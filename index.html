@@ -2,166 +2,121 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زاوية الحدث - محمد نيوز</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>موقع الأخبار - الرئيسية</title>
     <style>
-        :root {
-            --primary-color: #1a237e;
-            --accent-color: #d32f2f;
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #212121;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-        header {
-            background: linear-gradient(135deg, var(--primary-color), #0d47a1);
-            color: white;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 0.3rem;
-        }
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-        .breaking-news {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.6rem 1rem;
-            font-weight: 700;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .breaking-badge {
-            background: white;
-            color: var(--accent-color);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 900;
-            white-space: nowrap;
-        }
-        .container {
-            max-width: 900px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-        }
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
-        .news-card {
-            background: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            border-top: 4px solid var(--primary-color);
-        }
-        .news-card:hover {
-            transform: translateY(-4px);
-        }
-        .news-content {
-            padding: 1.2rem;
-        }
-        .news-category {
-            color: var(--accent-color);
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-            display: block;
-        }
-        .news-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.6rem;
-            color: var(--primary-color);
-        }
-        .news-excerpt {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 1rem;
-        }
-        .news-date {
-            font-size: 0.8rem;
-            color: #888;
-        }
-        footer {
-            background-color: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 1.5rem 1rem;
-            margin-top: 3rem;
-            font-size: 0.85rem;
-        }
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { margin: 0; background-color: #f4f6f9; color: #222; }
+        header { background: #1e293b; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 0; font-size: 1.4rem; }
+        .btn { background: #2563eb; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+        .btn:hover { background: #1d4ed8; }
+        .btn-danger { background: #dc2626; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .card { background: #fff; padding: 18px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 15px; }
+        .card h2 { margin-top: 0; font-size: 1.2rem; color: #0f172a; }
+        .card p { line-height: 1.6; color: #475569; white-space: pre-line; }
+        .card small { color: #94a3b8; display: block; margin-top: 10px; }
+        #admin-panel { display: none; background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #2563eb; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+        .actions { margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>زاوية الحدث</h1>
-        <p>تغطية إخبارية شاملة ومستمرة - بإدارة محمد كريم</p>
-    </header>
+<header>
+    <h1>شبكة الأخبار</h1>
+    <button class="btn" onclick="toggleAdmin()">لوحة التحكم</button>
+</header>
 
-    <div class="breaking-news">
-        <span class="breaking-badge">عاجل</span>
-        <marquee behavior="scroll" direction="right">أهلاً بكم في الانطلاقة الرسمية لمنصة زاوية الحدث الإخبارية.. نضعكم في قلب الحدث لحظة بلحظة.</marquee>
+<div class="container">
+    <!-- لوحة التحكم -->
+    <div id="admin-panel">
+        <h3>إضافة خبر جديد</h3>
+        <input type="text" id="news-title" placeholder="عنوان الخبر">
+        <textarea id="news-content" rows="4" placeholder="تفاصيل الخبر..."></textarea>
+        <button class="btn" onclick="addNews()">نشر الخبر</button>
     </div>
 
-    <div class="container">
-        <div class="news-grid">
-            <article class="news-card">
-                <div class="news-content">
-                    <span class="news-category">أخبار محلية</span>
-                    <h2 class="news-title">انطلاق منصة زاوية الحدث بحلتها الجديدة</h2>
-                    <p class="news-excerpt">نرحب بمتابعينا الكرام في موقعنا الإخباري الجديد لنقل أبرز المستجدات والأخبار الموثوقة على مدار الساعة.</p>
-                    <span class="news-date">تحديث اليوم</span>
-                </div>
-            </article>
+    <!-- عرض الأخبار -->
+    <div id="news-list">جاري تحميل الأخبار...</div>
+</div>
 
-            <article class="news-card">
-                <div class="news-content">
-                    <span class="news-category">تكنولوجيا واتصالات</span>
-                    <h2 class="news-title">تطورات متسارعة في خدمات الإنترنت الفضائي والشبكات</h2>
-                    <p class="news-excerpt">متابعة خاصة لأحدث تقنيات الاتصال وتطوير البنية التحتية الرقمية لتوفير سرعات عالية واستقرار مستمر.</p>
-                    <span class="news-date">تحديث اليوم</span>
-                </div>
-            </article>
+<script>
+    // تم ربط رابط قاعدة البيانات الخاص بك هنا
+    const FIREBASE_URL = "https://news-site-f4efc-default-rtdb.firebaseio.com";
+    let isAdmin = false;
 
-            <article class="news-card">
-                <div class="news-content">
-                    <span class="news-category">اقتصاد وأسواق</span>
-                    <h2 class="news-title">نشرة الأسعار وحركة الأسواق المحلية اليوم</h2>
-                    <p class="news-excerpt">تقرير مفصل يرصد حركة التداول وأسعار السلع الأساسية والخدمات في الأسواق.</p>
-                    <span class="news-date">تحديث اليوم</span>
-                </div>
-            </article>
-        </div>
-    </div>
+    function toggleAdmin() {
+        const panel = document.getElementById('admin-panel');
+        if (panel.style.display === 'block') {
+            panel.style.display = 'none';
+            isAdmin = false;
+            loadNews();
+        } else {
+            const pass = prompt("أدخل كلمة مرور الإدارة:");
+            if (pass === "14761228811517") { // يمكنك تغيير كلمة المرور من هنا
+                panel.style.display = 'block';
+                isAdmin = true;
+                loadNews();
+            } else if (pass !== null) {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+    }
 
-    <footer>
-        <p>جميع الحقوق محفوظة &copy; 2026 - زاوية الحدث (محمد نيوز)</p>
-    </footer>
+    async function loadNews() {
+        const list = document.getElementById('news-list');
+        try {
+            const res = await fetch(`${FIREBASE_URL}/news.json`);
+            const data = await res.json();
+            list.innerHTML = "";
+            if (!data) {
+                list.innerHTML = "<div class='card'><p>لا توجد أخبار منشورة حالياً.</p></div>";
+                return;
+            }
+            const keys = Object.keys(data).reverse();
+            keys.forEach(key => {
+                const item = data[key];
+                const deleteBtn = isAdmin ? `<div class="actions"><button class="btn btn-danger" onclick="deleteNews('${key}')">حذف الخبر</button></div>` : "";
+                list.innerHTML += `
+                    <div class="card">
+                        <h2>${item.title}</h2>
+                        <p>${item.content}</p>
+                        <small>${item.date || ''}</small>
+                        ${deleteBtn}
+                    </div>
+                `;
+            });
+        } catch (err) {
+            list.innerHTML = "<div class='card'><p>حدث خطأ أثناء الاتصال بقاعدة البيانات.</p></div>";
+        }
+    }
+
+    async function addNews() {
+        const title = document.getElementById('news-title').value.trim();
+        const content = document.getElementById('news-content').value.trim();
+        if (!title || !content) return alert("يرجى كتابة العنوان والتفاصيل");
+
+        const date = new Date().toLocaleString('ar-EG');
+        await fetch(`${FIREBASE_URL}/news.json`, {
+            method: 'POST',
+            body: JSON.stringify({ title, content, date })
+        });
+
+        document.getElementById('news-title').value = "";
+        document.getElementById('news-content').value = "";
+        loadNews();
+    }
+
+    async function deleteNews(key) {
+        if (!confirm("هل أنت متأكد من حذف هذا الخبر؟")) return;
+        await fetch(`${FIREBASE_URL}/news/${key}.json`, { method: 'DELETE' });
+        loadNews();
+    }
+
+    loadNews();
+</script>
 
 </body>
 </html>
