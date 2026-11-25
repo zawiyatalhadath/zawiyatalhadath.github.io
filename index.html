@@ -1,441 +1,330 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زاوية الحدث - تغطية إخبارية شاملة ومستمرة</title>
-    <style>
-        :root {
-            --primary-color: #1e293b;
-            --accent-color: #2563eb;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Tahoma, sans-serif;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 1.5rem 1rem;
-        }
-        header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.3rem;
-        }
-        header p {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-        }
-        nav {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.75rem 1rem;
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            justify-content: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-btn {
-            background: none;
-            border: none;
-            padding: 0.4rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .nav-btn.active, .nav-btn:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .container {
-            max-width: 800px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-        }
-        .admin-box {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            display: none;
-        }
-        .admin-box h2 {
-            color: var(--accent-color);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-        textarea.form-control {
-            min-height: 110px;
-            resize: vertical;
-        }
-        .btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        .btn:hover {
-            background-color: #1d4ed8;
-        }
-        .btn-logout {
-            background-color: #ef4444;
-            width: auto;
-            padding: 0.35rem 0.8rem;
-            font-size: 0.8rem;
-        }
-        .btn-logout:hover {
-            background-color: #dc2626;
-        }
-        .news-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e2e8f0;
-        }
-        .news-media img, .news-media video {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            display: block;
-        }
-        .news-body {
-            padding: 1.25rem;
-        }
-        .news-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
-            font-size: 0.8rem;
-        }
-        .badge {
-            background-color: #eff6ff;
-            color: var(--accent-color);
-            padding: 0.2rem 0.6rem;
-            border-radius: 6px;
-            font-weight: 700;
-        }
-        .news-date {
-            color: var(--text-muted);
-        }
-        .news-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.6rem;
-            color: var(--text-main);
-        }
-        .news-content {
-            color: #334155;
-            font-size: 0.95rem;
-            white-space: pre-line;
-        }
-        .delete-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            border: none;
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-top: 0.8rem;
-            font-weight: 600;
-        }
-        .status-msg {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 2rem 0;
-        }
-        .error-text {
-            color: #dc2626;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>زاوية الحدث</title>
+  <style>
+    * { box-sizing: border-box; font-family: Tahoma, Arial, sans-serif; }
+    body { margin: 0; background: #f3f4f6; color: #111827; }
+    header {
+      background: #0f172a;
+      color: #fff;
+      padding: 16px;
+      text-align: center;
+      border-bottom: 3px solid #dc2626;
+    }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; font-size: 13px; color: #cbd5e1; }
+    nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      background: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    nav button {
+      border: none;
+      background: #e5e7eb;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+    nav button.active {
+      background: #dc2626;
+      color: #fff;
+      font-weight: bold;
+    }
+    .container { max-width: 900px; margin: 16px auto; padding: 0 12px; }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .card img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .date { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+    .hidden { display: none !important; }
+
+    /* لوحة الإدارة */
+    .admin-box {
+      background: #fff;
+      border: 2px solid #0f172a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .admin-box h2 { margin-top: 0; font-size: 18px; color: #0f172a; }
+    label { display: block; margin: 10px 0 4px; font-weight: bold; font-size: 14px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    .btn {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .btn-primary { background: #1d4ed8; color: #fff; width: 100%; }
+    .btn-success { background: #15803d; color: #fff; width: 100%; }
+    .btn-danger { background: #dc2626; color: #fff; padding: 6px 12px; font-size: 13px; margin-top: 8px; }
+    .btn-logout { background: #475569; color: #fff; float: left; margin-top: 0; padding: 6px 12px; font-size: 13px; }
+    .error { color: #dc2626; font-size: 13px; margin-top: 8px; text-align: center; }
+    .success { color: #15803d; font-size: 13px; margin-top: 8px; text-align: center; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>زاوية الحدث</h1>
-        <p>تغطية إخبارية شاملة ومستمرة - بإدارة محمد كريم</p>
-    </header>
+<header>
+  <h1>زاوية الحدث</h1>
+  <p>تغطية إخبارية شاملة ومستمرة - بإدارة محمد كريم</p>
+</header>
 
-    <nav id="categoryNav">
-        <button class="nav-btn active" data-cat="الكل">الكل</button>
-        <button class="nav-btn" data-cat="عاجل">عاجل</button>
-        <button class="nav-btn" data-cat="محلية">محلية</button>
-        <button class="nav-btn" data-cat="اقتصاد">اقتصاد</button>
-        <button class="nav-btn" data-cat="أسواق">أسواق</button>
-        <button class="nav-btn" data-cat="اتصالات">اتصالات</button>
-        <button class="nav-btn" data-cat="منوعات">منوعات</button>
-    </nav>
+<nav id="categoryNav">
+  <button class="active" data-cat="الكل">الكل</button>
+  <button data-cat="عاجل">عاجل</button>
+  <button data-cat="محلية">محلية</button>
+  <button data-cat="اقتصاد">اقتصاد</button>
+  <button data-cat="أسواق">أسواق</button>
+  <button data-cat="اتصالات">اتصالات</button>
+  <button data-cat="منوعات">منوعات</button>
+</nav>
 
-    <div class="container">
-        <div id="loginBox" class="admin-box">
-            <h2>تسجيل دخول الإدارة</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="adminEmail" class="form-control" placeholder="أدخل البريد الإلكتروني..." required>
-                </div>
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="adminPassword" class="form-control" placeholder="أدخل كلمة المرور..." required>
-                </div>
-                <button type="submit" class="btn">تسجيل الدخول</button>
-                <div id="loginError" class="error-text"></div>
-            </form>
-        </div>
+<div class="container">
 
-        <div id="adminPanel" class="admin-box">
-            <h2>
-                <span>لوحة النشر والتحكم الإداري</span>
-                <button id="logoutBtn" class="btn btn-logout">تسجيل خروج</button>
-            </h2>
-            <form id="newsForm">
-                <div class="form-group">
-                    <label>عنوان الخبر</label>
-                    <input type="text" id="newsTitle" class="form-control" placeholder="اكتب عنواناً جذاباً..." required>
-                </div>
-                <div class="form-group">
-                    <label>القسم</label>
-                    <select id="newsCategory" class="form-control">
-                        <option value="عاجل">عاجل</option>
-                        <option value="محلية" selected>محلية</option>
-                        <option value="اقتصاد">اقتصاد</option>
-                        <option value="أسواق">أسواق</option>
-                        <option value="اتصالات">اتصالات</option>
-                        <option value="منوعات">منوعات</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>رابط صورة أو فيديو (اختياري)</label>
-                    <input type="url" id="newsMediaUrl" class="form-control" placeholder="ضع رابط الصورة المباشر هنا (https://...)">
-                </div>
-                <div class="form-group">
-                    <label>تفاصيل الخبر</label>
-                    <textarea id="newsContent" class="form-control" placeholder="اكتب تفاصيل الخبر هنا..." required></textarea>
-                </div>
-                <button type="submit" id="publishBtn" class="btn">نشر الخبر الآن</button>
-            </form>
-        </div>
+  <!-- صندوق تسجيل الدخول للإدارة (مخفي افتراضياً) -->
+  <div id="loginSection" class="admin-box hidden">
+    <h2>تسجيل دخول الإدارة</h2>
+    <label>البريد الإلكتروني</label>
+    <input type="email" id="adminEmail" placeholder="أدخل البريد الإلكتروني..." />
+    <label>كلمة المرور</label>
+    <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور..." />
+    <button class="btn btn-primary" id="loginBtn">تسجيل الدخول</button>
+    <div id="loginMsg" class="error"></div>
+  </div>
 
-        <div id="newsContainer">
-            <p class="status-msg">جاري تحميل الأخبار...</p>
-        </div>
-    </div>
+  <!-- لوحة التحكم لإضافة الأخبار (تظهر فقط بعد تسجيل الدخول) -->
+  <div id="dashboardSection" class="admin-box hidden">
+    <button class="btn btn-logout" id="logoutBtn">تسجيل الخروج</button>
+    <h2>نشر خبر جديد</h2>
+    <label>القسم</label>
+    <select id="newsCategory">
+      <option value="عاجل">عاجل</option>
+      <option value="محلية">محلية</option>
+      <option value="اقتصاد">اقتصاد</option>
+      <option value="أسواق">أسواق</option>
+      <option value="اتصالات">اتصالات</option>
+      <option value="منوعات">منوعات</option>
+    </select>
+    <label>عنوان الخبر</label>
+    <input type="text" id="newsTitle" placeholder="اكتب عنوان الخبر..." />
+    <label>رابط الصورة (اختياري)</label>
+    <input type="url" id="newsImage" placeholder="https://example.com/image.jpg" />
+    <label>تفاصيل الخبر</label>
+    <textarea id="newsContent" placeholder="اكتب نص الخبر كاملاً..."></textarea>
+    <button class="btn btn-success" id="publishBtn">نشر الخبر الآن</button>
+    <div id="publishMsg" class="success"></div>
+  </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <!-- قائمة الأخبار للزوار -->
+  <div id="newsFeed">
+    <p style="text-align:center; color:#6b7280;">جاري تحميل الأخبار...</p>
+  </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDmW6Diuo5I2Pw25wH76D6oD4H2hR4W5aQ",
-            authDomain: "news-site-f4efc.firebaseapp.com",
-            databaseURL: "https://news-site-f4efc-default-rtdb.firebaseio.com",
-            projectId: "news-site-f4efc",
-            storageBucket: "news-site-f4efc.firebasestorage.app",
-            messagingSenderId: "644957766713",
-            appId: "1:644957766713:web:bc6b525e1e9e1e9e1e9e1e",
-            measurementId: "G-6DPLP8E6H3"
-        };
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const isAdminMode = urlParams.get('admin') === '1';
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4DiuqBE2seftZOe4TtCT-Mtwvhh7A_BM",
+    authDomain: "news-site-f4efc.firebaseapp.com",
+    databaseURL: "https://news-site-f4efc-default-rtdb.firebaseio.com",
+    projectId: "news-site-f4efc",
+    storageBucket: "news-site-f4efc.firebasestorage.app",
+    messagingSenderId: "644937766713",
+    appId: "1:644937766713:web:bc55a35eebedbe46c1bae8",
+    measurementId: "G-65MJ96EGXD"
+  };
 
-        const loginBox = document.getElementById('loginBox');
-        const adminPanel = document.getElementById('adminPanel');
-        const loginForm = document.getElementById('loginForm');
-        const loginError = document.getElementById('loginError');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const newsForm = document.getElementById('newsForm');
-        const newsContainer = document.getElementById('newsContainer');
-        const navBtns = document.querySelectorAll('.nav-btn');
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
 
-        let currentUser = null;
-        let currentCategory = 'الكل';
-        let allNews = [];
+  const urlParams = new URLSearchParams(window.location.search);
+  const isAdminRoute = urlParams.get('admin') === '1';
 
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (isAdminMode) {
-                if (user) {
-                    loginBox.style.display = 'none';
-                    adminPanel.style.display = 'block';
-                } else {
-                    loginBox.style.display = 'block';
-                    adminPanel.style.display = 'none';
-                }
-            }
-            renderNews();
-        });
+  const loginSection = document.getElementById('loginSection');
+  const dashboardSection = document.getElementById('dashboardSection');
+  const loginMsg = document.getElementById('loginMsg');
+  const publishMsg = document.getElementById('publishMsg');
+  const newsFeed = document.getElementById('newsFeed');
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            loginError.textContent = '';
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
+  let currentUser = null;
+  let allNews = [];
+  let selectedCategory = 'الكل';
 
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                loginError.textContent = 'خطأ في البريد الإلكتروني أو كلمة المرور. تأكد من البيانات.';
-            }
-        });
+  // مراقبة حالة تسجيل الدخول
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    if (user) {
+      loginSection.classList.add('hidden');
+      dashboardSection.classList.remove('hidden');
+    } else {
+      dashboardSection.classList.add('hidden');
+      if (isAdminRoute) {
+        loginSection.classList.remove('hidden');
+      } else {
+        loginSection.classList.add('hidden');
+      }
+    }
+    renderNews();
+  });
 
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth);
-        });
+  // تسجيل الدخول
+  document.getElementById('loginBtn').addEventListener('click', async () => {
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value.trim();
+    loginMsg.textContent = '';
 
-        newsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
+    if (!email || !password) {
+      loginMsg.textContent = 'يرجى إدخال البريد الإلكتروني وكلمة المرور.';
+      return;
+    }
 
-            const publishBtn = document.getElementById('publishBtn');
-            publishBtn.disabled = true;
-            publishBtn.textContent = 'جاري النشر...';
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      loginMsg.textContent = 'خطأ في البريد الإلكتروني أو كلمة المرور. تأكد من البيانات.';
+      console.error(error);
+    }
+  });
 
-            const title = document.getElementById('newsTitle').value.trim();
-            const category = document.getElementById('newsCategory').value;
-            const mediaUrl = document.getElementById('newsMediaUrl').value.trim();
-            const content = document.getElementById('newsContent').value.trim();
+  // تسجيل الخروج
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut(auth);
+  });
 
-            try {
-                await addDoc(collection(db, "news"), {
-                    title,
-                    category,
-                    mediaUrl,
-                    content,
-                    createdAt: serverTimestamp()
-                });
-                newsForm.reset();
-            } catch (error) {
-                alert('حدث خطأ أثناء النشر. تأكد من إعدادات Firestore Rules.');
-            } finally {
-                publishBtn.disabled = false;
-                publishBtn.textContent = 'نشر الخبر الآن';
-            }
-        });
+  // نشر خبر جديد
+  document.getElementById('publishBtn').addEventListener('click', async () => {
+    const category = document.getElementById('newsCategory').value;
+    const title = document.getElementById('newsTitle').value.trim();
+    const image = document.getElementById('newsImage').value.trim();
+    const content = document.getElementById('newsContent').value.trim();
+    publishMsg.textContent = '';
 
-        const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
-        onSnapshot(q, (snapshot) => {
-            allNews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderNews();
-        }, (error) => {
-            newsContainer.innerHTML = '<p class="status-msg">لا توجد أخبار حالياً أو بانتظار تفعيل قاعدة البيانات.</p>';
-        });
+    if (!title || !content) {
+      alert('يرجى إدخال عنوان الخبر وتفاصيله.');
+      return;
+    }
 
-        function renderNews() {
-            const filtered = currentCategory === 'الكل' 
-                ? allNews 
-                : allNews.filter(item => item.category === currentCategory);
+    try {
+      await push(ref(db, 'news'), {
+        category,
+        title,
+        image,
+        content,
+        createdAt: Date.now()
+      });
+      document.getElementById('newsTitle').value = '';
+      document.getElementById('newsImage').value = '';
+      document.getElementById('newsContent').value = '';
+      publishMsg.textContent = 'تم نشر الخبر بنجاح!';
+      setTimeout(() => publishMsg.textContent = '', 3000);
+    } catch (error) {
+      alert('حدث خطأ أثناء النشر: ' + error.message);
+    }
+  });
 
-            if (filtered.length === 0) {
-                newsContainer.innerHTML = '<p class="status-msg">لا توجد أخبار في هذا القسم حالياً.</p>';
-                return;
-            }
+  // جلب الأخبار وعرضها
+  onValue(ref(db, 'news'), (snapshot) => {
+    const data = snapshot.val();
+    allNews = [];
+    if (data) {
+      Object.keys(data).forEach(key => {
+        allNews.push({ id: key, ...data[key] });
+      });
+      allNews.sort((a, b) => b.createdAt - a.createdAt);
+    }
+    renderNews();
+  });
 
-            newsContainer.innerHTML = filtered.map(item => {
-                const dateStr = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('ar-EG', {
-                    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                }) : 'الآن';
+  function renderNews() {
+    const filtered = selectedCategory === 'الكل'
+      ? allNews
+      : allNews.filter(item => item.category === selectedCategory);
 
-                let mediaHtml = '';
-                if (item.mediaUrl) {
-                    if (item.mediaUrl.match(/\.(mp4|webm|ogg)$/i)) {
-                        mediaHtml = `<div class="news-media"><video src="${item.mediaUrl}" controls></video></div>`;
-                    } else {
-                        mediaHtml = `<div class="news-media"><img src="${item.mediaUrl}" alt="${item.title}"></div>`;
-                    }
-                }
+    if (filtered.length === 0) {
+      newsFeed.innerHTML = '<p style="text-align:center; color:#6b7280;">لا توجد أخبار في هذا القسم حالياً.</p>';
+      return;
+    }
 
-                const deleteHtml = (currentUser && isAdminMode) 
-                    ? `<button class="delete-btn" onclick="deleteNews('${item.id}')">حذف الخبر</button>` 
-                    : '';
+    newsFeed.innerHTML = '';
+    filtered.forEach(item => {
+      const dateStr = new Date(item.createdAt).toLocaleString('ar-SY', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
 
-                return `
-                    <article class="news-card">
-                        ${mediaHtml}
-                        <div class="news-body">
-                            <div class="news-meta">
-                                <span class="badge">${item.category}</span>
-                                <span class="news-date">${dateStr}</span>
-                            </div>
-                            <h3 class="news-title">${item.title}</h3>
-                            <p class="news-content">${item.content}</p>
-                            ${deleteHtml}
-                        </div>
-                    </article>
-                `;
-            }).join('');
-        }
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        ${item.image ? `<img src="${item.image}" alt="صورة الخبر" onerror="this.style.display='none'">` : ''}
+        <span class="badge">${item.category}</span>
+        <div class="date">${dateStr}</div>
+        <h3 style="margin: 0 0 8px;">${item.title}</h3>
+        <p style="margin: 0; line-height: 1.6; white-space: pre-line;">${item.content}</p>
+        ${currentUser ? `<button class="btn btn-danger" onclick="deleteNews('${item.id}')">حذف الخبر</button>` : ''}
+      `;
+      newsFeed.appendChild(card);
+    });
+  }
 
-        window.deleteNews = async (id) => {
-            if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
-                await deleteDoc(doc(db, "news", id));
-            }
-        };
+  window.deleteNews = async (id) => {
+    if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
+      await remove(ref(db, 'news/' + id));
+    }
+  };
 
-        navBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                navBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.getAttribute('data-cat');
-                renderNews();
-            });
-        });
-    </script>
+  // تبديل الأقسام
+  document.querySelectorAll('#categoryNav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#categoryNav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedCategory = btn.getAttribute('data-cat');
+      renderNews();
+    });
+  });
+</script>
+
 </body>
 </html>
