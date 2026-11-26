@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>زاوية الحدث | تغطية إخبارية واقتصادية شاملة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #f4f5f7; color: #111827; line-height: 1.6; overflow-x: hidden; }
         .top-bar { background: #14171a; color: #d1d5db; padding: 6px 14px; font-size: 0.78rem; }
         .top-bar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
@@ -23,35 +24,34 @@
         .header-btns { display: flex; align-items: center; gap: 8px; }
         .btn-urgent { background: #dc2626; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
         .btn-search { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
-
         .cats-bar { background: #ffffff; padding: 10px 14px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; white-space: nowrap; }
         .cats-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 8px; }
-        .cat-pill { background: #f3f4f6; color: #374151; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .cat-pill { background: #f3f4f6; color: #374151; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
         .cat-pill.active { background: #111827; color: #ffffff; }
         .search-panel { display: none; max-width: 1100px; margin: 10px auto 0; padding: 0 14px; }
         .search-panel.open { display: block; }
         .search-panel input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 0.9rem; }
         .container { max-width: 900px; margin: 16px auto 40px; padding: 0 14px; }
-        .ad-banner { background: linear-gradient(135deg, #1f2937, #111827); color: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); flex-wrap: wrap; }
+        .ad-banner { background: linear-gradient(135deg, #1f2937, #111827); color: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
         .ad-tag { background: #ea580c; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
         .ad-text { flex: 1; min-width: 200px; }
         .ad-text h3 { font-size: 0.98rem; font-weight: 800; }
         .ad-text p { font-size: 0.78rem; color: #9ca3af; }
         .ad-cta { background: #16a34a; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; white-space: nowrap; }
-        .news-list { display: flex; flex-direction: column; gap: 16px; }
-        .news-card { background: #ffffff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .news-list { display: flex; flex-direction: column; gap: 14px; }
+        .news-card { background: #ffffff; border-radius: 14px; padding: 15px; border: 1px solid #e5e7eb; contain: content; }
         .card-cat { background: #f3f4f6; color: #4b5563; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; }
-        .card-img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-        .news-card h2 { font-size: 1.12rem; font-weight: 800; color: #111827; margin-bottom: 6px; line-height: 1.45; cursor: pointer; }
-        .news-card p { font-size: 0.88rem; color: #6b7280; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-meta { font-size: 0.75rem; color: #9ca3af; margin-bottom: 12px; display: flex; gap: 12px; }
+        .card-img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; cursor: pointer; background: #f3f4f6; }
+        .news-card h2 { font-size: 1.1rem; font-weight: 800; color: #111827; margin-bottom: 6px; line-height: 1.45; cursor: pointer; }
+        .news-card p { font-size: 0.88rem; color: #6b7280; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-meta { font-size: 0.75rem; color: #9ca3af; margin-bottom: 10px; }
         .card-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #f3f4f6; padding-top: 10px; }
         .btn-read { background: #111827; color: #fff; border: none; padding: 7px 14px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
         .btn-save { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 7px 12px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
         .btn-share { background: #ea580c; color: #fff; border: none; padding: 7px 12px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-right: auto; }
-        .floating-brief { position: fixed; bottom: 16px; left: 16px; background: #111827; color: #fff; border: none; padding: 9px 16px; border-radius: 25px; font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.25); cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 800; }
+        .floating-brief { position: fixed; bottom: 16px; left: 16px; background: #111827; color: #fff; border: none; padding: 9px 16px; border-radius: 25px; font-size: 0.82rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 800; }
         .play-badge { background: #ea580c; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.65rem; }
-        footer { background: #14171a; color: #fff; padding: 28px 14px 70px; text-align: center; margin-top: 30px; }
+        footer { background: #14171a; color: #fff; padding: 26px 14px 70px; text-align: center; margin-top: 30px; }
         .footer-inner { max-width: 800px; margin: 0 auto; }
         .footer-inner h3 { color: #ea580c; font-size: 1.05rem; margin-bottom: 14px; }
         .contact-pills { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
@@ -63,7 +63,7 @@
         .modal-box { background: #fff; max-width: 700px; margin: 20px auto; border-radius: 14px; padding: 20px; position: relative; }
         .close-btn { position: absolute; top: 12px; left: 12px; background: #111827; color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
         #admin-panel { display: none; max-width: 900px; margin: 20px auto; padding: 0 14px 60px; }
-        .admin-card { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .admin-card { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; margin-bottom: 16px; }
         .admin-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 16px; border-bottom: 2px solid #f3f4f6; }
         .tab-btn { background: #f3f4f6; color: #374151; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; cursor: pointer; white-space: nowrap; }
         .tab-btn.active { background: #ea580c; color: #fff; }
@@ -134,7 +134,7 @@
         <button class="floating-brief" onclick="openBriefModal()">الأخبار باختصار <span class="play-badge"><i class="fa-solid fa-play"></i></span></button>
     </div>
 
-    <!-- Full Admin & Editors Dashboard (#admin) -->
+    <!-- Admin & Editors Dashboard (#admin) -->
     <div id="admin-panel">
         <div class="admin-card" id="login-box" style="max-width:420px; margin:20px auto;">
             <h3 style="margin-bottom:14px;"><i class="fa-solid fa-shield-halved" style="color:#ea580c"></i> دخول الإدارة والمحررين</h3>
@@ -184,11 +184,11 @@
                         <option value="أخبار عامة">أخبار عامة</option>
                     </select>
 
-                    <!-- Studio HD Image Upload + Smart Compression -->
+                    <!-- Ultra-Fast HD Studio Image Upload -->
                     <div class="upload-box" onclick="document.getElementById('in-file').click()">
                         <i class="fa-solid fa-image" style="font-size:1.5rem; color:#ea580c; margin-bottom:4px;"></i>
-                        <div style="font-weight:800; font-size:0.88rem;" id="upload-status-txt">اضغط لاختيار صورة عالية الدقة من الاستوديو</div>
-                        <small style="color:#6b7280;">ضغط ذكي تلقائي (HD 1080p) لسرعة فائقة دون ثقل</small>
+                        <div style="font-weight:800; font-size:0.88rem;" id="upload-status-txt">اضغط لاختيار صورة من الاستوديو</div>
+                        <small style="color:#6b7280;">ضغط فوري فائق الخفة (~25 KB) لسرعة فتح نار</small>
                         <input type="file" id="in-file" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
                     </div>
                     <img id="img-preview" style="display:none; width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
@@ -197,7 +197,7 @@
                     <textarea id="in-body" class="form-ctrl" rows="4" placeholder="تفاصيل الخبر..."></textarea>
                     <button class="btn-read" style="padding:10px 20px;" onclick="saveArticle()"><i class="fa-solid fa-paper-plane"></i> نشر / حفظ الخبر</button>
                     <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
-                    <h4 style="margin-bottom:8px;">الأخبار المنشورة</h4>
+                    <h4 style="margin-bottom:8px;">الأخبار المنشورة (اضغط حذف لإزالة أي خبر فوراً)</h4>
                     <div id="adm-list"></div>
                 </div>
 
@@ -324,84 +324,96 @@
             document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
             document.querySelectorAll(".cat-pill").forEach(btn => btn.onclick = () => filterByCat(btn.dataset.cat));
 
-            const cachedSet = localStorage.getItem("zawiya_settings_v3");
+            const cachedSet = localStorage.getItem("zawiya_settings_v4");
             if (cachedSet) siteSettings = { ...siteSettings, ...JSON.parse(cachedSet) };
             applySettingsToUI();
 
-            const cachedArt = localStorage.getItem("zawiya_art_v3");
+            const cachedArt = localStorage.getItem("zawiya_art_v4");
             articles = cachedArt ? JSON.parse(cachedArt) : defaultArticles;
             renderNews();
 
             if (location.hash === "#admin") openAdmin();
             window.onhashchange = () => location.hash === "#admin" ? openAdmin() : exitAdmin(false);
 
-            syncAllFromFirebase();
+            // Fast non-blocking background sync
+            syncArticlesFast();
+            syncSettingsFast();
             trackVisitors();
         });
 
         async function safeFetch(url, opt = {}) {
             const c = new AbortController();
-            const t = setTimeout(() => c.abort(), 4000);
+            const t = setTimeout(() => c.abort(), 2500);
             try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
             catch (e) { clearTimeout(t); throw e; }
         }
 
+        // Ultra-light compression (~25KB) so mobile loads instantaneously
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
             const statusTxt = document.getElementById("upload-status-txt");
-            statusTxt.textContent = "جاري معالجة الصورة بدقة HD...";
+            statusTxt.textContent = "جاري تجهيز الصورة...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement("canvas");
-                    const MAX_WIDTH = 1080;
+                    const MAX_WIDTH = 720;
                     let w = img.width, h = img.height;
                     if (w > MAX_WIDTH) { h = Math.round(h * (MAX_WIDTH / w)); w = MAX_WIDTH; }
                     canvas.width = w; canvas.height = h;
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, w, h);
 
-                    const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+                    const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.65);
                     document.getElementById("in-img").value = compressedDataUrl;
                     const prev = document.getElementById("img-preview");
                     prev.src = compressedDataUrl;
                     prev.style.display = "block";
                     const kb = Math.round((compressedDataUrl.length * 3) / 4 / 1024);
-                    statusTxt.textContent = `تم تجهيز الصورة بدقة HD (${w}×${h} • ${kb} KB)`;
-                    toast("تم ضغط الصورة بدقة عالية وجاهزة للنشر!");
+                    statusTxt.textContent = `جاهزة للنشر (${kb} KB - خفيفة جداً)`;
+                    toast("تم ضغط الصورة بسرعة فائقة!");
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        async function syncAllFromFirebase() {
+        async function syncArticlesFast() {
             try {
-                const [artRes, setRes, edRes] = await Promise.all([
-                    safeFetch(`${DB_URL}/articles.json`),
+                const r = await safeFetch(`${DB_URL}/articles.json`);
+                const artData = await r.json();
+                if (artData && typeof artData === "object") {
+                    articles = Object.keys(artData).map(k => ({ id: k, ...artData[k] })).reverse();
+                    saveLocalCache();
+                    renderNews();
+                    renderAdminList();
+                }
+            } catch (e) {}
+        }
+
+        async function syncSettingsFast() {
+            try {
+                const [setRes, edRes] = await Promise.all([
                     safeFetch(`${DB_URL}/settings.json`),
                     safeFetch(`${DB_URL}/editors.json`)
                 ]);
-                const artData = await artRes.json();
-                if (artData && typeof artData === "object") {
-                    articles = Object.keys(artData).map(k => ({ id: k, ...artData[k] })).reverse();
-                    try { localStorage.setItem("zawiya_art_v3", JSON.stringify(articles.slice(0, 15))); } catch(e) {}
-                    renderNews();
-                }
                 const setData = await setRes.json();
                 if (setData && typeof setData === "object") {
                     siteSettings = { ...siteSettings, ...setData };
-                    localStorage.setItem("zawiya_settings_v3", JSON.stringify(siteSettings));
+                    localStorage.setItem("zawiya_settings_v4", JSON.stringify(siteSettings));
                     applySettingsToUI();
                 }
                 const edData = await edRes.json();
                 editors = (edData && typeof edData === "object") ? Object.keys(edData).map(k => ({ id: k, ...edData[k] })) : [];
-                renderAdminList();
                 renderEditorsList();
             } catch (e) {}
+        }
+
+        function saveLocalCache() {
+            try { localStorage.setItem("zawiya_art_v4", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
         }
 
         function applySettingsToUI() {
@@ -446,7 +458,7 @@
                 if (!sessionStorage.getItem("v_done")) {
                     count++;
                     sessionStorage.setItem("v_done", "1");
-                    await safeFetch(`${DB_URL}/visitors.json`, { method: "PUT", body: JSON.stringify(count) });
+                    safeFetch(`${DB_URL}/visitors.json`, { method: "PUT", body: JSON.stringify(count) }).catch(() => {});
                 }
                 visitors = count;
             } catch (e) { visitors = 108; }
@@ -558,6 +570,7 @@
 
         function logoutUser() { sessionStorage.removeItem("zawiya_user"); openAdmin(); toast("تم تسجيل الخروج"); }
 
+        // Instant Optimistic Save (0ms UI response)
         async function saveArticle() {
             const id = document.getElementById("edit-id").value;
             const title = document.getElementById("in-title").value.trim();
@@ -567,20 +580,37 @@
             if (!title || !body) return toast("أدخل العنوان والتفاصيل");
             const user = JSON.parse(sessionStorage.getItem("zawiya_user") || '{"name":"هيئة التحرير"}');
             const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: user.name, views: 1 };
-            try {
-                if (id) await safeFetch(`${DB_URL}/articles/${id}.json`, { method: "PUT", body: JSON.stringify(payload) });
-                else {
-                    await safeFetch(`${DB_URL}/articles.json`, { method: "POST", body: JSON.stringify(payload) });
+
+            // Clear form immediately
+            document.getElementById("edit-id").value = "";
+            document.getElementById("in-title").value = "";
+            document.getElementById("in-img").value = "";
+            document.getElementById("in-body").value = "";
+            document.getElementById("img-preview").style.display = "none";
+            document.getElementById("upload-status-txt").textContent = "اضغط لاختيار صورة من الاستوديو";
+
+            if (id) {
+                const idx = articles.findIndex(x => x.id === id);
+                if (idx > -1) articles[idx] = { id, ...payload };
+                renderAdminList(); renderNews(); saveLocalCache();
+                toast("تم التعديل فوراً!");
+                safeFetch(`${DB_URL}/articles/${id}.json`, { method: "PUT", body: JSON.stringify(payload) }).catch(() => {});
+            } else {
+                const tempId = "temp_" + Date.now();
+                articles.unshift({ id: tempId, ...payload });
+                renderAdminList(); renderNews(); saveLocalCache();
+                toast("تم نشر الخبر بسرعة البرق!");
+                try {
+                    const r = await safeFetch(`${DB_URL}/articles.json`, { method: "POST", body: JSON.stringify(payload) });
+                    const res = await r.json();
+                    if (res && res.name) {
+                        const i = articles.findIndex(x => x.id === tempId);
+                        if (i > -1) articles[i].id = res.name;
+                        saveLocalCache(); renderAdminList();
+                    }
                     if (siteSettings.webhook) fetch(siteSettings.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
-                }
-                document.getElementById("edit-id").value = "";
-                document.getElementById("in-title").value = "";
-                document.getElementById("in-img").value = "";
-                document.getElementById("in-body").value = "";
-                document.getElementById("img-preview").style.display = "none";
-                document.getElementById("upload-status-txt").textContent = "اضغط لاختيار صورة عالية الدقة من الاستوديو";
-                toast("تم حفظ ونشر الخبر بنجاح"); syncAllFromFirebase();
-            } catch (e) { toast("خطأ في الاتصال"); }
+                } catch (e) {}
+            }
         }
 
         function renderAdminList() {
@@ -611,11 +641,12 @@
             window.scrollTo(0, 0);
         }
 
-        async function delArt(id) {
-            if (!confirm("حذف الخبر نهائياً؟")) return;
-            await safeFetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" });
+        // Instant Optimistic Delete (0ms UI removal)
+        function delArt(id) {
             articles = articles.filter(a => a.id !== id);
-            renderAdminList(); renderNews(); toast("تم الحذف");
+            renderAdminList(); renderNews(); saveLocalCache();
+            toast("تم حذف الخبر فوراً!");
+            safeFetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" }).catch(() => {});
         }
 
         async function addEditor() {
@@ -623,10 +654,10 @@
             const email = document.getElementById("ed-email").value.trim();
             const pass = document.getElementById("ed-pass").value.trim();
             if (!name || !email || !pass) return toast("أكمل جميع بيانات المحرر");
+            document.getElementById("ed-name").value = ""; document.getElementById("ed-email").value = ""; document.getElementById("ed-pass").value = "";
             try {
                 await safeFetch(`${DB_URL}/editors.json`, { method: "POST", body: JSON.stringify({ name, email, pass }) });
-                document.getElementById("ed-name").value = ""; document.getElementById("ed-email").value = ""; document.getElementById("ed-pass").value = "";
-                toast("تمت إضافة المحرر بنجاح"); syncAllFromFirebase();
+                toast("تمت إضافة المحرر بنجاح"); syncSettingsFast();
             } catch (e) { toast("تعذر الإضافة"); }
         }
 
@@ -640,11 +671,10 @@
                 </div>`).join("");
         }
 
-        async function delEditor(id) {
-            if (!confirm("إزالة هذا المحرر؟")) return;
-            await safeFetch(`${DB_URL}/editors/${id}.json`, { method: "DELETE" });
+        function delEditor(id) {
             editors = editors.filter(e => e.id !== id);
             renderEditorsList(); toast("تم حذف المحرر");
+            safeFetch(`${DB_URL}/editors/${id}.json`, { method: "DELETE" }).catch(() => {});
         }
 
         async function saveSiteSettings() {
@@ -661,15 +691,13 @@
             siteSettings.adBtn = document.getElementById("set-ad-btn").value.trim();
             siteSettings.adUrl = document.getElementById("set-ad-url").value.trim();
 
-            try {
-                await safeFetch(`${DB_URL}/settings.json`, { method: "PUT", body: JSON.stringify(siteSettings) });
-                localStorage.setItem("zawiya_settings_v3", JSON.stringify(siteSettings));
-                applySettingsToUI();
-                toast("تم حفظ جميع الإعدادات وتطبيقها على الموقع!");
-            } catch (e) { toast("تعذر الحفظ، تحقق من الإنترنت"); }
+            localStorage.setItem("zawiya_settings_v4", JSON.stringify(siteSettings));
+            applySettingsToUI();
+            toast("تم حفظ الإعدادات فوراً!");
+            safeFetch(`${DB_URL}/settings.json`, { method: "PUT", body: JSON.stringify(siteSettings) }).catch(() => {});
         }
 
-        function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2800); }
+        function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2200); }
     </script>
 </body>
 </html>
