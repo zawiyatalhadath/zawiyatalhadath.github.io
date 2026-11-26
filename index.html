@@ -34,8 +34,9 @@
         .search-panel.open { display: block; }
         .search-panel input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 0.9rem; }
         .container { max-width: 900px; margin: 16px auto 40px; padding: 0 14px; }
-        .ad-banner { background: linear-gradient(135deg, #1f2937, #111827); color: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+        .ad-banner { background: linear-gradient(135deg, #1f2937, #111827); color: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); flex-wrap: wrap; }
         .ad-tag { background: #ea580c; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
+        .ad-text { flex: 1; min-width: 200px; }
         .ad-text h3 { font-size: 0.98rem; font-weight: 800; }
         .ad-text p { font-size: 0.78rem; color: #9ca3af; }
         .ad-cta { background: #16a34a; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; white-space: nowrap; }
@@ -47,9 +48,9 @@
         .news-card p { font-size: 0.88rem; color: #6b7280; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .card-meta { font-size: 0.75rem; color: #9ca3af; margin-bottom: 12px; display: flex; gap: 12px; }
         .card-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #f3f4f6; padding-top: 10px; }
-        .btn-read { background: #111827; color: #fff; border: none; padding: 6px 14px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
-        .btn-save { background: #f3f4f6; color: #374151; border: none; padding: 6px 12px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
-        .btn-share { background: #ea580c; color: #fff; border: none; padding: 6px 12px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; margin-right: auto; }
+        .btn-read { background: #111827; color: #fff; border: none; padding: 7px 14px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+        .btn-save { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 7px 12px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+        .btn-share { background: #ea580c; color: #fff; border: none; padding: 7px 12px; border-radius: 7px; font-size: 0.82rem; font-weight: 700; cursor: pointer; margin-right: auto; }
         .floating-brief { position: fixed; bottom: 16px; left: 16px; background: #111827; color: #fff; border: none; padding: 9px 16px; border-radius: 25px; font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.25); cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 800; }
         .play-badge { background: #ea580c; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.65rem; }
         footer { background: #14171a; color: #fff; padding: 28px 14px 70px; text-align: center; margin-top: 30px; }
@@ -63,18 +64,25 @@
         .modal.active { display: block; }
         .modal-box { background: #fff; max-width: 700px; margin: 20px auto; border-radius: 14px; padding: 20px; position: relative; }
         .close-btn { position: absolute; top: 12px; left: 12px; background: #111827; color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
-        #admin-panel { display: none; max-width: 800px; margin: 20px auto; padding: 0 14px 60px; }
-        .admin-card { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; margin-bottom: 16px; }
-        .form-ctrl { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; }
+        #admin-panel { display: none; max-width: 900px; margin: 20px auto; padding: 0 14px 60px; }
+        .admin-card { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .admin-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 16px; border-bottom: 2px solid #f3f4f6; }
+        .tab-btn { background: #f3f4f6; color: #374151; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; cursor: pointer; white-space: nowrap; }
+        .tab-btn.active { background: #ea580c; color: #fff; }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+        .form-label { display: block; font-size: 0.82rem; font-weight: 700; color: #374151; margin-bottom: 4px; }
+        .form-ctrl { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 12px; font-size: 0.9rem; background: #f9fafb; }
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; text-align: center; }
         .stat-item { background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; }
-        #toast { position: fixed; bottom: 65px; right: 16px; background: #111827; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; display: none; z-index: 2000; }
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f3f4f6; gap: 10px; }
+        #toast { position: fixed; bottom: 65px; right: 16px; background: #111827; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; display: none; z-index: 2000; border-right: 4px solid #16a34a; }
     </style>
 </head>
 <body>
     <div class="top-bar">
         <div class="top-bar-inner">
-            <a href="https://facebook.com" target="_blank" class="fb-top-btn"><i class="fa-brands fa-facebook"></i> تابعنا على فيسبوك</a>
+            <a href="https://facebook.com" id="top-fb-link" target="_blank" class="fb-top-btn"><i class="fa-brands fa-facebook"></i> تابعنا على فيسبوك</a>
             <div class="top-meta">
                 <span>حمص • <span id="today-date"></span></span>
                 <span class="visitor-pill"><i class="fa-solid fa-users"></i> الزوار: <span id="visitor-count">...</span></span>
@@ -122,55 +130,129 @@
 
     <div id="visitor-view">
         <main class="container">
-            <div class="ad-banner">
+            <div class="ad-banner" id="main-ad-banner">
                 <div class="ad-text">
-                    <span class="ad-tag">إعلان ممول</span>
-                    <h3>أعلن عن نشاطك التجاري هنا أمام آلاف الزوار</h3>
-                    <p>مساحات إعلانية مميزة في موقع زاوية الحدث بأسعار منافسة</p>
+                    <span class="ad-tag" id="ad-badge-txt">إعلان ممول</span>
+                    <h3 id="ad-title-txt">أعلن عن نشاطك التجاري هنا أمام آلاف الزوار</h3>
+                    <p id="ad-desc-txt">مساحات إعلانية مميزة في موقع زاوية الحدث بأسعار منافسة</p>
                 </div>
-                <a href="https://wa.me/963900000000" target="_blank" class="ad-cta">تواصل معنا</a>
+                <a href="https://wa.me/963900000000" id="ad-link-btn" target="_blank" class="ad-cta">تواصل معنا</a>
             </div>
             <div class="news-list" id="news-container"></div>
         </main>
         <button class="floating-brief" onclick="openBriefModal()">الأخبار باختصار <span class="play-badge"><i class="fa-solid fa-play"></i></span></button>
     </div>
 
+    <!-- Full Admin & Editors Dashboard (#admin) -->
     <div id="admin-panel">
-        <div class="admin-card" id="login-box" style="max-width:400px; margin:20px auto;">
-            <h3 style="margin-bottom:12px;">دخول إدارة زاوية الحدث</h3>
-            <input type="email" id="adm-email" class="form-ctrl" value="admin@zawiya.com">
-            <input type="password" id="adm-pass" class="form-ctrl" placeholder="كلمة المرور (1234)">
-            <button class="btn-read" style="width:100%; padding:10px;" onclick="loginAdmin()">تسجيل الدخول</button>
+        <div class="admin-card" id="login-box" style="max-width:420px; margin:20px auto;">
+            <h3 style="margin-bottom:14px;"><i class="fa-solid fa-shield-halved" style="color:#ea580c"></i> دخول الإدارة والمحررين</h3>
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" id="adm-email" class="form-ctrl" placeholder="أدخل البريد الإلكتروني">
+            <label class="form-label">كلمة المرور</label>
+            <input type="password" id="adm-pass" class="form-ctrl" placeholder="أدخل كلمة المرور">
+            <button class="btn-read" style="width:100%; padding:10px;" onclick="loginUser()">تسجيل الدخول</button>
             <button class="btn-save" style="width:100%; margin-top:8px;" onclick="exitAdmin()">عودة للموقع</button>
         </div>
 
         <div id="dashboard-box" style="display:none;">
             <div class="admin-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                    <h3>لوحة التحكم</h3>
-                    <button class="btn-save" onclick="exitAdmin()">عرض الموقع</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h3 id="welcome-role-title">لوحة التحكم</h3>
+                        <small id="logged-user-info" style="color:#6b7280;"></small>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn-save" onclick="exitAdmin()">عرض الموقع</button>
+                        <button class="btn-urgent" onclick="logoutUser()">خروج</button>
+                    </div>
                 </div>
-                <div class="stats-row">
+
+                <div class="stats-row" id="admin-stats-bar">
                     <div class="stat-item"><small>إجمالي الزوار</small><h2 id="adm-visitors" style="color:#ea580c;">0</h2></div>
                     <div class="stat-item"><small>عدد الأخبار</small><h2 id="adm-news-count">0</h2></div>
                     <div class="stat-item"><small>المشاهدات</small><h2 id="adm-views">0</h2></div>
                 </div>
-                <h4 style="margin-bottom:8px;">نشر خبر جديد</h4>
-                <input type="hidden" id="edit-id">
-                <input type="text" id="in-title" class="form-ctrl" placeholder="عنوان الخبر">
-                <select id="in-cat" class="form-ctrl">
-                    <option value="عاجل">عاجل</option>
-                    <option value="أسواق وبورصة">أسواق وبورصة</option>
-                    <option value="اقتصاد">اقتصاد</option>
-                    <option value="أخبار عامة">أخبار عامة</option>
-                </select>
-                <input type="url" id="in-img" class="form-ctrl" placeholder="رابط الصورة (اختياري)">
-                <textarea id="in-body" class="form-ctrl" rows="4" placeholder="تفاصيل الخبر..."></textarea>
-                <button class="btn-read" style="padding:10px 20px;" onclick="saveArticle()">نشر / حفظ الخبر</button>
-            </div>
-            <div class="admin-card">
-                <h4 style="margin-bottom:10px;">الأخبار المنشورة</h4>
-                <div id="adm-list"></div>
+
+                <div class="admin-tabs" id="admin-tabs-nav">
+                    <button class="tab-btn active" onclick="switchTab('tab-news', this)"><i class="fa-solid fa-newspaper"></i> الأخبار</button>
+                    <button class="tab-btn manager-only" onclick="switchTab('tab-ads', this)"><i class="fa-solid fa-bullhorn"></i> الإعلانات</button>
+                    <button class="tab-btn manager-only" onclick="switchTab('tab-editors', this)"><i class="fa-solid fa-users-gear"></i> المحررون</button>
+                    <button class="tab-btn manager-only" onclick="switchTab('tab-settings', this)"><i class="fa-solid fa-sliders"></i> إعدادات المدير</button>
+                </div>
+
+                <!-- Tab 1: News -->
+                <div id="tab-news" class="tab-section active">
+                    <h4 style="margin-bottom:10px;" id="news-form-title">نشر خبر جديد</h4>
+                    <input type="hidden" id="edit-id">
+                    <input type="text" id="in-title" class="form-ctrl" placeholder="عنوان الخبر">
+                    <select id="in-cat" class="form-ctrl">
+                        <option value="عاجل">عاجل</option>
+                        <option value="أسواق وبورصة">أسواق وبورصة</option>
+                        <option value="اقتصاد">اقتصاد</option>
+                        <option value="أخبار عامة">أخبار عامة</option>
+                    </select>
+                    <input type="url" id="in-img" class="form-ctrl" placeholder="رابط الصورة (اختياري)">
+                    <textarea id="in-body" class="form-ctrl" rows="4" placeholder="تفاصيل الخبر..."></textarea>
+                    <button class="btn-read" style="padding:10px 20px;" onclick="saveArticle()"><i class="fa-solid fa-paper-plane"></i> نشر / حفظ الخبر</button>
+                    <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
+                    <h4 style="margin-bottom:8px;">الأخبار المنشورة</h4>
+                    <div id="adm-list"></div>
+                </div>
+
+                <!-- Tab 2: Ads Management -->
+                <div id="tab-ads" class="tab-section">
+                    <h4 style="margin-bottom:10px;">إدارة الإعلان الممول الرئيسي</h4>
+                    <label class="form-label">حالة الإعلان</label>
+                    <select id="set-ad-active" class="form-ctrl">
+                        <option value="true">مفعّل (يظهر للزوار)</option>
+                        <option value="false">مخفي مؤقتاً</option>
+                    </select>
+                    <label class="form-label">عنوان الإعلان</label>
+                    <input type="text" id="set-ad-title" class="form-ctrl" placeholder="مثال: أعلن عن نشاطك التجاري هنا">
+                    <label class="form-label">وصف الإعلان</label>
+                    <input type="text" id="set-ad-desc" class="form-ctrl" placeholder="تفاصيل العرض أو الإعلان">
+                    <label class="form-label">نص الزر</label>
+                    <input type="text" id="set-ad-btn" class="form-ctrl" placeholder="مثال: تواصل معنا / اطلب الآن">
+                    <label class="form-label">رابط الإعلان (واتساب أو موقع)</label>
+                    <input type="url" id="set-ad-url" class="form-ctrl" placeholder="https://wa.me/9639...">
+                    <button class="btn-read" onclick="saveSiteSettings()">حفظ ونشر الإعلان</button>
+                </div>
+
+                <!-- Tab 3: Editors Management -->
+                <div id="tab-editors" class="tab-section">
+                    <h4 style="margin-bottom:10px;">إضافة محرر جديد</h4>
+                    <input type="text" id="ed-name" class="form-ctrl" placeholder="اسم المحرر (مثال: أحمد - قسم الاقتصاد)">
+                    <input type="email" id="ed-email" class="form-ctrl" placeholder="البريد الإلكتروني للمحرر">
+                    <input type="text" id="ed-pass" class="form-ctrl" placeholder="كلمة مرور المحرر">
+                    <button class="btn-read" onclick="addEditor()"><i class="fa-solid fa-user-plus"></i> إضافة المحرر</button>
+                    <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
+                    <h4 style="margin-bottom:8px;">قائمة المحررين الحاليين</h4>
+                    <div id="editors-list"></div>
+                </div>
+
+                <!-- Tab 4: Manager & Site Settings -->
+                <div id="tab-settings" class="tab-section">
+                    <h4 style="margin-bottom:10px;">بيانات الدخول الأساسية (المدير العام)</h4>
+                    <label class="form-label">البريد الإلكتروني الأساسي للمدير</label>
+                    <input type="email" id="set-mgr-email" class="form-ctrl">
+                    <label class="form-label">كلمة المرور الأساسية للمدير</label>
+                    <input type="text" id="set-mgr-pass" class="form-ctrl">
+
+                    <h4 style="margin:14px 0 10px;">بيانات التواصل وروابط الموقع</h4>
+                    <label class="form-label">رقم الواتساب (مع رمز الدولة بدون +)</label>
+                    <input type="text" id="set-wa" class="form-ctrl" placeholder="963900000000">
+                    <label class="form-label">رقم الاتصال الهاتفي</label>
+                    <input type="text" id="set-phone" class="form-ctrl" placeholder="0900000000">
+                    <label class="form-label">البريد الرسمي الظاهر في الموقع</label>
+                    <input type="email" id="set-public-email" class="form-ctrl" placeholder="info@zawiyatalhadath.com">
+                    <label class="form-label">رابط صفحة فيسبوك</label>
+                    <input type="url" id="set-fb" class="form-ctrl" placeholder="https://facebook.com/...">
+                    <label class="form-label">رابط Webhook للنشر التلقائي (اختياري)</label>
+                    <input type="url" id="set-webhook" class="form-ctrl" placeholder="https://hook.eu2.make.com/...">
+
+                    <button class="btn-read" style="background:#16a34a;" onclick="saveSiteSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ جميع الإعدادات</button>
+                </div>
             </div>
         </div>
     </div>
@@ -179,11 +261,11 @@
         <div class="footer-inner">
             <h3>تواصل معنا وأعلن عبر زاوية الحدث</h3>
             <div class="contact-pills">
-                <a href="https://wa.me/963900000000" class="c-pill"><i class="fa-brands fa-whatsapp"></i> واتساب مباشر: 963900000000</a>
-                <a href="tel:0900000000" class="c-pill"><i class="fa-solid fa-phone"></i> اتصال هاتفي: 0900000000</a>
-                <a href="mailto:info@zawiyatalhadath.com" class="c-pill"><i class="fa-solid fa-envelope"></i> info@zawiyatalhadath.com</a>
+                <a href="https://wa.me/963900000000" id="ft-wa" class="c-pill"><i class="fa-brands fa-whatsapp"></i> واتساب مباشر: 963900000000</a>
+                <a href="tel:0900000000" id="ft-phone" class="c-pill"><i class="fa-solid fa-phone"></i> اتصال هاتفي: 0900000000</a>
+                <a href="mailto:info@zawiyatalhadath.com" id="ft-email" class="c-pill"><i class="fa-solid fa-envelope"></i> info@zawiyatalhadath.com</a>
             </div>
-            <a href="https://facebook.com" target="_blank" class="fb-footer-btn"><i class="fa-brands fa-facebook"></i> صفحتنا الرسمية على فيسبوك</a>
+            <a href="https://facebook.com" id="ft-fb" target="_blank" class="fb-footer-btn"><i class="fa-brands fa-facebook"></i> صفحتنا الرسمية على فيسبوك</a>
             <div class="copy-txt">جميع الحقوق محفوظة © 2026 زاوية الحدث</div>
         </div>
     </footer>
@@ -198,13 +280,28 @@
         </div>
     </div>
     <div id="toast"></div>
-        <script>
+    <script>
         const DB_URL = "https://news-site-f4efc-default-rtdb.firebaseio.com";
-        let articles = [], activeCat = "الكل", visitors = 0, tapCount = 0, tapTimer = null;
+        let articles = [], editors = [], activeCat = "الكل", visitors = 0, tapCount = 0, tapTimer = null;
+
+        let siteSettings = {
+            mgrEmail: "admin@zawiya.com",
+            mgrPass: "1234",
+            wa: "963900000000",
+            phone: "0900000000",
+            publicEmail: "info@zawiyatalhadath.com",
+            fb: "https://facebook.com",
+            webhook: "",
+            adActive: "true",
+            adTitle: "أعلن عن نشاطك التجاري هنا أمام آلاف الزوار",
+            adDesc: "مساحات إعلانية مميزة في موقع زاوية الحدث بأسعار منافسة",
+            adBtn: "تواصل معنا",
+            adUrl: "https://wa.me/963900000000"
+        };
 
         const defaultArticles = [
-            { id: "1", title: "النفط يحافظ على مكاسبه مع تجدد المخاوف بشأن الإمدادات وخام برنت قرب 95 دولاراً", category: "أسواق وبورصة", body: "حافظت أسعار النفط على مكاسبها التي حققتها خلال الجلسات الأخيرة مدعومة بمخاوف المستثمرين من تراجع المعروض العالمي وتنامي الطلب.", date: "منذ قليل • هيئة التحرير", views: 45 },
-            { id: "2", title: "أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة", category: "اقتصاد", body: "ارتفعت أسعار الذهب في المعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة مستفيدة من تراجع مؤشر الدولار.", date: "منذ قليل • القسم الاقتصادي", views: 38 }
+            { id: "1", title: "النفط يحافظ على مكاسبه مع تجدد المخاوف بشأن الإمدادات وخام برنت قرب 95 دولاراً", category: "أسواق وبورصة", body: "حافظت أسعار النفط على مكاسبها التي حققتها خلال الجلسات الأخيرة مدعومة بمخاوف المستثمرين من تراجع المعروض العالمي وتنامي الطلب.", date: "منذ قليل", author: "هيئة التحرير", views: 45 },
+            { id: "2", title: "أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة", category: "اقتصاد", body: "ارتفعت أسعار الذهب في المعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة مستفيدة من تراجع مؤشر الدولار.", date: "منذ قليل", author: "القسم الاقتصادي", views: 38 }
         ];
 
         function handleLogoTap() {
@@ -224,24 +321,88 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.querySelectorAll(".cat-pill").forEach(btn => {
-                btn.onclick = () => filterByCat(btn.dataset.cat);
-            });
+            document.querySelectorAll(".cat-pill").forEach(btn => btn.onclick = () => filterByCat(btn.dataset.cat));
+
+            const cachedSet = localStorage.getItem("zawiya_settings_v3");
+            if (cachedSet) siteSettings = { ...siteSettings, ...JSON.parse(cachedSet) };
+            applySettingsToUI();
+
+            const cachedArt = localStorage.getItem("zawiya_art_v3");
+            articles = cachedArt ? JSON.parse(cachedArt) : defaultArticles;
+            renderNews();
+
             if (location.hash === "#admin") openAdmin();
             window.onhashchange = () => location.hash === "#admin" ? openAdmin() : exitAdmin(false);
 
-            const cached = localStorage.getItem("zawiya_v2_cache");
-            articles = cached ? JSON.parse(cached) : defaultArticles;
-            renderNews();
-            loadFirebase();
+            syncAllFromFirebase();
             trackVisitors();
         });
 
         async function safeFetch(url, opt = {}) {
             const c = new AbortController();
-            const t = setTimeout(() => c.abort(), 4000);
+            const t = setTimeout(() => c.abort(), 4500);
             try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
             catch (e) { clearTimeout(t); throw e; }
+        }
+
+        async function syncAllFromFirebase() {
+            try {
+                const [artRes, setRes, edRes] = await Promise.all([
+                    safeFetch(`${DB_URL}/articles.json`),
+                    safeFetch(`${DB_URL}/settings.json`),
+                    safeFetch(`${DB_URL}/editors.json`)
+                ]);
+                const artData = await artRes.json();
+                if (artData && typeof artData === "object") {
+                    articles = Object.keys(artData).map(k => ({ id: k, ...artData[k] })).reverse();
+                    localStorage.setItem("zawiya_art_v3", JSON.stringify(articles));
+                    renderNews();
+                }
+                const setData = await setRes.json();
+                if (setData && typeof setData === "object") {
+                    siteSettings = { ...siteSettings, ...setData };
+                    localStorage.setItem("zawiya_settings_v3", JSON.stringify(siteSettings));
+                    applySettingsToUI();
+                }
+                const edData = await edRes.json();
+                editors = (edData && typeof edData === "object") ? Object.keys(edData).map(k => ({ id: k, ...edData[k] })) : [];
+                renderAdminList();
+                renderEditorsList();
+            } catch (e) {}
+        }
+
+        function applySettingsToUI() {
+            document.getElementById("top-fb-link").href = siteSettings.fb;
+            document.getElementById("ft-fb").href = siteSettings.fb;
+            document.getElementById("ft-wa").href = `https://wa.me/${siteSettings.wa}`;
+            document.getElementById("ft-wa").innerHTML = `<i class="fa-brands fa-whatsapp"></i> واتساب مباشر: ${siteSettings.wa}`;
+            document.getElementById("ft-phone").href = `tel:${siteSettings.phone}`;
+            document.getElementById("ft-phone").innerHTML = `<i class="fa-solid fa-phone"></i> اتصال هاتفي: ${siteSettings.phone}`;
+            document.getElementById("ft-email").href = `mailto:${siteSettings.publicEmail}`;
+            document.getElementById("ft-email").innerHTML = `<i class="fa-solid fa-envelope"></i> ${siteSettings.publicEmail}`;
+
+            const adBox = document.getElementById("main-ad-banner");
+            if (siteSettings.adActive === "false") adBox.style.display = "none";
+            else {
+                adBox.style.display = "flex";
+                document.getElementById("ad-title-txt").textContent = siteSettings.adTitle;
+                document.getElementById("ad-desc-txt").textContent = siteSettings.adDesc;
+                document.getElementById("ad-link-btn").textContent = siteSettings.adBtn;
+                document.getElementById("ad-link-btn").href = siteSettings.adUrl;
+            }
+
+            document.getElementById("set-mgr-email").value = siteSettings.mgrEmail;
+            document.getElementById("set-mgr-pass").value = siteSettings.mgrPass;
+            document.getElementById("set-wa").value = siteSettings.wa;
+            document.getElementById("set-phone").value = siteSettings.phone;
+            document.getElementById("set-public-email").value = siteSettings.publicEmail;
+            document.getElementById("set-fb").value = siteSettings.fb;
+            document.getElementById("set-webhook").value = siteSettings.webhook || "";
+            document.getElementById("set-ad-active").value = siteSettings.adActive;
+            document.getElementById("set-ad-title").value = siteSettings.adTitle;
+            document.getElementById("set-ad-desc").value = siteSettings.adDesc;
+            document.getElementById("set-ad-btn").value = siteSettings.adBtn;
+            document.getElementById("set-ad-url").value = siteSettings.adUrl;
         }
 
         async function trackVisitors() {
@@ -255,25 +416,9 @@
                     await safeFetch(`${DB_URL}/visitors.json`, { method: "PUT", body: JSON.stringify(count) });
                 }
                 visitors = count;
-            } catch (e) { visitors = parseInt(localStorage.getItem("v_loc") || "105"); }
+            } catch (e) { visitors = 108; }
             document.getElementById("visitor-count").textContent = visitors;
             document.getElementById("adm-visitors").textContent = visitors;
-        }
-
-        async function loadFirebase() {
-            try {
-                const r = await safeFetch(`${DB_URL}/articles.json`);
-                const data = await r.json();
-                if (data && typeof data === "object") {
-                    const list = Object.keys(data).map(k => ({ id: k, ...data[k] })).reverse();
-                    if (list.length) {
-                        articles = list;
-                        localStorage.setItem("zawiya_v2_cache", JSON.stringify(articles));
-                        renderNews();
-                        renderAdminList();
-                    }
-                }
-            } catch (e) {}
         }
 
         function filterByCat(cat) {
@@ -281,7 +426,6 @@
             document.querySelectorAll(".cat-pill").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
             renderNews();
         }
-
         function resetHome() { filterByCat("الكل"); exitAdmin(); }
         function toggleSearch() {
             const p = document.getElementById("search-panel");
@@ -299,10 +443,10 @@
                     ${a.image ? `<img src="${a.image}" class="card-img" onerror="this.style.display='none'">` : ''}
                     <h2 onclick="openArticle('${a.id}')">${a.title}</h2>
                     <p>${a.body}</p>
-                    <div class="card-meta"><span><i class="fa-regular fa-clock"></i> ${a.date || 'منذ قليل'}</span></div>
+                    <div class="card-meta"><span><i class="fa-regular fa-clock"></i> ${a.date || 'منذ قليل'} • ${a.author || 'هيئة التحرير'}</span></div>
                     <div class="card-actions">
                         <button class="btn-read" onclick="openArticle('${a.id}')">اقرأ المزيد</button>
-                        <button class="btn-save" onclick="toast('تم حفظ الخبر في المفضلة')">حفظ</button>
+                        <button class="btn-save" onclick="toast('تم حفظ الخبر')">حفظ</button>
                         <button class="btn-share" onclick="shareArt('${a.id}')">شارك</button>
                     </div>
                 </article>`).join("");
@@ -318,7 +462,6 @@
             if (a.image) { img.src = a.image; img.style.display = "block"; } else img.style.display = "none";
             document.getElementById("read-modal").classList.add("active");
         }
-
         function openBriefModal() {
             document.getElementById("m-cat").textContent = "الأخبار باختصار";
             document.getElementById("m-title").textContent = "موجز أهم أخبار زاوية الحدث";
@@ -326,32 +469,62 @@
             document.getElementById("m-body").textContent = articles.slice(0, 5).map((a, i) => `${i + 1}. ${a.title}`).join("\n\n");
             document.getElementById("read-modal").classList.add("active");
         }
-
         function closeModal() { document.getElementById("read-modal").classList.remove("active"); }
         function shareArt(id) {
             const a = articles.find(x => x.id === id);
             if (a) window.open(`https://wa.me/?text=${encodeURIComponent(a.title + "\n" + location.href)}`, "_blank");
         }
 
+        function switchTab(tabId, btn) {
+            document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.getElementById(tabId).classList.add("active");
+            btn.classList.add("active");
+        }
+
         function openAdmin() {
             document.getElementById("visitor-view").style.display = "none";
             document.getElementById("admin-panel").style.display = "block";
-            if (sessionStorage.getItem("adm_ok") === "1") {
+            const sessionUser = JSON.parse(sessionStorage.getItem("zawiya_user") || "null");
+            if (sessionUser) {
                 document.getElementById("login-box").style.display = "none";
                 document.getElementById("dashboard-box").style.display = "block";
+                document.getElementById("welcome-role-title").textContent = sessionUser.role === "manager" ? "لوحة تحكم المدير العام" : "لوحة المحرر";
+                document.getElementById("logged-user-info").textContent = `${sessionUser.name} (${sessionUser.email})`;
+                document.querySelectorAll(".manager-only").forEach(el => el.style.display = sessionUser.role === "manager" ? "inline-block" : "none");
                 renderAdminList();
+                renderEditorsList();
+            } else {
+                document.getElementById("login-box").style.display = "block";
+                document.getElementById("dashboard-box").style.display = "none";
             }
         }
+
         function exitAdmin(clr = true) {
             if (clr && location.hash === "#admin") history.pushState("", "", location.pathname);
             document.getElementById("admin-panel").style.display = "none";
             document.getElementById("visitor-view").style.display = "block";
         }
-        function loginAdmin() {
-            if (document.getElementById("adm-email").value === "admin@zawiya.com" && document.getElementById("adm-pass").value === "1234") {
-                sessionStorage.setItem("adm_ok", "1"); openAdmin(); toast("تم الدخول بنجاح");
-            } else toast("كلمة المرور غير صحيحة");
+
+        function loginUser() {
+            const em = document.getElementById("adm-email").value.trim().toLowerCase();
+            const pw = document.getElementById("adm-pass").value.trim();
+            if (em === siteSettings.mgrEmail.toLowerCase() && pw === siteSettings.mgrPass) {
+                sessionStorage.setItem("zawiya_user", JSON.stringify({ role: "manager", name: "المدير العام", email: em }));
+                openAdmin(); toast("أهلاً بك أيها المدير");
+                return;
+            }
+            const ed = editors.find(x => x.email.toLowerCase() === em && x.pass === pw);
+            if (ed) {
+                sessionStorage.setItem("zawiya_user", JSON.stringify({ role: "editor", name: ed.name, email: ed.email }));
+                openAdmin(); toast(`أهلاً بك ${ed.name}`);
+                return;
+            }
+            toast("البريد الإلكتروني أو كلمة المرور غير صحيحة");
         }
+
+        function logoutUser() { sessionStorage.removeItem("zawiya_user"); openAdmin(); toast("تم تسجيل الخروج"); }
+
         async function saveArticle() {
             const id = document.getElementById("edit-id").value;
             const title = document.getElementById("in-title").value.trim();
@@ -359,26 +532,35 @@
             const image = document.getElementById("in-img").value.trim();
             const body = document.getElementById("in-body").value.trim();
             if (!title || !body) return toast("أدخل العنوان والتفاصيل");
-            const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), views: 1 };
+            const user = JSON.parse(sessionStorage.getItem("zawiya_user") || '{"name":"هيئة التحرير"}');
+            const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: user.name, views: 1 };
             try {
                 if (id) await safeFetch(`${DB_URL}/articles/${id}.json`, { method: "PUT", body: JSON.stringify(payload) });
-                else await safeFetch(`${DB_URL}/articles.json`, { method: "POST", body: JSON.stringify(payload) });
+                else {
+                    await safeFetch(`${DB_URL}/articles.json`, { method: "POST", body: JSON.stringify(payload) });
+                    if (siteSettings.webhook) fetch(siteSettings.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
+                }
                 document.getElementById("edit-id").value = ""; document.getElementById("in-title").value = ""; document.getElementById("in-img").value = ""; document.getElementById("in-body").value = "";
-                toast("تم الحفظ بنجاح"); loadFirebase();
+                toast("تم حفظ ونشر الخبر بنجاح"); syncAllFromFirebase();
             } catch (e) { toast("خطأ في الاتصال"); }
         }
+
         function renderAdminList() {
             document.getElementById("adm-news-count").textContent = articles.length;
             document.getElementById("adm-views").textContent = articles.reduce((s, a) => s + (a.views || 0), 0);
             document.getElementById("adm-list").innerHTML = articles.map(a => `
-                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; gap:8px;">
-                    <span style="font-size:0.85rem; font-weight:700;">${a.title}</span>
+                <div class="list-row">
+                    <div>
+                        <strong style="font-size:0.88rem; display:block;">${a.title}</strong>
+                        <small style="color:#6b7280;">${a.category} • بواسطة: ${a.author || 'المدير'}</small>
+                    </div>
                     <div style="display:flex; gap:5px;">
                         <button class="btn-save" onclick="editArt('${a.id}')">تعديل</button>
                         <button class="btn-urgent" onclick="delArt('${a.id}')">حذف</button>
                     </div>
                 </div>`).join("");
         }
+
         function editArt(id) {
             const a = articles.find(x => x.id === id);
             if (!a) return;
@@ -389,13 +571,66 @@
             document.getElementById("in-body").value = a.body;
             window.scrollTo(0, 0);
         }
+
         async function delArt(id) {
-            if (!confirm("حذف الخبر؟")) return;
+            if (!confirm("حذف الخبر نهائياً؟")) return;
             await safeFetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" });
             articles = articles.filter(a => a.id !== id);
             renderAdminList(); renderNews(); toast("تم الحذف");
         }
-        function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2500); }
+
+        async function addEditor() {
+            const name = document.getElementById("ed-name").value.trim();
+            const email = document.getElementById("ed-email").value.trim();
+            const pass = document.getElementById("ed-pass").value.trim();
+            if (!name || !email || !pass) return toast("أكمل جميع بيانات المحرر");
+            try {
+                await safeFetch(`${DB_URL}/editors.json`, { method: "POST", body: JSON.stringify({ name, email, pass }) });
+                document.getElementById("ed-name").value = ""; document.getElementById("ed-email").value = ""; document.getElementById("ed-pass").value = "";
+                toast("تمت إضافة المحرر بنجاح"); syncAllFromFirebase();
+            } catch (e) { toast("تعذر الإضافة"); }
+        }
+
+        function renderEditorsList() {
+            const el = document.getElementById("editors-list");
+            if (!editors.length) { el.innerHTML = "<small style='color:#6b7280;'>لا يوجد محررون مضافون حالياً.</small>"; return; }
+            el.innerHTML = editors.map(ed => `
+                <div class="list-row">
+                    <div><strong>${ed.name}</strong><br><small style="color:#6b7280;">${ed.email} | كلمة المرور: ${ed.pass}</small></div>
+                    <button class="btn-urgent" onclick="delEditor('${ed.id}')">حذف</button>
+                </div>`).join("");
+        }
+
+        async function delEditor(id) {
+            if (!confirm("إزالة هذا المحرر؟")) return;
+            await safeFetch(`${DB_URL}/editors/${id}.json`, { method: "DELETE" });
+            editors = editors.filter(e => e.id !== id);
+            renderEditorsList(); toast("تم حذف المحرر");
+        }
+
+        async function saveSiteSettings() {
+            siteSettings.mgrEmail = document.getElementById("set-mgr-email").value.trim() || "admin@zawiya.com";
+            siteSettings.mgrPass = document.getElementById("set-mgr-pass").value.trim() || "1234";
+            siteSettings.wa = document.getElementById("set-wa").value.trim();
+            siteSettings.phone = document.getElementById("set-phone").value.trim();
+            siteSettings.publicEmail = document.getElementById("set-public-email").value.trim();
+            siteSettings.fb = document.getElementById("set-fb").value.trim();
+            siteSettings.webhook = document.getElementById("set-webhook").value.trim();
+            siteSettings.adActive = document.getElementById("set-ad-active").value;
+            siteSettings.adTitle = document.getElementById("set-ad-title").value.trim();
+            siteSettings.adDesc = document.getElementById("set-ad-desc").value.trim();
+            siteSettings.adBtn = document.getElementById("set-ad-btn").value.trim();
+            siteSettings.adUrl = document.getElementById("set-ad-url").value.trim();
+
+            try {
+                await safeFetch(`${DB_URL}/settings.json`, { method: "PUT", body: JSON.stringify(siteSettings) });
+                localStorage.setItem("zawiya_settings_v3", JSON.stringify(siteSettings));
+                applySettingsToUI();
+                toast("تم حفظ جميع الإعدادات وتطبيقها على الموقع!");
+            } catch (e) { toast("تعذر الحفظ، تحقق من الإنترنت"); }
+        }
+
+        function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2800); }
     </script>
 </body>
 </html>
