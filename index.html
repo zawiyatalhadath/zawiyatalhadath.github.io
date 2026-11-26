@@ -24,15 +24,6 @@
         .btn-urgent { background: #dc2626; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
         .btn-search { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
 
-        /* Animated Live Ticker */
-        .ticker-bar { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 7px 0; font-size: 0.8rem; overflow: hidden; white-space: nowrap; position: relative; }
-        .ticker-track { display: inline-flex; align-items: center; gap: 36px; padding-right: 100%; animation: tickerScroll 24s linear infinite; }
-        .ticker-bar:hover .ticker-track, .ticker-bar:active .ticker-track { animation-play-state: paused; }
-        @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
-        .tick-up { color: #16a34a; font-weight: 800; }
-        .live-dot { display: inline-block; width: 7px; height: 7px; background: #16a34a; border-radius: 50%; margin-left: 5px; animation: pulseLive 1.5s infinite; }
-        @keyframes pulseLive { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
         .cats-bar { background: #ffffff; padding: 10px 14px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; white-space: nowrap; }
         .cats-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 8px; }
         .cat-pill { background: #f3f4f6; color: #374151; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
@@ -113,15 +104,6 @@
             </div>
         </div>
     </header>
-
-    <div class="ticker-bar">
-        <div class="ticker-track">
-            <span><span class="live-dot"></span><strong>بيتكوين (BTC):</strong> <span id="btc-val" class="tick-up">جاري التحديث...</span></span>
-            <span><strong>إيثريوم (ETH):</strong> <span id="eth-val" class="tick-up">جاري التحديث...</span></span>
-            <span><strong>أونصة الذهب (XAU):</strong> <span id="gold-val" class="tick-up">$3,574.20 ▲ 0.45%</span></span>
-            <span><strong>نفط برنت (BRENT):</strong> <span id="oil-val" class="tick-up">$94.96 ▲ 0.62%</span></span>
-        </div>
-    </div>
 
     <nav class="cats-bar">
         <div class="cats-inner" id="cat-buttons">
@@ -355,8 +337,6 @@
 
             syncAllFromFirebase();
             trackVisitors();
-            fetchLivePrices();
-            setInterval(fetchLivePrices, 10000); // تحديث سريع كل 10 ثوانٍ
         });
 
         async function safeFetch(url, opt = {}) {
@@ -366,34 +346,6 @@
             catch (e) { clearTimeout(t); throw e; }
         }
 
-        // Open Global Exchange APIs (Unblocked in Syria: KuCoin + Gold/Oil)
-        async function fetchLivePrices() {
-            try {
-                const [btcRes, ethRes] = await Promise.all([
-                    safeFetch("https://api.kucoin.com/api/v1/market/stats?symbol=BTC-USDT"),
-                    safeFetch("https://api.kucoin.com/api/v1/market/stats?symbol=ETH-USDT")
-                ]);
-                const btcJson = await btcRes.json();
-                const ethJson = await ethRes.json();
-
-                if (btcJson.data && btcJson.data.last) {
-                    const price = parseFloat(btcJson.data.last).toLocaleString('en-US', { maximumFractionDigits: 1 });
-                    const chg = (parseFloat(btcJson.data.changeRate) * 100).toFixed(2);
-                    const el = document.getElementById("btc-val");
-                    el.textContent = `$${price} ${chg >= 0 ? '▲' : '▼'} ${Math.abs(chg)}%`;
-                    el.style.color = chg >= 0 ? "#16a34a" : "#dc2626";
-                }
-                if (ethJson.data && ethJson.data.last) {
-                    const price = parseFloat(ethJson.data.last).toLocaleString('en-US', { maximumFractionDigits: 1 });
-                    const chg = (parseFloat(ethJson.data.changeRate) * 100).toFixed(2);
-                    const el = document.getElementById("eth-val");
-                    el.textContent = `$${price} ${chg >= 0 ? '▲' : '▼'} ${Math.abs(chg)}%`;
-                    el.style.color = chg >= 0 ? "#16a34a" : "#dc2626";
-                }
-            } catch (e) {}
-        }
-
-        // Smart HD Studio Image Compression (High Resolution + Ultra Light Size)
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -405,14 +357,13 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement("canvas");
-                    const MAX_WIDTH = 1080; // Full HD width
+                    const MAX_WIDTH = 1080;
                     let w = img.width, h = img.height;
                     if (w > MAX_WIDTH) { h = Math.round(h * (MAX_WIDTH / w)); w = MAX_WIDTH; }
                     canvas.width = w; canvas.height = h;
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, w, h);
 
-                    // High quality 0.78 JPEG (crisp HD visuals at ~80-110KB)
                     const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
                     document.getElementById("in-img").value = compressedDataUrl;
                     const prev = document.getElementById("img-preview");
