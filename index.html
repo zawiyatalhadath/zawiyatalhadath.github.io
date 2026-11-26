@@ -322,6 +322,62 @@
             border-radius: 8px;
             font-size: 14px;
         }
+
+        /* صندوق رفع الصور في لوحة التحكم */
+        .image-upload-box {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .upload-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .studio-btn {
+            background: var(--blue);
+            color: #fff;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+        }
+        .img-preview-wrap {
+            display: none;
+            position: relative;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .img-preview-wrap img {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+        .remove-img-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(220, 38, 38, 0.9);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .publish-btn {
             background: var(--green);
             color: #fff;
@@ -356,10 +412,21 @@
         .news-card {
             background: var(--card);
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 14px;
+            overflow: hidden;
+            margin-bottom: 16px;
             border: 1px solid var(--border);
             box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .card-img {
+            width: 100%;
+            max-height: 360px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-body {
+            padding: 16px;
         }
         .badge {
             display: inline-block;
@@ -429,7 +496,7 @@
             display: inline-flex;
         }
 
-        /* تذييل الموقع (بيانات التواصل) */
+        /* تذييل الموقع */
         .site-footer {
             background: #111;
             color: #fff;
@@ -502,6 +569,14 @@
             line-height: 1.4;
             margin: 10px 0;
         }
+        .modal-full-img {
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 12px 0;
+            display: none;
+        }
         .summary-box {
             background: #0d0d0d;
             color: #fff;
@@ -564,7 +639,7 @@
 </head>
 <body>
 
-    <!-- الشريط العلوي للزوار (بدون أي زر إدارة) -->
+    <!-- الشريط العلوي للزوار -->
     <div class="top-bar">
         <div>حمص • <span id="current-date"></span></div>
         <a href="#" id="top-fb-link" target="_blank" class="fb-top-link">تابعنا على فيسبوك</a>
@@ -611,10 +686,10 @@
 
     <!-- مربع البحث -->
     <div class="search-box" id="search-box">
-        <input type="text" id="search-input" placeholder="ابحث في عناوين وتفاصيل الأخبار..." onkeyup="renderNews()">
+        <input type="text" id="search-input" placeholder="ابحث في عناوين وتفاصيل  الأخبار..." onkeyup="renderNews()">
     </div>
 
-    <!-- نافذة تسجيل الدخول (تفتح فقط عبر الرابط السري #admin) -->
+    <!-- نافذة تسجيل الدخول -->
     <div class="login-modal" id="login-modal">
         <div class="login-box">
             <h3>🔐 دخول الإدارة والمحررين</h3>
@@ -665,6 +740,24 @@
                 <label>عنوان الخبر:</label>
                 <input type="text" id="news-title" placeholder="اكتب عنوان الخبر الرئيسي هنا...">
             </div>
+
+            <!-- قسم إضافة الصورة (استوديو بجودة عالية + رابط مباشر) -->
+            <div class="form-group">
+                <label>صورة الخبر (اختياري):</label>
+                <div class="image-upload-box">
+                    <div class="upload-options">
+                        <label for="news-img-file" class="studio-btn">🖼️ اختيار من الاستوديو (HD)</label>
+                        <input type="file" id="news-img-file" accept="image/*" style="display:none;" onchange="handleStudioImage(event)">
+                    </div>
+                    <input type="url" id="news-img-url" placeholder="أو الصق رابط صورة مباشر (https://...)" oninput="handleUrlImage(this.value)">
+                    <div id="img-status" style="font-size:12px; color:var(--green); margin-top:5px; font-weight:700;"></div>
+                    <div class="img-preview-wrap" id="img-preview-wrap">
+                        <img id="img-preview" src="" alt="معاينة الصورة">
+                        <button type="button" class="remove-img-btn" onclick="clearArticleImage()">✕ إزالة الصورة</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>الخلاصة (تظهر في الصندوق الأسود داخل الخبر):</label>
                 <textarea id="news-summary" rows="2" placeholder="ملخص سريع لأهم نقاط الخبر..."></textarea>
@@ -696,7 +789,7 @@
 
         <!-- تبويب 3: بيانات التواصل والربط -->
         <div class="tab-content" id="tab-contact">
-            <h4 style="margin-bottom:10px;">📞 تعديل أرقام وروابط الموقع (تظهر للزوار في الأسفل والأعلى)</h4>
+            <h4 style="margin-bottom:10px;">📞 تعديل أرقام وروابط الموقع</h4>
             <div class="form-group">
                 <label>رقم الواتساب (مع رمز الدولة بدون +، مثال: 963944123456):</label>
                 <input type="text" id="set-whatsapp" placeholder="9639...">
@@ -755,7 +848,7 @@
     <!-- قائمة الأخبار -->
     <main class="container" id="news-container"></main>
 
-    <!-- تذييل الموقع (بيانات التواصل المربوطة بلوحة التحكم) -->
+    <!-- تذييل الموقع -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-title">تواصل معنا وأعلن عبر زاوية الحدث</div>
@@ -773,6 +866,8 @@
             <div class="news-meta">
                 <span id="modal-date"></span> • <span id="modal-author"></span>
             </div>
+
+            <img id="modal-img" class="modal-full-img" src="" alt="صورة الخبر">
 
             <div class="summary-box" id="modal-summary-box">
                 <div class="summary-header">
@@ -809,7 +904,7 @@
         let editors = JSON.parse(localStorage.getItem('zawiya_editors')) || [];
         let currentUser = JSON.parse(sessionStorage.getItem('zawiya_session')) || null;
 
-        // بيانات التواصل الافتراضية
+        // بيانات التواصل
         let siteSettings = JSON.parse(localStorage.getItem('zawiya_settings')) || {
             whatsapp: '963900000000',
             phone: '0900000000',
@@ -817,7 +912,7 @@
             facebook: 'https://facebook.com'
         };
 
-        // الإعلانات الافتراضية
+        // الإعلانات
         let ads = JSON.parse(localStorage.getItem('zawiya_ads')) || [
             {
                 id: 101,
@@ -833,6 +928,7 @@
                 id: 1,
                 category: 'أسواق',
                 title: 'النفط يحافظ على مكاسبه مع تجدد المخاوف بشأن الإمدادات وخام برنت قرب 95 دولاراً',
+                image: '',
                 summary: 'حافظت أسعار النفط على مكاسبها وسط ترقب الأسواق لاجتماع تحالف أوبك+ لتحديد مسار الإمدادات، مع تداول خام برنت قرب 95 دولاراً للبرميل.',
                 content: 'حافظت أسعار النفط على مكاسبها التي حققتها خلال الجلسات الأخيرة، مدعومة بمخاوف المستثمرين من تراجع المعروض العالمي.\n\nوتترقب أسواق الطاقة الاجتماع المرتقب لتحالف "أوبك+" لتحديد سياسات الإنتاج للفترة المقبلة، في وقت أظهرت فيه البيانات تراجعاً ملحوظاً في المخزونات الاستراتيجية.',
                 date: 'منشور حديثاً',
@@ -842,6 +938,7 @@
                 id: 2,
                 category: 'اقتصاد',
                 title: 'أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة',
+                image: '',
                 summary: 'سجلت أسعار المعدن الأصفر ارتفاعاً جديداً مدفوعة بزيادة الطلب العالمي على الملاذات الآمنة وتقلبات أسواق العملات.',
                 content: 'ارتفعت أسعار الذهب في التعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة، مستفيدة من تراجع مؤشر الدولار وزيادة إقبال البنوك المركزية والمستثمرين على التحوط.',
                 date: 'منشور حديثاً',
@@ -853,6 +950,77 @@
         let savedIds = JSON.parse(localStorage.getItem('zawiya_saved')) || [];
         let currentFilter = 'الكل';
         let onlySaved = false;
+        let currentArticleImage = '';
+
+        // معالجة الصورة المرفوعة من الاستوديو بجودة عالية (HD 1280px - 90%)
+        function handleStudioImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('img-status');
+            statusEl.innerText = '⏳ جاري تجهيز الصورة بدقة عالية...';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 1280;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const highQualityDataUrl = canvas.toDataURL('image/jpeg', 0.90);
+                    currentArticleImage = highQualityDataUrl;
+                    document.getElementById('news-img-url').value = '';
+                    showImagePreview(highQualityDataUrl);
+                    statusEl.innerText = '✅ تم تجهيز الصورة من الاستوديو بجودة HD';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // معالجة الصورة عبر الرابط المباشر
+        function handleUrlImage(url) {
+            const trimmed = url.trim();
+            const statusEl = document.getElementById('img-status');
+            if (trimmed) {
+                currentArticleImage = trimmed;
+                document.getElementById('news-img-file').value = '';
+                showImagePreview(trimmed);
+                statusEl.innerText = '✅ تم ربط الصورة من الرابط';
+            } else {
+                clearArticleImage();
+            }
+        }
+
+        function showImagePreview(src) {
+            const wrap = document.getElementById('img-preview-wrap');
+            const img = document.getElementById('img-preview');
+            img.src = src;
+            wrap.style.display = 'block';
+        }
+
+        function clearArticleImage() {
+            currentArticleImage = '';
+            document.getElementById('news-img-file').value = '';
+            document.getElementById('news-img-url').value = '';
+            document.getElementById('img-status').innerText = '';
+            document.getElementById('img-preview').src = '';
+            document.getElementById('img-preview-wrap').style.display = 'none';
+        }
 
         // فحص الرابط السري للإدارة (#admin)
         function checkSecretAdminRoute() {
@@ -941,7 +1109,7 @@
                 panel.style.display = 'block';
                 document.getElementById('welcome-user').innerText = `مرحباً: ${currentUser.name} (${currentUser.role === 'admin' ? 'مدير عام' : 'محرر'})`;
 
-                adminTabs.forEach(t => t.style.display = currentUser.role === 'admin' ? 'inline-block' : 'none');
+                adminTabs.forEach(t => t.style.display = currentUser.role === 'admin' ?  'inline-block' : 'none');
 
                 if (currentUser.role === 'admin') {
                     document.getElementById('admin-new-email').value = adminAccount.email;
@@ -1132,7 +1300,7 @@
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="news-card" style="text-align:center;color:#777;">لا توجد مواد مطابقة حالياً.</div>';
+                container.innerHTML = '<div class="news-card" style="padding:20px; text-align:center; color:#777;">لا توجد مواد مطابقة حالياً.</div>';
                 return;
             }
 
@@ -1140,22 +1308,26 @@
                 const isSaved = savedIds.includes(art.id);
                 const excerpt = art.content.length > 120 ? art.content.substring(0, 120) + '...' : art.content;
                 const badgeClass = art.category === 'عاجل' ? 'badge urgent' : 'badge';
+                const imgHtml = art.image ? `<img src="${art.image}" class="card-img" alt="${art.title}" onclick="openArticle(${art.id})" onerror="this.style.display='none'">` : '';
 
                 const card = document.createElement('article');
                 card.className = 'news-card';
                 card.innerHTML = `
-                    <span class="${badgeClass}">${art.category}</span>
-                    <h2 class="news-title" onclick="openArticle(${art.id})">${art.title}</h2>
-                    <p class="news-excerpt">${excerpt}</p>
-                    <div class="news-meta">🕒 ${art.date} • ✍️ ${art.author || 'زاوية الحدث'}</div>
-                    <div class="card-actions">
-                        <button class="btn btn-read" onclick="openArticle(${art.id})">📖 اقرأ المزيد</button>
-                        <button class="btn btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${art.id})">
-                            ${isSaved ? '★ محفوظ' : '☆ حفظ'}
-                        </button>
-                        <button class="btn btn-share" onclick="shareArticle(${art.id})">📤 شارك</button>
-                        <button class="btn btn-edit" onclick="editArticle(${art.id})">✏️ تعديل</button>
-                        <button class="btn btn-delete" onclick="deleteArticle(${art.id})">🗑️ حذف</button>
+                    ${imgHtml}
+                    <div class="card-body">
+                        <span class="${badgeClass}">${art.category}</span>
+                        <h2 class="news-title" onclick="openArticle(${art.id})">${art.title}</h2>
+                        <p class="news-excerpt">${excerpt}</p>
+                        <div class="news-meta">🕒 ${art.date} • ✍️ ${art.author || 'زاوية الحدث'}</div>
+                        <div class="card-actions">
+                            <button class="btn btn-read" onclick="openArticle(${art.id})">📖 اقرأ المزيد</button>
+                            <button class="btn btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(${art.id})">
+                                ${isSaved ? '★ محفوظ' : '☆ حفظ'}
+                            </button>
+                            <button class="btn btn-share" onclick="shareArticle(${art.id})">📤 شارك</button>
+                            <button class="btn btn-edit" onclick="editArticle(${art.id})">✏️ تعديل</button>
+                            <button class="btn btn-delete" onclick="deleteArticle(${art.id})">🗑️ حذف</button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1172,6 +1344,15 @@
             document.getElementById('modal-title').innerText = art.title;
             document.getElementById('modal-date').innerText = 'نُشر: ' + art.date;
             document.getElementById('modal-author').innerText = 'بقلم: ' + (art.author || 'زاوية الحدث');
+
+            const modalImg = document.getElementById('modal-img');
+            if (art.image && art.image.trim() !== '') {
+                modalImg.src = art.image;
+                modalImg.style.display = 'block';
+            } else {
+                modalImg.style.display = 'none';
+                modalImg.src = '';
+            }
             
             if (art.summary && art.summary.trim() !== '') {
                 document.getElementById('modal-summary-box').style.display = 'block';
@@ -1254,32 +1435,38 @@
                 return;
             }
 
-            if (editId) {
-                const index = articles.findIndex(a => a.id == editId);
-                if (index !== -1) {
-                    articles[index] = { ...articles[index], category, title, summary, content };
+            try {
+                if (editId) {
+                    const index = articles.findIndex(a => a.id == editId);
+                    if (index !== -1) {
+                        articles[index] = { ...articles[index], category, title, image: currentArticleImage, summary, content };
+                    }
+                    document.getElementById('edit-id').value = '';
+                    document.getElementById('save-art-btn').innerText = 'نشر وحفظ المادة الآن';
+                } else {
+                    const newArt = {
+                        id: Date.now(),
+                        category,
+                        title,
+                        image: currentArticleImage,
+                        summary,
+                        content,
+                        date: new Date().toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit' }),
+                        author: currentUser ? currentUser.name : 'زاوية الحدث'
+                    };
+                    articles.unshift(newArt);
                 }
-                document.getElementById('edit-id').value = '';
-                document.getElementById('save-art-btn').innerText = 'نشر وحفظ المادة الآن';
-            } else {
-                const newArt = {
-                    id: Date.now(),
-                    category,
-                    title,
-                    summary,
-                    content,
-                    date: new Date().toLocaleTimeString('ar-SY', { hour: '2-digit', minute: '2-digit' }),
-                    author: currentUser ? currentUser.name : 'زاوية الحدث'
-                };
-                articles.unshift(newArt);
-            }
 
-            localStorage.setItem('zawiya_articles', JSON.stringify(articles));
-            document.getElementById('news-title').value = '';
-            document.getElementById('news-summary').value = '';
-            document.getElementById('news-content').value = '';
-            renderNews();
-            alert('تم الحفظ والنشر بنجاح!');
+                localStorage.setItem('zawiya_articles', JSON.stringify(articles));
+                document.getElementById('news-title').value = '';
+                document.getElementById('news-summary').value = '';
+                document.getElementById('news-content').value = '';
+                clearArticleImage();
+                renderNews();
+                alert('تم الحفظ والنشر بنجاح!');
+            } catch (err) {
+                alert('تنبيه: مساحة التخزين في المتصفح امتلأت بسبب كثرة الصور المرفوعة من الاستوديو. احذف بعض الأخبار القديمة أو استخدم روابط الصور.');
+            }
         }
 
         function editArticle(id) {
@@ -1291,6 +1478,17 @@
             document.getElementById('news-title').value = art.title;
             document.getElementById('news-summary').value = art.summary || '';
             document.getElementById('news-content').value = art.content;
+
+            if (art.image) {
+                currentArticleImage = art.image;
+                if (art.image.startsWith('http')) {
+                    document.getElementById('news-img-url').value = art.image;
+                }
+                showImagePreview(art.image);
+            } else {
+                clearArticleImage();
+            }
+
             document.getElementById('save-art-btn').innerText = 'حفظ التعديلات';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
