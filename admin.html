@@ -4,306 +4,367 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم الشاملة — زاوية الحدث</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0d2b6b; --success: #009944; --bg: #f4f6f9; --border: #dce1e7; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #222; }
-        .header { background: var(--primary); color: #fff; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .header h1 { margin: 0; font-size: 18px; }
-        .btn-view { background: #1a4bb8; color: #fff; text-decoration: none; padding: 6px 12px; border-radius: 5px; font-size: 13px; }
-        .card { background: #fff; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card h2 { margin-top: 0; font-size: 16px; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .col { flex: 1; }
-        label { display: block; font-size: 13px; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        .btn-primary { background: var(--primary); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
-        .btn-success { background: var(--success); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .news-item { border-bottom: 1px solid var(--border); padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .btn-del { background: #dc3545; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        #statusMsg { padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; font-weight: bold; text-align: center; }
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e3a8a;
+            --accent: #d32f2f;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 15px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .top-bar { background: var(--primary); color: #fff; padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .top-bar h1 { font-size: 1.25rem; font-weight: 800; }
+        .btn { padding: 10px 16px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; text-decoration: none; transition: 0.2s; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-primary { background: var(--secondary); color: #fff; }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { background: #e2e8f0; border: none; padding: 10px 18px; font-weight: 700; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+        .tab-btn.active { background: var(--primary); color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .card h2 { font-size: 1.15rem; margin-bottom: 18px; color: var(--primary); border-right: 4px solid var(--accent); padding-right: 10px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.9rem; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="url"], select, textarea { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #f8fafc; }
+        input:focus, textarea:focus { outline: none; border-color: var(--secondary); background: #fff; }
+        .ad-row { border: 1px solid var(--border); padding: 16px; border-radius: 10px; margin-bottom: 15px; background: #f8fafc; }
+        .ad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .news-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap; }
+        .news-info { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 220px; }
+        .news-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; background: #e2e8f0; flex-shrink: 0; }
+        #notification { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; color: white; font-weight: 700; display: none; z-index: 3000; box-shadow: 0 8px 15px rgba(0,0,0,0.2); text-align: center; }
+        #loginModal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.92); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .login-card { background: #fff; padding: 30px; border-radius: 16px; width: 100%; max-width: 380px; }
+        .login-card h2 { text-align: center; border: none; margin-bottom: 20px; padding: 0; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>لوحة التحكم الشاملة — زاوية الحدث</h1>
-    <a href="index.html" target="_blank" class="btn-view">معاينة الموقع ↗</a>
-</div>
+    <div id="notification"></div>
 
-<div id="statusMsg"></div>
-
-<div class="card">
-    <h2>الربط مع GitHub</h2>
-    <div class="row">
-        <div class="col">
-            <label>اسم المستخدم</label>
-            <input type="text" id="ghUser" value="zawiyatalhadath">
-        </div>
-        <div class="col">
-            <label>المستودع</label>
-            <input type="text" id="ghRepo" value="zawiyatalhadath-github-io">
-        </div>
-    </div>
-    <div style="margin-bottom: 10px;">
-        <label>رمز الوصول (Token)</label>
-        <input type="password" id="ghToken" placeholder="الصق رمز الوصول (ghp_...) هنا">
-    </div>
-    <button class="btn-primary" onclick="saveAndLoad()">حفظ الاتصال وتحميل البيانات</button>
-</div>
-
-<div class="card">
-    <h2>نشر خبر جديد</h2>
-    <div style="margin-bottom: 10px;">
-        <label>عنوان الخبر</label>
-        <input type="text" id="newsTitle" placeholder="اكتب عنوان الخبر هنا...">
-    </div>
-    <div class="row">
-        <div class="col">
-            <label>التصنيف</label>
-            <select id="newsCategory">
-                <option value="عاجل">عاجل</option>
-                <option value="أخبار محلية">أخبار محلية</option>
-                <option value="أخبار دولية">أخبار دولية</option>
-                <option value="اقتصاد">اقتصاد</option>
-                <option value="رياضة">رياضة</option>
-            </select>
-        </div>
-        <div class="col">
-            <label>رابط صورة (اختياري)</label>
-            <input type="url" id="newsImage" placeholder="https://...">
+    <div id="loginModal">
+        <div class="login-card">
+            <h2>دخول لوحة التحكم</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>البريد الإلكتروني أو اسم المستخدم</label>
+                    <input type="text" id="loginEmail" required placeholder="أدخل البريد الإلكتروني">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">دخول</button>
+            </form>
         </div>
     </div>
-    <div style="margin-bottom: 10px;">
-        <label>أو اختر صورة من الاستوديو:</label>
-        <input type="file" id="newsFile" accept="image/*">
+
+    <div class="container" id="mainApp" style="display:none;">
+        <div class="top-bar">
+            <div>
+                <h1>لوحة التحكم — زاوية الحدث</h1>
+                <p id="welcomeUser" style="font-size: 0.8rem; opacity: 0.85;"></p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <a href="index.html" target="_blank" class="btn" style="background: rgba(255,255,255,0.2); color: #fff;">معاينة الموقع ↗</a>
+                <button class="btn btn-danger" onclick="logout()">خروج</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'news')">1. إدارة الأخبار</button>
+            <button class="tab-btn" onclick="switchTab(event, 'ads')">2. إدارة الإعلانات</button>
+            <button class="tab-btn" onclick="switchTab(event, 'settings')">3. إعدادات الموقع</button>
+        </div>
+
+        <!-- قسم الأخبار -->
+        <div id="tab-news" class="tab-content active">
+            <div class="card">
+                <h2>نشر / تعديل خبر</h2>
+                <form id="newsForm" onsubmit="saveNews(event)">
+                    <input type="hidden" id="editIndex" value="">
+                    <div class="form-group">
+                        <label>عنوان الخبر</label>
+                        <input type="text" id="newsTitle" required placeholder="اكتب عنوان الخبر هنا...">
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>التصنيف</label>
+                            <select id="newsCategory">
+                                <option value="عاجل">عاجل</option>
+                                <option value="أخبار محلية">أخبار محلية</option>
+                                <option value="أخبار دولية">أخبار دولية</option>
+                                <option value="اقتصاد">اقتصاد</option>
+                                <option value="رياضة">رياضة</option>
+                                <option value="منوعات">منوعات</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>صورة الخبر (عالية الدقة من الاستوديو)</label>
+                            <input type="file" id="newsImageInput" accept="image/*" onchange="processHighResImage(this)">
+                            <input type="hidden" id="newsImageBase64">
+                        </div>
+                    </div>
+                    <div id="imagePreviewContainer" style="margin-bottom: 15px; display: none;">
+                        <img id="imagePreview" src="" style="max-height: 180px; border-radius: 8px; display: block; margin-bottom: 8px;">
+                        <button type="button" class="btn btn-danger" style="padding: 5px 12px; font-size: 0.8rem;" onclick="clearImage()">إزالة الصورة</button>
+                    </div>
+                    <div class="form-group">
+                        <label>تفاصيل الخبر</label>
+                        <textarea id="newsContent" rows="5" required placeholder="اكتب تفاصيل الخبر هنا..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; font-size: 1rem;">حفظ ونشر الخبر</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>الأخبار المنشورة (<span id="newsCount">0</span>)</h2>
+                <div id="newsList"></div>
+            </div>
+        </div>
+
+        <!-- قسم الإعلانات -->
+        <div id="tab-ads" class="tab-content">
+            <div class="card">
+                <h2>التحكم الكامل بالإعلانات</h2>
+                <form id="adsForm" onsubmit="saveAds(event)">
+                    <div id="adsContainer"></div>
+                    <button type="button" class="btn btn-primary" onclick="addAdField()" style="margin-bottom: 15px; width: 100%;">+ إضافة إعلان جديد</button>
+                    <button type="submit" class="btn btn-success" style="width: 100%; font-size: 1rem;">حفظ وتحديث الإعلانات</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- قسم الإعدادات -->
+        <div id="tab-settings" class="tab-content">
+            <div class="card">
+                <h2>إعدادات الموقع والتواصل</h2>
+                <form id="settingsForm" onsubmit="saveSettings(event)">
+                    <div class="form-group">
+                        <label>اسم الموقع</label>
+                        <input type="text" id="siteName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف الموقع</label>
+                        <textarea id="siteDesc" rows="3" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>رقم الهاتف</label>
+                            <input type="text" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الواتساب (بدون +)</label>
+                            <input type="text" id="whatsapp" required>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>البريد الإلكتروني</label>
+                            <input type="email" id="adminEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label>رابط فيسبوك</label>
+                            <input type="url" id="facebookLink" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; font-size: 1rem;">حفظ الإعدادات</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div style="margin-bottom: 10px;">
-        <label>نص الخبر</label>
-        <textarea id="newsBody" rows="4" placeholder="اكتب تفاصيل الخبر هنا..."></textarea>
-    </div>
-    <button class="btn-success" id="publishBtn" onclick="publishNews()">نشر الخبر الآن + إرسال لفيسبوك</button>
-</div>
 
-<div class="card">
-    <h2>الأخبار المنشورة (<span id="newsCount">0</span>)</h2>
-    <div id="newsList">لا توجد أخبار</div>
-</div>
+    <script>
+        const defaultSettings = {
+            siteName: "زاوية الحدث",
+            siteDesc: "منصة إخبارية شاملة تنقل لكم الخبر بدقة وموضوعية على مدار الساعة.",
+            phone: "0953445723",
+            whatsapp: "963953445723",
+            adminEmail: "Easyxx1111999@gmail.com",
+            facebookLink: "https://facebook.com"
+        };
 
-<script>
-    let currentNews = [];
-    let fileSha = "";
+        const defaultAds = [
+            { active: true, tag: "شبكة HAYA.NET", title: "إنترنت فائق السرعة واستقرار على مدار الساعة", desc: "باقات شهرية وتجارية مميزة — تغطية قوية ودعم فني متواصل.", btnText: "اشترك الآن", whatsappMsg: "مرحباً، أود الاستفسار عن اشتراك الإنترنت" }
+        ];
 
-    function showStatus(msg, isError = false) {
-        const el = document.getElementById('statusMsg');
-        el.style.display = 'block';
-        el.style.background = isError ? '#f8d7da' : '#d4edda';
-        el.style.color = isError ? '#721c24' : '#155724';
-        el.innerText = msg;
-    }
+        let currentUser = null;
+        let newsList = JSON.parse(localStorage.getItem('admin_news') || '[]');
+        let adsList = JSON.parse(localStorage.getItem('admin_ads') || JSON.stringify(defaultAds));
+        let settings = JSON.parse(localStorage.getItem('admin_settings') || JSON.stringify(defaultSettings));
 
-    window.onload = () => {
-        if (localStorage.getItem('ghUser')) document.getElementById('ghUser').value = localStorage.getItem('ghUser');
-        if (localStorage.getItem('ghRepo')) document.getElementById('ghRepo').value = localStorage.getItem('ghRepo');
-        if (localStorage.getItem('ghToken')) {
-            document.getElementById('ghToken').value = localStorage.getItem('ghToken');
-            loadNews();
+        window.onload = () => {
+            const storedUser = localStorage.getItem('admin_user');
+            if (storedUser) {
+                currentUser = storedUser;
+                initApp();
+            }
+        };
+
+        function showNotification(msg, isError = false) {
+            const note = document.getElementById('notification');
+            note.textContent = msg;
+            note.style.display = 'block';
+            note.style.background = isError ? '#dc2626' : '#16a34a';
+            setTimeout(() => { note.style.display = 'none'; }, 3000);
         }
-    };
 
-    function saveAndLoad() {
-        const user = document.getElementById('ghUser').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        const token = document.getElementById('ghToken').value.trim();
-
-        if (!user || !repo || !token) {
-            showStatus('يرجى تعبئة اسم المستخدم والمستودع ورمز الوصول (Token).', true);
-            return;
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            currentUser = email;
+            localStorage.setItem('admin_user', email);
+            document.getElementById('loginModal').style.display = 'none';
+            showNotification('تم تسجيل الدخول بنجاح');
+            initApp();
         }
 
-        localStorage.setItem('ghUser', user);
-        localStorage.setItem('ghRepo', repo);
-        localStorage.setItem('ghToken', token);
-        showStatus('جاري الاتصال بـ GitHub وجلب البيانات...');
-        loadNews();
-    }
+        function logout() {
+            localStorage.removeItem('admin_user');
+            currentUser = null;
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'flex';
+        }
 
-    async function loadNews() {
-        const user = document.getElementById('ghUser').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        const token = document.getElementById('ghToken').value.trim();
+        function initApp() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('welcomeUser').textContent = `المحرر: ${currentUser}`;
+            
+            document.getElementById('siteName').value = settings.siteName;
+            document.getElementById('siteDesc').value = settings.siteDesc;
+            document.getElementById('phone').value = settings.phone;
+            document.getElementById('whatsapp').value = settings.whatsapp;
+            document.getElementById('adminEmail').value = settings.adminEmail;
+            document.getElementById('facebookLink').value = settings.facebookLink;
 
-        try {
-            const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/news.json?ref=main`, {
-                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-            });
+            renderNewsList();
+            renderAdsForm();
+        }
 
-            if (res.status === 404) {
-                currentNews = [];
-                fileSha = "";
-                renderNews();
-                showStatus('تم الاتصال بنجاح! ملف الأخبار فارغ وجاهز للنشر.');
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // معالجة الصور عالية الدقة
+        function processHighResImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1600;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                        document.getElementById('imagePreview').src = dataUrl;
+                        document.getElementById('imagePreviewContainer').style.display = 'block';
+                        document.getElementById('newsImageBase64').value = dataUrl;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImage() {
+            document.getElementById('newsImageInput').value = '';
+            document.getElementById('newsImageBase64').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+        }
+
+        function saveNews(e) {
+            e.preventDefault();
+            const index = document.getElementById('editIndex').value;
+            const title = document.getElementById('newsTitle').value;
+            const category = document.getElementById('newsCategory').value;
+            const content = document.getElementById('newsContent').value;
+            const image = document.getElementById('newsImageBase64').value;
+
+            const newsData = {
+                id: index === "" ? Date.now() : newsList[index].id,
+                title,
+                category,
+                content,
+                image: image || (index !== "" ? newsList[index].image : ""),
+                date: new Date().toLocaleDateString('ar-SY', { year: 'numeric', month: 'long', day: 'numeric' })
+            };
+
+            if (index === "") {
+                newsList.unshift(newsData);
+            } else {
+                newsList[index] = newsData;
+                document.getElementById('editIndex').value = "";
+            }
+
+            try {
+                localStorage.setItem('admin_news', JSON.stringify(newsList));
+                renderNewsList();
+                document.getElementById('newsForm').reset();
+                clearImage();
+                showNotification('تم نشر الخبر وحفظه بنجاح!');
+            } catch (err) {
+                showNotification('مساحة التخزين ممتلئة، احذف بعض الأخبار القديمة.', true);
+            }
+        }
+
+        function renderNewsList() {
+            const container = document.getElementById('newsList');
+            document.getElementById('newsCount').textContent = newsList.length;
+
+            if (newsList.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding: 15px; color: var(--text-muted);">لا توجد أخبار منشورة حالياً.</p>';
                 return;
             }
 
-            if (!res.ok) {
-                const errData = await res.json();
-                throw new Error(errData.message || 'فشل الاتصال');
-            }
-
-            const data = await res.json();
-            fileSha = data.sha;
-            const decoded = decodeURIComponent(escape(atob(data.content)));
-            currentNews = JSON.parse(decoded);
-            renderNews();
-            showStatus('تم الاتصال وتحميل الأخبار بنجاح!');
-        } catch (err) {
-            showStatus('خطأ في الاتصال: ' + err.message, true);
-        }
-    }
-
-    function renderNews() {
-        const list = document.getElementById('newsList');
-        document.getElementById('newsCount').innerText = currentNews.length;
-        if (currentNews.length === 0) {
-            list.innerHTML = 'لا توجد أخبار';
-            return;
-        }
-        list.innerHTML = currentNews.map((item, idx) => `
-            <div class="news-item">
-                <div>
-                    <strong>[${item.category}] ${item.title}</strong><br>
-                    <small style="color:#666">${item.date}</small>
+            container.innerHTML = newsList.map((item, idx) => `
+                <div class="news-item">
+                    <div class="news-info">
+                        ${item.image ? `<img src="${item.image}" class="news-thumb">` : `<div class="news-thumb" style="display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:#64748b;">بدون صورة</div>`}
+                        <div>
+                            <span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">${item.category}</span>
+                            <h3 style="font-size: 1rem; margin: 4px 0;">${item.title}</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">${item.date}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="padding: 6px 12px;" onclick="editNews(${idx})">تعديل</button>
+                        <button class="btn btn-danger" style="padding: 6px 12px;" onclick="deleteNews(${idx})">حذف</button>
+                    </div>
                 </div>
-                <button class="btn-del" onclick="deleteNews(${idx})">حذف</button>
-            </div>
-        `).join('');
-    }
-
-    async function uploadImageToGitHub(file, user, repo, token) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const base64Content = reader.result.split(',')[1];
-                const fileName = `images/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-                try {
-                    const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${fileName}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: 'Upload news image',
-                            content: base64Content,
-                            branch: 'main'
-                        })
-                    });
-                    if (!res.ok) throw new Error('فشل رفع الصورة');
-                    resolve(`https://raw.githubusercontent.com/${user}/${repo}/main/${fileName}`);
-                } catch (e) {
-                    reject(e);
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    async function publishNews() {
-        const user = document.getElementById('ghUser').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        const token = document.getElementById('ghToken').value.trim();
-        const title = document.getElementById('newsTitle').value.trim();
-        const category = document.getElementById('newsCategory').value;
-        const body = document.getElementById('newsBody').value.trim();
-        let imageUrl = document.getElementById('newsImage').value.trim();
-        const fileInput = document.getElementById('newsFile');
-
-        if (!title || !body) {
-            showStatus('يرجى إدخال عنوان الخبر ونص الخبر.', true);
-            return;
+            `).join('');
         }
 
-        const btn = document.getElementById('publishBtn');
-        btn.disabled = true;
-        btn.innerText = 'جاري النشر...';
-
-        try {
-            if (fileInput.files.length > 0) {
-                showStatus('جاري رفع الصورة من الاستوديو...');
-                imageUrl = await uploadImageToGitHub(fileInput.files[0], user, repo, token);
-            }
-
-            const newPost = {
-                id: Date.now(),
-                title,
-                category,
-                body,
-                image: imageUrl || '',
-                date: new Date().toLocaleDateString('ar-SY')
-            };
-
-            currentNews.unshift(newPost);
-            await saveNewsToGitHub(user, repo, token);
-
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsBody').value = '';
-            document.getElementById('newsImage').value = '';
-            fileInput.value = '';
-            showStatus('تم نشر الخبر بنجاح على الموقع!');
-        } catch (err) {
-            showStatus('فشل النشر: ' + err.message, true);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = 'نشر الخبر الآن + إرسال لفيسبوك';
-        }
-    }
-
-    async function deleteNews(index) {
-        if (!confirm('هل أنت متأكد من حذف هذا الخبر؟')) return;
-        const user = document.getElementById('ghUser').value.trim();
-        const repo = document.getElementById('ghRepo').value.trim();
-        const token = document.getElementById('ghToken').value.trim();
-
-        currentNews.splice(index, 1);
-        try {
-            await saveNewsToGitHub(user, repo, token);
-            showStatus('تم حذف الخبر وتحديث الموقع.');
-        } catch (err) {
-            showStatus('خطأ أثناء الحذف: ' + err.message, true);
-        }
-    }
-
-    async function saveNewsToGitHub(user, repo, token) {
-        const jsonStr = JSON.stringify(currentNews, null, 2);
-        const encodedContent = btoa(unescape(encodeURIComponent(jsonStr)));
-
-        const payload = {
-            message: 'Update news.json via Admin Panel',
-            content: encodedContent,
-            branch: 'main'
-        };
-        if (fileSha) payload.sha = fileSha;
-
-        const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/news.json`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-            const errData = await res.json();
-            throw new Error(errData.message || 'خطأ في الحفظ على GitHub');
-        }
-
-        const resData = await res.json();
-        fileSha = resData.content.sha;
-        renderNews();
-    }
-</script>
-
-</body>
-  </html>
-  
+        function editNews(idx) {
+            const item = newsList[idx];
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('newsTitle').val
