@@ -9,50 +9,36 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #f4f5f7; color: #111827; line-height: 1.6; overflow-x: hidden; }
-        
-        /* Top Dark Bar */
         .top-bar { background: #14171a; color: #d1d5db; padding: 6px 14px; font-size: 0.78rem; }
         .top-bar-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
         .fb-top-btn { background: #1877f2; color: #fff; text-decoration: none; padding: 3px 10px; border-radius: 5px; font-weight: 700; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; }
         .top-meta { display: flex; align-items: center; gap: 10px; }
         .visitor-pill { background: rgba(255,255,255,0.1); color: #fbbf24; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; }
-
-        /* Main Header */
         header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 12px 14px; position: sticky; top: 0; z-index: 900; }
         .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .brand-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .brand-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .menu-icon { font-size: 1.3rem; color: #111827; background: none; border: none; cursor: pointer; }
         .brand-title h1 { font-size: 1.35rem; font-weight: 900; color: #111827; line-height: 1.1; }
         .brand-title span { font-size: 0.72rem; color: #ea580c; font-weight: 700; display: block; }
         .header-btns { display: flex; align-items: center; gap: 8px; }
         .btn-urgent { background: #dc2626; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
         .btn-search { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
-
-        /* Market Ticker */
         .ticker-bar { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 6px 14px; font-size: 0.78rem; overflow-x: auto; white-space: nowrap; }
         .ticker-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 18px; }
         .tick-up { color: #16a34a; font-weight: 700; }
-
-        /* Category Pills */
         .cats-bar { background: #ffffff; padding: 10px 14px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; white-space: nowrap; }
         .cats-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 8px; }
         .cat-pill { background: #f3f4f6; color: #374151; border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .cat-pill.active { background: #111827; color: #ffffff; }
-
-        /* Search Bar */
         .search-panel { display: none; max-width: 1100px; margin: 10px auto 0; padding: 0 14px; }
         .search-panel.open { display: block; }
         .search-panel input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 0.9rem; }
-
-        /* Container & Sponsored Banner */
         .container { max-width: 900px; margin: 16px auto 40px; padding: 0 14px; }
         .ad-banner { background: linear-gradient(135deg, #1f2937, #111827); color: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
         .ad-tag { background: #ea580c; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
         .ad-text h3 { font-size: 0.98rem; font-weight: 800; }
         .ad-text p { font-size: 0.78rem; color: #9ca3af; }
         .ad-cta { background: #16a34a; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-weight: 800; font-size: 0.82rem; white-space: nowrap; }
-
-        /* News Cards (Exact Style) */
         .news-list { display: flex; flex-direction: column; gap: 16px; }
         .news-card { background: #ffffff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
         .card-cat { background: #f3f4f6; color: #4b5563; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; }
@@ -64,12 +50,8 @@
         .btn-read { background: #111827; color: #fff; border: none; padding: 6px 14px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
         .btn-save { background: #f3f4f6; color: #374151; border: none; padding: 6px 12px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
         .btn-share { background: #ea580c; color: #fff; border: none; padding: 6px 12px; border-radius: 7px; font-size: 0.8rem; font-weight: 700; cursor: pointer; margin-right: auto; }
-
-        /* Floating Summary Button */
         .floating-brief { position: fixed; bottom: 16px; left: 16px; background: #111827; color: #fff; border: none; padding: 9px 16px; border-radius: 25px; font-size: 0.82rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.25); cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 800; }
         .play-badge { background: #ea580c; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.65rem; }
-
-        /* Footer */
         footer { background: #14171a; color: #fff; padding: 28px 14px 70px; text-align: center; margin-top: 30px; }
         .footer-inner { max-width: 800px; margin: 0 auto; }
         .footer-inner h3 { color: #ea580c; font-size: 1.05rem; margin-bottom: 14px; }
@@ -77,8 +59,6 @@
         .c-pill { background: #1f2429; color: #e5e7eb; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; border: 1px solid #2d333b; }
         .fb-footer-btn { background: #1877f2; color: #fff; text-decoration: none; padding: 9px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; display: inline-block; margin-bottom: 16px; }
         .copy-txt { font-size: 0.75rem; color: #6b7280; }
-
-        /* Modals & Hidden Admin Panel */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; padding: 14px; }
         .modal.active { display: block; }
         .modal-box { background: #fff; max-width: 700px; margin: 20px auto; border-radius: 14px; padding: 20px; position: relative; }
@@ -104,7 +84,7 @@
 
     <header>
         <div class="header-inner">
-            <div class="brand-wrap" onclick="resetHome()">
+            <div class="brand-wrap" id="secret-logo" onclick="handleLogoTap()">
                 <button class="menu-icon"><i class="fa-solid fa-bars"></i></button>
                 <div class="brand-title">
                     <h1>زاوية الحدث</h1>
@@ -155,7 +135,6 @@
         <button class="floating-brief" onclick="openBriefModal()">الأخبار باختصار <span class="play-badge"><i class="fa-solid fa-play"></i></span></button>
     </div>
 
-    <!-- Secret Admin Panel (#admin only) -->
     <div id="admin-panel">
         <div class="admin-card" id="login-box" style="max-width:400px; margin:20px auto;">
             <h3 style="margin-bottom:12px;">دخول إدارة زاوية الحدث</h3>
@@ -176,7 +155,7 @@
                     <div class="stat-item"><small>عدد الأخبار</small><h2 id="adm-news-count">0</h2></div>
                     <div class="stat-item"><small>المشاهدات</small><h2 id="adm-views">0</h2></div>
                 </div>
-                <h4 style="margin-bottom:8px;" id="form-heading">نشر خبر جديد</h4>
+                <h4 style="margin-bottom:8px;">نشر خبر جديد</h4>
                 <input type="hidden" id="edit-id">
                 <input type="text" id="in-title" class="form-ctrl" placeholder="عنوان الخبر">
                 <select id="in-cat" class="form-ctrl">
@@ -218,17 +197,30 @@
             <p id="m-body" style="white-space:pre-line; line-height:1.8; color:#374151;"></p>
         </div>
     </div>
-
     <div id="toast"></div>
-
-    <script>
+        <script>
         const DB_URL = "https://news-site-f4efc-default-rtdb.firebaseio.com";
-        let articles = [], activeCat = "الكل", visitors = 0;
+        let articles = [], activeCat = "الكل", visitors = 0, tapCount = 0, tapTimer = null;
 
         const defaultArticles = [
             { id: "1", title: "النفط يحافظ على مكاسبه مع تجدد المخاوف بشأن الإمدادات وخام برنت قرب 95 دولاراً", category: "أسواق وبورصة", body: "حافظت أسعار النفط على مكاسبها التي حققتها خلال الجلسات الأخيرة مدعومة بمخاوف المستثمرين من تراجع المعروض العالمي وتنامي الطلب.", date: "منذ قليل • هيئة التحرير", views: 45 },
             { id: "2", title: "أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة", category: "اقتصاد", body: "ارتفعت أسعار الذهب في المعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة مستفيدة من تراجع مؤشر الدولار.", date: "منذ قليل • القسم الاقتصادي", views: 38 }
         ];
+
+        function handleLogoTap() {
+            tapCount++;
+            clearTimeout(tapTimer);
+            if (tapCount >= 3) {
+                tapCount = 0;
+                location.hash = "admin";
+                openAdmin();
+            } else {
+                tapTimer = setTimeout(() => {
+                    if (tapCount === 1) resetHome();
+                    tapCount = 0;
+                }, 400);
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
