@@ -109,7 +109,7 @@
     <div class="ticker-bar">
         <div class="ticker-inner">
             <span><strong>بيتكوين (BTC):</strong> <span id="btc-val" class="tick-up">$94,500 ▲ 1.25%</span></span>
-            <span><strong>إيثريوم (ETH):</strong> <span class="tick-up">$3,120 ▲ 0.75%</span></span>
+            <span><strong>إيثريوم (ETH):</strong> <span id="eth-val" class="tick-up">$3,120 ▲ 0.75%</span></span>
             <span><strong>مؤشر البورصة العالمي:</strong> <span class="tick-up">16,720.50 ▲ 0.80%</span></span>
         </div>
     </div>
@@ -336,6 +336,8 @@
 
             syncAllFromFirebase();
             trackVisitors();
+            fetchLivePrices();
+            setInterval(fetchLivePrices, 60000);
         });
 
         async function safeFetch(url, opt = {}) {
@@ -343,6 +345,27 @@
             const t = setTimeout(() => c.abort(), 4500);
             try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
             catch (e) { clearTimeout(t); throw e; }
+        }
+
+        async function fetchLivePrices() {
+            try {
+                const res = await safeFetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true");
+                const data = await res.json();
+                if (data.bitcoin) {
+                    const bPrice = data.bitcoin.usd.toLocaleString('en-US');
+                    const bChg = data.bitcoin.usd_24h_change.toFixed(2);
+                    const bEl = document.getElementById("btc-val");
+                    bEl.textContent = `$${bPrice} ${bChg >= 0 ? '▲' : '▼'} ${Math.abs(bChg)}%`;
+                    bEl.style.color = bChg >= 0 ? "#16a34a" : "#dc2626";
+                }
+                if (data.ethereum) {
+                    const ePrice = data.ethereum.usd.toLocaleString('en-US');
+                    const eChg = data.ethereum.usd_24h_change.toFixed(2);
+                    const eEl = document.getElementById("eth-val");
+                    eEl.textContent = `$${ePrice} ${eChg >= 0 ? '▲' : '▼'} ${Math.abs(eChg)}%`;
+                    eEl.style.color = eChg >= 0 ? "#16a34a" : "#dc2626";
+                }
+            } catch (e) {}
         }
 
         async function syncAllFromFirebase() {
