@@ -197,7 +197,7 @@
                     <textarea id="in-body" class="form-ctrl" rows="4" placeholder="تفاصيل الخبر..."></textarea>
                     <button class="btn-read" style="padding:10px 20px;" onclick="saveArticle()"><i class="fa-solid fa-paper-plane"></i> نشر / حفظ الخبر</button>
                     <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
-                    <h4 style="margin-bottom:8px;">الأخبار المنشورة (اضغط حذف لإزالة أي خبر فوراً)</h4>
+                    <h4 style="margin-bottom:8px;">الأخبار المنشورة (حذف نهائي ومؤكد من السيرفر)</h4>
                     <div id="adm-list"></div>
                 </div>
 
@@ -324,18 +324,17 @@
             document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
             document.querySelectorAll(".cat-pill").forEach(btn => btn.onclick = () => filterByCat(btn.dataset.cat));
 
-            const cachedSet = localStorage.getItem("zawiya_settings_v4");
+            const cachedSet = localStorage.getItem("zawiya_settings_v5");
             if (cachedSet) siteSettings = { ...siteSettings, ...JSON.parse(cachedSet) };
             applySettingsToUI();
 
-            const cachedArt = localStorage.getItem("zawiya_art_v4");
+            const cachedArt = localStorage.getItem("zawiya_art_v5");
             articles = cachedArt ? JSON.parse(cachedArt) : defaultArticles;
             renderNews();
 
             if (location.hash === "#admin") openAdmin();
             window.onhashchange = () => location.hash === "#admin" ? openAdmin() : exitAdmin(false);
 
-            // Fast non-blocking background sync
             syncArticlesFast();
             syncSettingsFast();
             trackVisitors();
@@ -343,12 +342,11 @@
 
         async function safeFetch(url, opt = {}) {
             const c = new AbortController();
-            const t = setTimeout(() => c.abort(), 2500);
+            const t = setTimeout(() => c.abort(), 3500);
             try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
             catch (e) { clearTimeout(t); throw e; }
         }
 
-        // Ultra-light compression (~25KB) so mobile loads instantaneously
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -390,6 +388,11 @@
                     saveLocalCache();
                     renderNews();
                     renderAdminList();
+                } else if (artData === null) {
+                    articles = defaultArticles;
+                    saveLocalCache();
+                    renderNews();
+                    renderAdminList();
                 }
             } catch (e) {}
         }
@@ -403,7 +406,7 @@
                 const setData = await setRes.json();
                 if (setData && typeof setData === "object") {
                     siteSettings = { ...siteSettings, ...setData };
-                    localStorage.setItem("zawiya_settings_v4", JSON.stringify(siteSettings));
+                    localStorage.setItem("zawiya_settings_v5", JSON.stringify(siteSettings));
                     applySettingsToUI();
                 }
                 const edData = await edRes.json();
@@ -413,7 +416,7 @@
         }
 
         function saveLocalCache() {
-            try { localStorage.setItem("zawiya_art_v4", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
+            try { localStorage.setItem("zawiya_art_v5", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
         }
 
         function applySettingsToUI() {
@@ -570,7 +573,6 @@
 
         function logoutUser() { sessionStorage.removeItem("zawiya_user"); openAdmin(); toast("تم تسجيل الخروج"); }
 
-        // Instant Optimistic Save (0ms UI response)
         async function saveArticle() {
             const id = document.getElementById("edit-id").value;
             const title = document.getElementById("in-title").value.trim();
@@ -581,7 +583,6 @@
             const user = JSON.parse(sessionStorage.getItem("zawiya_user") || '{"name":"هيئة التحرير"}');
             const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: user.name, views: 1 };
 
-            // Clear form immediately
             document.getElementById("edit-id").value = "";
             document.getElementById("in-title").value = "";
             document.getElementById("in-img").value = "";
@@ -641,12 +642,31 @@
             window.scrollTo(0, 0);
         }
 
-        // Instant Optimistic Delete (0ms UI removal)
-        function delArt(id) {
-            articles = articles.filter(a => a.id !== id);
-            renderAdminList(); renderNews(); saveLocalCache();
-            toast("تم حذف الخبر فوراً!");
-            safeFetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" }).catch(() => {});
+        // Confirmed Permanent Server Delete (removes article + image cleanly from Firebase & cache)
+        async function delArt(id) {
+            if (!id || id.startsWith("temp_")) {
+                articles = articles.filter(a => a.id !== id);
+                renderAdminList(); renderNews(); saveLocalCache();
+                return toast("تم الحذف!");
+            }
+            toast("جاري مسح الخبر والصورة من السيرفر...");
+            try {
+                const res = await fetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" });
+                if (res.ok) {
+                    articles = articles.filter(a => a.id !== id);
+                    localStorage.removeItem("zawiya_art_v5");
+                    localStorage.removeItem("zawiya_art_v4");
+                    localStorage.removeItem("zawiya_art_v3");
+                    saveLocalCache();
+                    renderAdminList();
+                    renderNews();
+                    toast("تم المسح النهائي من الإنترنت بنجاح!");
+                } else {
+                    toast("تعذر الحذف، حاول مرة أخرى");
+                }
+            } catch (e) {
+                toast("ضعف في الإنترنت، أعد المحاولة");
+            }
         }
 
         async function addEditor() {
@@ -691,7 +711,7 @@
             siteSettings.adBtn = document.getElementById("set-ad-btn").value.trim();
             siteSettings.adUrl = document.getElementById("set-ad-url").value.trim();
 
-            localStorage.setItem("zawiya_settings_v4", JSON.stringify(siteSettings));
+            localStorage.setItem("zawiya_settings_v5", JSON.stringify(siteSettings));
             applySettingsToUI();
             toast("تم حفظ الإعدادات فوراً!");
             safeFetch(`${DB_URL}/settings.json`, { method: "PUT", body: JSON.stringify(siteSettings) }).catch(() => {});
