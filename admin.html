@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم الشاملة | زاوية الحدث</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#1e3a8a;--success:#16a34a;--danger:#dc2626;--bg:#f1f5f9;--card:#fff;--border:#cbd5e1}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:#0f172a;padding:16px}
+.container{max-width:850px;margin:0 auto}
+.header{background:#0f172a;color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.header h1{font-size:1.2rem}
+.visit-link{background:#3b82f6;color:#fff;text-decoration:none;padding:6px 14px;border-radius:8px;font-size:.85rem;font-weight:700}
+.tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto}
+.tab-btn{flex:1;min-width:110px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:#475569;font-weight:700;font-size:.9rem;cursor:pointer}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);padding:18px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px}
+.card h2{font-size:1.05rem;margin-bottom:14px;color:var(--primary);border-bottom:1px solid #e2e8f0;padding-bottom:8px}
+.form-group{margin-bottom:12px}
+label{display:block;font-weight:700;font-size:.85rem;margin-bottom:4px;color:#334155}
+input,textarea,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:.95rem;background:#f8fafc}
+textarea{min-height:100px;resize:vertical}
+.btn{width:100%;padding:12px;border:none;border-radius:8px;font-weight:800;font-size:1rem;cursor:pointer;color:#fff}
+.btn-primary{background:var(--primary)}.btn-success{background:var(--success)}
+.btn-danger{background:var(--danger);padding:6px 12px;width:auto;font-size:.8rem}
+.ad-box{border:1px solid #cbd5e1;border-radius:10px;padding:14px;margin-bottom:14px;background:#f8fafc}
+.ad-box-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:800}
+.news-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #e2e8f0;gap:10px}
+.status-msg{padding:12px;border-radius:8px;margin-bottom:14px;font-weight:700;display:none;text-align:center}
+.status-ok{background:#dcfce7;color:#166534;display:block}.status-err{background:#fee2e2;color:#991b1b;display:block}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>لوحة التحكم الشاملة — زاوية الحدث</h1>
+<a href="index.html" target="_blank" class="visit-link">معاينة الموقع &larr;</a>
+</div>
+<div class="card">
+<h2>الربط مع GitHub</h2>
+<div class="grid-2">
+<div class="form-group"><label>اسم المستخدم</label><input type="text" id="ghUser" value="easyxx1111999-beep"></div>
+<div class="form-group"><label>المستودع</label><input type="text" id="ghRepo" value="News-"></div>
+</div>
+<div class="form-group"><label>رمز الوصول (Token)</label><input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx"></div>
+<button class="btn btn-primary" onclick="saveAuthAndLoad()">حفظ الاتصال وتحميل البيانات</button>
+</div>
+<div id="statusBox" class="status-msg"></div>
+<div id="dashboardArea" style="display:none">
+<div class="tabs">
+<button class="tab-btn active" onclick="switchTab('newsTab',this)">1. الأخبار</button>
+<button class="tab-btn" onclick="switchTab('adsTab',this)">2. الإعلانات</button>
+<button class="tab-btn" onclick="switchTab('settingsTab',this)">3. التواصل والإعدادات</button>
+</div>
+<div id="newsTab" class="panel active">
+<div class="card">
+<h2>نشر خبر جديد</h2>
+<div class="form-group"><label>عنوان الخبر</label><input type="text" id="newsTitle"></div>
+<div class="grid-2">
+<div class="form-group"><label>التصنيف</label><select id="newsCategory"><option value="أخبار محلية">أخبار محلية</option><option value="عاجل">عاجل</option><option value="اقتصاد وخدمات">اقتصاد وخدمات</option><option value="تقنية واتصالات">تقنية واتصالات</option><option value="منوعات">منوعات</option></select></div>
+<div class="form-group"><label>رابط صورة (اختياري)</label><input type="url" id="newsImageUrl" placeholder="https://..."></div>
+</div>
+<div class="form-group"><label>أو اختر صورة من الاستوديو:</label><input type="file" id="newsImageFile" accept="image/*"></div>
+<div class="form-group"><label>نص الخبر</label><textarea id="newsContent"></textarea></div>
+<button class="btn btn-success" onclick="publishNews()">نشر الخبر الآن + إرسال لفيسبوك</button>
+</div>
+<div class="card"><h2>الأخبار المنشورة (<span id="newsCount">0</span>)</h2><div id="newsList"></div></div>
+</div>
+<div id="adsTab" class="panel">
+<div class="card"><h2>التحكم بالشريط الإعلاني المتحرك</h2><div id="adsEditorContainer"></div><button class="btn btn-success" onclick="saveFullConfig()">حفظ تعديلات الإعلانات</button></div>
+</div>
+<div id="settingsTab" class="panel">
+<div class="card">
+<h2>بيانات الموقع والتواصل والـ Webhook</h2>
+<div class="form-group"><label>اسم الموقع</label><input type="text" id="cfgSiteName"></div>
+<div class="form-group"><label>وصف الموقع</label><textarea id="cfgSiteDesc" style="min-height:60px"></textarea></div>
+<div class="grid-2">
+<div class="form-group"><label>الهاتف للعرض</label><input type="text" id="cfgPhone"></div>
+<div class="form-group"><label>واتساب دولي (بدون +)</label><input type="text" id="cfgWhatsappIntl"></div>
+</div>
+<div class="grid-2">
+<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="cfgEmail"></div>
+<div class="form-group"><label>صفحة فيسبوك</label><input type="url" id="cfgFacebook"></div>
+</div>
+<div class="form-group"><label>رابط Webhook (Make / Zapier)</label><input type="url" id="cfgWebhook"></div>
+<button class="btn btn-success" onclick="saveFullConfig()">حفظ كافة الإعدادات</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+let newsData=[],newsSha=null,configSha=null;
+let siteConfig={siteName:"زاوية الحدث",siteDesc:"منصة إخبارية شاملة تنقل لكم الخبر بدقة وموضوعية على مدار الساعة.",phone:"0953445723",whatsappIntl:"963953445723",email:"Easyxx1111999@gmail.com",facebook:"https://www.facebook.com/zawiyatalhadath",webhookUrl:"",ads:[{active:true,theme:"ad-theme-blue",tag:"شبكة HAYA.NET للإنترنت",title:"إنترنت فائق السرعة واستقرار على مدار الساعة",desc:"باقات منزلية وتجارية متنوعة — تغطية قوية ودعم فني متواصل.",btnText:"اشترك الآن",customWhatsapp:"",whatsappMsg:"مرحباً، أود الاستفسار عن اشتراكات الإنترنت في شبكة HAYA.NET"},{active:true,theme:"ad-theme-red",tag:"ملحمة أبو ناصر",title:"أجود أنواع اللحوم الطازجة وتجهيز الولائم والمناسبات",desc:"ذبح يومي طازج — تشكيلة واسعة من اللحوم والفروج بأعلى معايير النظافة.",btnText:"اطلب الآن",customWhatsapp:"",whatsappMsg:"مرحباً أبو ناصر، أود الاستفسار عن طلبات اللحوم من ملحمة أبو ناصر"},{active:true,theme:"ad-theme-light",tag:"مساحة إعلانية متاحة",title:"أعلن عن نشاطك التجاري هنا أمام آلاف الزوار",desc:"احجز مساحتك الإعلانية المميزة في موقع زاوية الحدث بأسعار منافسة.",btnText:"احجز مساحتك",customWhatsapp:"",whatsappMsg:"مرحباً، أرغب بالاستفسار عن حجز مساحة إعلانية في موقع زاوية الحدث"}]};
+window.onload=()=>{if(localStorage.getItem('ghUser'))document.getElementById('ghUser').value=localStorage.getItem('ghUser');if(localStorage.getItem('ghRepo'))document.getElementById('ghRepo').value=localStorage.getItem('ghRepo');if(localStorage.getItem('ghToken')){document.getElementById('ghToken').value=localStorage.getItem('ghToken');saveAuthAndLoad()}};
+function showStatus(m,e=false){const b=document.getElementById('statusBox');b.textContent=m;b.className='status-msg '+(e?'status-err':'status-ok');setTimeout(()=>b.style.display='none',5000)}
+function switchTab(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active')}
+function utf8ToB64(s){return btoa(unescape(encodeURIComponent(s)))}
+function b64ToUtf8(s){return decodeURIComponent(escape(atob(s)))}
+async function saveAuthAndLoad(){const u=document.getElementById('ghUser').value.trim(),r=document.getElementById('ghRepo').value.trim(),t=document.getElementById('ghToken').value.trim();if(!u||!r||!t)return showStatus('أدخل جميع بيانات GitHub',true);localStorage.setItem('ghUser',u);localStorage.setItem('ghRepo',r);localStorage.setItem('ghToken',t);document.getElementById('dashboardArea').style.display='block';await Promise.all([fetchNewsFromGH(),fetchConfigFromGH()])}
+async function fetchNewsFromGH(){const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo'),t=localStorage.getItem('ghToken');try{const res=await fetch(`https://api.github.com/repos/${u}/${r}/contents/news.json?t=${Date.now()}`,{headers:{Authorization:`token ${t}`}});if(res.ok){const d=await res.json();newsSha=d.sha;newsData=JSON.parse(b64ToUtf8(d.content))}else newsData=[];renderNewsList()}catch(e){showStatus('خطأ بجلب الأخبار',true)}}
+async function fetchConfigFromGH(){const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo'),t=localStorage.getItem('ghToken');try{const res=await fetch(`https://api.github.com/repos/${u}/${r}/contents/config.json?t=${Date.now()}`,{headers:{Authorization:`token ${t}`}});if(res.ok){const d=await res.json();configSha=d.sha;siteConfig={...siteConfig,...JSON.parse(b64ToUtf8(d.content))}}populateConfigForms()}catch(e){populateConfigForms()}}
+function populateConfigForms(){document.getElementById('cfgSiteName').value=siteConfig.siteName||'';document.getElementById('cfgSiteDesc').value=siteConfig.siteDesc||'';document.getElementById('cfgPhone').value=siteConfig.phone||'';document.getElementById('cfgWhatsappIntl').value=siteConfig.whatsappIntl||'';document.getElementById('cfgEmail').value=siteConfig.email||'';document.getElementById('cfgFacebook').value=siteConfig.facebook||'';document.getElementById('cfgWebhook').value=siteConfig.webhookUrl||'';document.getElementById('adsEditorContainer').innerHTML=siteConfig.ads.map((ad,i)=>`<div class="ad-box"><div class="ad-box-header"><span>إعلان (${i+1})</span><label style="display:flex;align-items:center;gap:6px"><input type="checkbox" style="width:auto" id="adActive_${i}" ${ad.active?'checked':''}> مفعّل</label></div><div class="grid-2"><div class="form-group"><label>الشارة العلوية</label><input type="text" id="adTag_${i}" value="${ad.tag}"></div><div class="form-group"><label>التصميم</label><select id="adTheme_${i}"><option value="ad-theme-blue" ${ad.theme==='ad-theme-blue'?'selected':''}>أزرق تقني</option><option value="ad-theme-red" ${ad.theme==='ad-theme-red'?'selected':''}>أحمر وذهبي</option><option value="ad-theme-light" ${ad.theme==='ad-theme-light'?'selected':''}>أبيض رسمي</option></select></div></div><div class="form-group"><label>العنوان</label><input type="text" id="adTitle_${i}" value="${ad.title}"></div><div class="form-group"><label>الوصف</label><input type="text" id="adDesc_${i}" value="${ad.desc}"></div><div class="grid-2"><div class="form-group"><label>نص الزر</label><input type="text" id="adBtn_${i}" value="${ad.btnText}"></div><div class="form-group"><label>واتساب مخصص (اختياري)</label><input type="text" id="adWa_${i}" value="${ad.customWhatsapp||''}"></div></div><div class="form-group"><label>رسالة الواتساب</label><input type="text" id="adMsg_${i}" value="${ad.whatsappMsg||''}"></div></div>`).join('')}
+async function saveFullConfig(){siteConfig.siteName=document.getElementById('cfgSiteName').value.trim();siteConfig.siteDesc=document.getElementById('cfgSiteDesc').value.trim();siteConfig.phone=document.getElementById('cfgPhone').value.trim();siteConfig.whatsappIntl=document.getElementById('cfgWhatsappIntl').value.trim();siteConfig.email=document.getElementById('cfgEmail').value.trim();siteConfig.facebook=document.getElementById('cfgFacebook').value.trim();siteConfig.webhookUrl=document.getElementById('cfgWebhook').value.trim();siteConfig.ads=siteConfig.ads.map((_,i)=>({active:document.getElementById(`adActive_${i}`).checked,theme:document.getElementById(`adTheme_${i}`).value,tag:document.getElementById(`adTag_${i}`).value.trim(),title:document.getElementById(`adTitle_${i}`).value.trim(),desc:document.getElementById(`adDesc_${i}`).value.trim(),btnText:document.getElementById(`adBtn_${i}`).value.trim(),customWhatsapp:document.getElementById(`adWa_${i}`).value.trim(),whatsappMsg:document.getElementById(`adMsg_${i}`).value.trim()}));const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo'),t=localStorage.getItem('ghToken');try{const b={message:"تحديث الإعدادات والإعلانات",content:utf8ToB64(JSON.stringify(siteConfig,null,2))};if(configSha)b.sha=configSha;const res=await fetch(`https://api.github.com/repos/${u}/${r}/contents/config.json`,{method:'PUT',headers:{Authorization:`token ${t}`,'Content-Type':'application/json'},body:JSON.stringify(b)});if(!res.ok)throw new Error();configSha=(await res.json()).content.sha;showStatus('تم حفظ الإعدادات والإعلانات بنجاح!')}catch(e){showStatus('فشل الحفظ، تأكد من Token',true)}}
+function renderNewsList(){document.getElementById('newsCount').textContent=newsData.length;document.getElementById('newsList').innerHTML=newsData.length?newsData.map((m,i)=>`<div class="news-item"><div><strong>${m.title}</strong><div style="font-size:.8rem;color:#64748b">${m.category} | ${m.date}</div></div><button class="btn btn-danger" onclick="deleteNews(${i})">حذف</button></div>`).join(''):'<p>لا توجد أخبار</p>'}
+async function uploadImageToGH(f){const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo'),t=localStorage.getItem('ghToken');return new Promise((res,rej)=>{const rd=new FileReader();rd.onload=async()=>{const c=rd.result.split(',')[1],fn=`images/${Date.now()}_${f.name.replace(/[^a-zA-Z0-9.]/g,'')}`;try{const q=await fetch(`https://api.github.com/repos/${u}/${r}/contents/${fn}`,{method:'PUT',headers:{Authorization:`token ${t}`,'Content-Type':'application/json'},body:JSON.stringify({message:"صورة خبر",content:c})});if(!q.ok)throw new Error();res(`https://raw.githubusercontent.com/${u}/${r}/main/${fn}`)}catch(e){rej(e)}};rd.readAsDataURL(f)})}
+async function publishNews(){const title=document.getElementById('newsTitle').value.trim(),category=document.getElementById('newsCategory').value,content=document.getElementById('newsContent').value.trim();let image=document.getElementById('newsImageUrl').value.trim();const fi=document.getElementById('newsImageFile');if(!title||!content)return showStatus('أدخل العنوان والنص',true);showStatus('جاري النشر...');try{if(fi.files.length>0)image=await uploadImageToGH(fi.files[0]);const art={id:Date.now(),title,category,content,image,date:new Date().toLocaleDateString('ar-SY',{year:'numeric',month:'long',day:'numeric'})};newsData.unshift(art);await pushNewsToGH("نشر: "+title);if(siteConfig.webhookUrl){const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo');fetch(siteConfig.webhookUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...art,siteUrl:`https://${u}.github.io/${r}/`})}).catch(()=>{})}document.getElementById('newsTitle').value='';document.getElementById('newsContent').value='';document.getElementById('newsImageUrl').value='';fi.value='';showStatus('تم نشر الخبر بنجاح!')}catch(e){showStatus('خطأ أثناء النشر',true)}}
+async function deleteNews(i){if(!confirm('حذف الخبر؟'))return;newsData.splice(i,1);await pushNewsToGH("حذف خبر");showStatus('تم الحذف')}
+async function pushNewsToGH(msg){const u=localStorage.getItem('ghUser'),r=localStorage.getItem('ghRepo'),t=localStorage.getItem('ghToken');const b={message:msg,content:utf8ToB64(JSON.stringify(newsData,null,2))};if(newsSha)b.sha=newsSha;const res=await fetch(`https://api.github.com/repos/${u}/${r}/contents/news.json`,{method:'PUT',headers:{Authorization:`token ${t}`,'Content-Type':'application/json'},body:JSON.stringify(b)});if(!res.ok)throw new Error();newsSha=(await res.json()).content.sha;renderNewsList()}
+</script>
+</body>
+</html>

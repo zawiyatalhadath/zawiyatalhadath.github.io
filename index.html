@@ -1,583 +1,617 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>زاوية الحدث | تغطية إخبارية شاملة</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --bg-body: #f4f5f7; --bg-card: #ffffff; --bg-header: #ffffff; --text-main: #111827; --text-muted: #6b7280; --border-color: #e5e7eb; --accent-orange: #ea580c; --accent-red: #dc2626; --shadow: 0 2px 10px rgba(0,0,0,0.06); }
-    body.dark-mode { --bg-body: #0f1115; --bg-card: #181b20; --bg-header: #14171c; --text-main: #f3f4f6; --text-muted: #9ca3af; --border-color: #272b33; --shadow: 0 2px 12px rgba(0,0,0,0.4); }
-    * { box-sizing: border-box; font-family: 'Cairo', Tahoma, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; background: var(--bg-body); color: var(--text-main); transition: background 0.25s, color 0.25s; padding-bottom: 75px; }
-    .hidden { display: none !important; }
-    .top-bar { background: #000000; color: #e5e7eb; font-size: 12px; padding: 6px 14px; display: flex; justify-content: space-between; align-items: center; }
-    .top-bar span.live-dot { display: inline-block; width: 7px; height: 7px; background: #ef4444; border-radius: 50%; margin-left: 6px; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    header.main-header { background: var(--bg-header); border-bottom: 1px solid var(--border-color); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .menu-btn { background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; padding: 4px; display: flex; align-items: center; }
-    .brand-logo { cursor: pointer; display: flex; align-items: center; }
-    .brand-logo h1 { margin: 0; font-size: 23px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .icon-action { background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: 600; gap: 2px; }
-    .icon-action svg { width: 20px; height: 20px; }
-    .saved-pill { background: var(--accent-orange); color: #fff; border: none; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-    .search-bar { background: var(--bg-card); padding: 10px 14px; border-bottom: 1px solid var(--border-color); display: flex; gap: 8px; }
-    .search-bar input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-body); color: var(--text-main); font-size: 14px; }
-    .market-strip { background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 7px 12px; gap: 18px; font-size: 12.5px; scrollbar-width: none; }
-    .market-strip::-webkit-scrollbar { display: none; }
-    .market-badge { background: #111827; color: #fbbf24; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
-    .market-item { display: inline-flex; align-items: center; gap: 6px; padding-left: 14px; border-left: 1px solid var(--border-color); }
-    .market-item:last-child { border-left: none; }
-    .market-name { font-weight: 700; color: var(--text-main); }
-    .market-val { font-weight: 800; direction: ltr; }
-    .ticker-wrap { background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; height: 36px; overflow: hidden; }
-    .ticker-label { background: var(--accent-red); color: #fff; font-size: 12px; font-weight: 800; padding: 0 12px; height: 100%; display: flex; align-items: center; white-space: nowrap; z-index: 2; }
-    .ticker-content { flex: 1; overflow: hidden; white-space: nowrap; position: relative; }
-    .ticker-move { display: inline-block; padding-right: 100%; animation: tickerScroll 26s linear infinite; font-size: 13px; font-weight: 600; }
-    .ticker-wrap.paused .ticker-move { animation-play-state: paused; }
-    .ticker-item { margin-left: 35px; cursor: pointer; }
-    .ticker-item:hover { color: var(--accent-orange); }
-    @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
-    .ticker-pause { background: var(--bg-card); border: none; border-right: 1px solid var(--border-color); color: var(--text-main); height: 100%; padding: 0 12px; cursor: pointer; font-weight: bold; }
-    .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; }
-    .side-drawer { position: fixed; top: 0; right: -300px; width: 285px; max-width: 85vw; height: 100%; background: #080808; color: #ffffff; z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; overflow-y: auto; }
-    .side-drawer.open { right: 0; }
-    .drawer-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-    .drawer-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
-    .theme-switch-bar { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 12px; background: #121212; border-bottom: 1px solid #222; font-size: 13px; }
-    .theme-btn { background: none; border: none; color: #9ca3af; cursor: pointer; font-weight: 700; font-size: 13px; }
-    .theme-btn.active { color: #fff; }
-    .drawer-list { list-style: none; margin: 0; padding: 0; }
-    .drawer-list li { border-bottom: 1px solid #1c1c1c; }
-    .drawer-list button { width: 100%; background: none; border: none; color: #f3f4f6; padding: 15px 18px; text-align: right; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-    .drawer-list button.active { color: var(--accent-orange); background: #141414; }
-    .container { max-width: 960px; margin: 16px auto; padding: 0 12px; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-right: 4px solid var(--accent-orange); padding-right: 10px; }
-    .section-header h2 { margin: 0; font-size: 18px; font-weight: 800; }
-    .news-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-    @media (min-width: 680px) { .news-grid { grid-template-columns: repeat(2, 1fr); } .news-card.featured { grid-column: span 2; } }
-    .news-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .news-card-img { width: 100%; height: 200px; object-fit: cover; cursor: pointer; }
-    .news-card.featured .news-card-img { height: 270px; }
-    .news-card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
-    .cat-tag { display: inline-block; background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; margin-bottom: 8px; align-self: flex-start; }
-    .cat-tag.urgent { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
-    .news-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 800; line-height: 1.45; cursor: pointer; }
-    .news-card.featured h3 { font-size: 21px; }
-    .news-card h3:hover { color: var(--accent-orange); }
-    .news-excerpt { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .card-footer { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; gap: 6px; }
-    .mini-actions { display: flex; gap: 6px; align-items: center; }
-    .mini-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; padding: 5px 9px; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .mini-btn.share-orange { background: var(--accent-orange); color: #fff; border-color: var(--accent-orange); }
-    .mini-btn.edit-blue { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-    .article-view { background: var(--bg-card); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border-color); }
-    .back-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; }
-    .article-title { font-size: 24px; font-weight: 800; line-height: 1.4; margin: 8px 0 12px; }
-    .article-meta-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 12px; font-size: 13px; color: var(--text-muted); }
-    .share-group { display: flex; align-items: center; gap: 8px; }
-    .share-btn-main { background: var(--accent-orange); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .bookmark-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); padding: 7px 11px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 13px; }
-    .follow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .follow-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); text-decoration: none; font-size: 13px; font-weight: 700; cursor: pointer; }
-    .follow-btn.whatsapp { border-color: #25D366; }
-    .follow-btn.whatsapp span.icon-wa { background: #25D366; color: #fff; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
-    .summary-box { background: #0a0a0a; color: #f9fafb; border-radius: 12px; padding: 14px 16px; margin: 16px 0; border: 1px solid #262626; box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
-    .summary-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .summary-title-wrap { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
-    .summary-icon { background: var(--accent-orange); color: #fff; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-    .summary-body { margin-top: 12px; font-size: 15px; line-height: 1.75; color: #e5e7eb; }
-    .summary-note { margin-top: 10px; font-size: 11px; color: #9ca3af; }
-    .article-main-img { width: 100%; max-height: 380px; object-fit: cover; border-radius: 10px; margin: 12px 0; }
-    .article-body-text { font-size: 17px; line-height: 1.9; white-space: pre-line; margin-top: 14px; }
-    .floating-brief-btn { position: fixed; bottom: 16px; left: 16px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 30px; padding: 8px 14px 8px 8px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 16px rgba(0,0,0,0.35); cursor: pointer; z-index: 95; }
-    .floating-brief-btn .play-circle { background: var(--accent-orange); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 300; display: flex; align-items: flex-end; justify-content: center; }
-    @media (min-width: 600px) { .modal-backdrop { align-items: center; } }
-    .modal-sheet { background: var(--bg-card); color: var(--text-main); width: 100%; max-width: 480px; border-radius: 16px 16px 0 0; padding: 20px; max-height: 85vh; overflow-y: auto; }
-    @media (min-width: 600px) { .modal-sheet { border-radius: 14px; } }
-    .share-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
-    .social-share-item { padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-weight: 700; font-size: 14px; text-align: center; text-decoration: none; cursor: pointer; }
-    .admin-box { background: var(--bg-card); border: 2px solid var(--accent-orange); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
-    .admin-box h2 { margin-top: 0; font-size: 18px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; }
-    .stat-card { background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 6px; text-align: center; }
-    .stat-num { display: block; font-size: 20px; font-weight: 800; color: var(--accent-orange); }
-    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 700; }
-    label { display: block; margin: 10px 0 4px; font-weight: 700; font-size: 13px; }
-    .admin-box input, .admin-box select, .admin-box textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; background: var(--bg-body); color: var(--text-main); }
-    .admin-box textarea { min-height: 110px; resize: vertical; }
-    .btn { margin-top: 12px; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; }
-    .btn-primary { background: #1d4ed8; color: #fff; width: 100%; }
-    .btn-success { background: #15803d; color: #fff; width: 100%; }
-    .btn-danger { background: #dc2626; color: #fff; padding: 5px 9px; font-size: 12px; margin-top: 0; }
-    .btn-logout { background: #475569; color: #fff; float: left; margin-top: 0; padding: 6px 12px; font-size: 12px; }
-    .error { color: #dc2626; font-size: 13px; margin-top: 8px; text-align: center; }
-    .success { color: #15803d; font-size: 13px; margin-top: 8px; text-align: center; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">زاوية الحدث | أخبار ومستجدات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --accent: #d32f2f;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .logo-badge {
+            background: var(--accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .header-social a {
+            color: #fff;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-social a:hover {
+            background: #1877f2;
+        }
+
+        /* Smart Ad Banner Slider */
+        .ad-wrapper {
+            margin: 20px auto;
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        .ad-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .ad-slide {
+            min-width: 100%;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ad-theme-blue {
+            background: linear-gradient(135deg, #061026 0%, #0d254c 100%);
+            color: #ffffff;
+            border-right: 6px solid #00e676;
+        }
+        .ad-theme-blue .ad-tag { background: #ff1744; color: #fff; }
+        .ad-theme-blue h3 { color: #00e676; }
+        .ad-theme-blue p { color: #cbd5e1; }
+        .ad-theme-blue .ad-btn { background: #00e676; color: #061026; }
+
+        .ad-theme-red {
+            background: linear-gradient(135deg, #3e0a0a 0%, #7f1d1d 100%);
+            color: #ffffff;
+            border-right: 6px solid #fbbf24;
+        }
+        .ad-theme-red .ad-tag { background: #fbbf24; color: #3e0a0a; }
+        .ad-theme-red h3 { color: #fef3c7; }
+        .ad-theme-red p { color: #fecaca; }
+        .ad-theme-red .ad-btn { background: #fbbf24; color: #3e0a0a; }
+
+        .ad-theme-light {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #0f172a;
+            border-right: 6px solid #1e3a8a;
+        }
+        .ad-theme-light .ad-tag { background: #1e3a8a; color: #fff; }
+        .ad-theme-light h3 { color: #1e3a8a; }
+        .ad-theme-light p { color: #475569; }
+        .ad-theme-light .ad-btn { background: #1e3a8a; color: #fff; }
+
+        .ad-tag {
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+        .ad-slide h3 { font-size: 1.25rem; margin: 4px 0; }
+        .ad-slide p { font-size: 0.92rem; }
+
+        .ad-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .ad-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 0;
+            background: rgba(0,0,0,0.03);
+        }
+        .ad-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .ad-dot.active {
+            background: var(--primary);
+            width: 22px;
+            border-radius: 5px;
+        }
+
+        /* News Grid */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 24px 0 16px;
+            padding-right: 12px;
+            border-right: 4px solid var(--accent);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #e2e8f0;
+        }
+
+        .news-body {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .news-category {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .news-title {
+            font-size: 1.12rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .news-excerpt {
+            font-size: 0.92rem;
+            color: #475569;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .read-more-btn {
+            align-self: flex-start;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: #fff;
+            max-width: 750px;
+            margin: 30px auto;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .modal-img {
+            width: 100%;
+            max-height: 360px;
+            object-fit: cover;
+        }
+        .modal-body { padding: 24px; }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            border-right: 3px solid var(--accent);
+            padding-right: 10px;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contact-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+
+        .contact-item i.fa-whatsapp { color: #25d366; font-size: 1.2rem; }
+        .contact-item i.fa-facebook { color: #1877f2; font-size: 1.2rem; }
+        .contact-item i.fa-envelope { color: #f59e0b; font-size: 1.1rem; }
+        .contact-item i.fa-phone { color: #38bdf8; font-size: 1.1rem; }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+    </style>
 </head>
 <body>
-<div class="top-bar">
-  <div><span class="live-dot"></span> تغطية مستمرة | <span id="todayDateStr"></span></div>
-  <div style="cursor:pointer;" onclick="openSubscribeModal()">🔔 اشترك بالتنبيهات</div>
-</div>
-<header class="main-header">
-  <div class="header-right">
-    <button class="menu-btn" id="openDrawerBtn" aria-label="القائمة">☰</button>
-    <div class="brand-logo" onclick="goHome()"><h1>زاوية الحدث</h1></div>
-  </div>
-  <div class="header-left">
-    <button class="icon-action" onclick="toggleSearch()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span>البحث</span></button>
-    <button class="saved-pill" onclick="showSavedNews()"><span>قائمتي</span><span id="savedCount">(0)</span></button>
-  </div>
-</header>
-<div id="searchBar" class="search-bar hidden">
-  <input type="text" id="searchInput" placeholder="ابحث في عناوين وتفاصيل الأخبار..." oninput="handleSearch()" />
-  <button class="mini-btn" onclick="clearSearch()">إغلاق</button>
-</div>
-<div class="market-strip" id="marketStrip">
-  <span class="market-badge">⚡ البورصة العالمية</span>
-  <div class="market-item"><span class="market-name">أونصة الذهب:</span><span class="market-val" id="goldOunceVal">...</span></div>
-  <div class="market-item"><span class="market-name">غرام 24:</span><span class="market-val" id="gold24Val">...</span></div>
-  <div class="market-item"><span class="market-name">غرام 21:</span><span class="market-val" id="gold21Val">...</span></div>
-  <div class="market-item"><span class="market-name">غرام 18:</span><span class="market-val" id="gold18Val">...</span></div>
-  <div class="market-item"><span class="market-name">الفضة:</span><span class="market-val" id="silverVal">...</span></div>
-  <div class="market-item"><span class="market-name">بيتكوين:</span><span class="market-val" id="btcVal">...</span></div>
-</div>
-<div class="ticker-wrap" id="tickerWrap">
-  <div class="ticker-label">عاجل</div>
-  <div class="ticker-content"><div class="ticker-move" id="tickerMove">أهلاً بكم في موقع زاوية الحدث الإخباري</div></div>
-  <button class="ticker-pause" id="tickerPauseBtn" onclick="toggleTicker()">❚❚</button>
-</div>
-<div id="drawerOverlay" class="drawer-overlay hidden" onclick="closeDrawer()"></div>
-<aside id="sideDrawer" class="side-drawer">
-  <div class="drawer-header">
-    <div><strong style="font-size:18px;">زاوية الحدث</strong><div style="font-size:11px; color:#ea580c;">أقسام الموقع</div></div>
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-  </div>
-  <div class="theme-switch-bar">
-    <button class="theme-btn active" id="lightThemeBtn" onclick="setTheme('light')">☀ نمط نهاري</button>
-    <span style="color:#444;">|</span>
-    <button class="theme-btn" id="darkThemeBtn" onclick="setTheme('dark')">☾ نمط ليلي</button>
-  </div>
-  <ul class="drawer-list" id="drawerCategories">
-    <li><button class="active" data-cat="الكل"><span>الرئيسية (الكل)</span><span>◂</span></button></li>
-    <li><button data-cat="عاجل"><span>عاجل</span><span>◂</span></button></li>
-    <li><button data-cat="محلية"><span>أخبار محلية</span><span>◂</span></button></li>
-    <li><button data-cat="اقتصاد"><span>اقتصاد</span><span>◂</span></button></li>
-    <li><button data-cat="أسواق"><span>أسواق ومؤشرات</span><span>◂</span></button></li>
-    <li><button data-cat="اتصالات"><span>اتصالات وتكنولوجيا</span><span>◂</span></button></li>
-    <li><button data-cat="منوعات"><span>منوعات</span><span>◂</span></button></li>
-    <li><button onclick="closeDrawer(); openSubscribeModal();" style="color:#ea580c;"><span>🔔 الاشتراك بالإشعارات</span><span>◂</span></button></li>
-  </ul>
-</aside>
 
-<div class="container">
-  <div id="loginSection" class="admin-box hidden">
-    <h2>تسجيل دخول الإدارة</h2>
-    <label>البريد الإلكتروني</label>
-    <input type="email" id="adminEmail" placeholder="أدخل البريد الإلكتروني..." />
-    <label>كلمة المرور</label>
-    <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور..." />
-    <button class="btn btn-primary" id="loginBtn">تسجيل الدخول</button>
-    <div id="loginMsg" class="error"></div>
-  </div>
-
-  <div id="dashboardSection" class="admin-box hidden">
-    <button class="btn btn-logout" id="logoutBtn">تسجيل الخروج</button>
-    <h2>لوحة تحكم الإدارة</h2>
-    <div class="stats-grid">
-      <div class="stat-card"><span class="stat-num" id="totalVisitsStat">0</span><span class="stat-label">إجمالي الزيارات</span></div>
-      <div class="stat-card"><span class="stat-num" id="todayVisitsStat">0</span><span class="stat-label">زيارات اليوم</span></div>
-      <div class="stat-card"><span class="stat-num" id="subsCountStat">0</span><span class="stat-label">المشتركين</span></div>
-    </div>
-    <label>القسم</label>
-    <select id="newsCategory">
-      <option value="عاجل">عاجل</option>
-      <option value="محلية">محلية</option>
-      <option value="اقتصاد">اقتصاد</option>
-      <option value="أسواق">أسواق</option>
-      <option value="اتصالات">اتصالات</option>
-      <option value="منوعات">منوعات</option>
-    </select>
-    <label>عنوان الخبر</label>
-    <input type="text" id="newsTitle" placeholder="اكتب عنوان الخبر..." />
-    <label>الخلاصة السريعة (اختياري)</label>
-    <input type="text" id="newsSummary" placeholder="ملخص الخبر بسطرين (إذا تركته فارغاً يتم توليده تلقائياً)" />
-    <label>رابط الصورة (اختياري)</label>
-    <input type="url" id="newsImage" placeholder="https://example.com/image.jpg" />
-    <label>تفاصيل الخبر</label>
-    <textarea id="newsContent" placeholder="اكتب نص الخبر كاملاً..."></textarea>
-    <button class="btn btn-success" id="publishBtn">نشر الخبر الآن</button>
-    <div id="publishMsg" class="success"></div>
-  </div>
-
-  <div id="homeView">
-    <div class="section-header">
-      <h2 id="currentSectionTitle">آخر الأخبار</h2>
-      <span id="newsCounter" style="font-size:12px; color:var(--text-muted);"></span>
-    </div>
-    <div id="newsFeed" class="news-grid">
-      <p style="text-align:center; color:var(--text-muted); grid-column: 1/-1; padding:30px 0;">جاري تحميل الأخبار...</p>
-    </div>
-  </div>
-  <div id="articleView" class="article-view hidden"></div>
-</div>
-
-<button class="floating-brief-btn" onclick="openBriefModal()">
-  <span>الأخبار باختصار</span>
-  <span class="play-circle">▶</span>
-</button>
-
-<div id="modalBackdrop" class="modal-backdrop hidden" onclick="closeModal(event)">
-  <div class="modal-sheet" id="modalContent"></div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getDatabase, ref, push, onValue, remove, runTransaction, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-  const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/";
-  const FACEBOOK_PAGE_URL = "https://www.facebook.com/";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD4DiuqBE2seftZOe4TtCT-Mtwvhh7A_BM",
-    authDomain: "news-site-f4efc.firebaseapp.com",
-    databaseURL: "https://news-site-f4efc-default-rtdb.firebaseio.com",
-    projectId: "news-site-f4efc",
-    storageBucket: "news-site-f4efc.firebasestorage.app",
-    messagingSenderId: "644937766713",
-    appId: "1:644937766713:web:bc55a35eebedbe46c1bae8",
-    measurementId: "G-65MJ96EGXD"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
-
-  document.getElementById('todayDateStr').textContent = new Date().toLocaleDateString('ar-SY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-
-  async function fetchGlobalMarkets() {
-    try {
-      const [goldRes, silverRes, btcRes] = await Promise.all([
-        fetch('https://api.gold-api.com/price/XAU'),
-        fetch('https://api.gold-api.com/price/XAG'),
-        fetch('https://api.gold-api.com/price/BTC')
-      ]);
-      const goldData = await goldRes.json();
-      const silverData = await silverRes.json();
-      const btcData = await btcRes.json();
-      if (goldData && goldData.price) {
-        const ounce = Number(goldData.price);
-        const gram24 = ounce / 31.1034768;
-        document.getElementById('goldOunceVal').textContent = `$${ounce.toFixed(2)}`;
-        document.getElementById('gold24Val').textContent = `$${gram24.toFixed(2)}`;
-        document.getElementById('gold21Val').textContent = `$${(gram24 * 21 / 24).toFixed(2)}`;
-        document.getElementById('gold18Val').textContent = `$${(gram24 * 18 / 24).toFixed(2)}`;
-      }
-      if (silverData && silverData.price) document.getElementById('silverVal').textContent = `$${Number(silverData.price).toFixed(2)}`;
-      if (btcData && btcData.price) document.getElementById('btcVal').textContent = `$${Math.round(Number(btcData.price)).toLocaleString()}`;
-    } catch (e) {}
-  }
-  fetchGlobalMarkets();
-  setInterval(fetchGlobalMarkets, 60000);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const isAdminRoute = urlParams.get('admin') === '1';
-  const sharedNewsId = urlParams.get('id');
-
-  const loginSection = document.getElementById('loginSection');
-  const dashboardSection = document.getElementById('dashboardSection');
-  const loginMsg = document.getElementById('loginMsg');
-  const publishMsg = document.getElementById('publishMsg');
-  const newsFeed = document.getElementById('newsFeed');
-  const homeView = document.getElementById('homeView');
-  const articleView = document.getElementById('articleView');
-
-  let currentUser = null;
-  let allNews = [];
-  let selectedCategory = 'الكل';
-  let searchQuery = '';
-  let showingSavedOnly = false;
-  let editingNewsId = null;
-  let savedIds = JSON.parse(localStorage.getItem('zawya_saved') || '[]');
-  updateSavedCount();
-
-  const todayKey = new Date().toISOString().split('T')[0];
-  if (!isAdminRoute && !sessionStorage.getItem('zawya_visited')) {
-    sessionStorage.setItem('zawya_visited', '1');
-    runTransaction(ref(db, 'stats/totalVisits'), (current) => (current || 0) + 1);
-    runTransaction(ref(db, `stats/daily/${todayKey}`), (current) => (current || 0) + 1);
-  }
-
-  if (localStorage.getItem('zawya_theme') === 'dark') setTheme('dark');
-
-  onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    if (user) { loginSection.classList.add('hidden'); dashboardSection.classList.remove('hidden'); loadAdminStats(); }
-    else { dashboardSection.classList.add('hidden'); if (isAdminRoute) loginSection.classList.remove('hidden'); else loginSection.classList.add('hidden'); }
-    renderNews();
-  });
-
-  function loadAdminStats() {
-    onValue(ref(db, 'stats/totalVisits'), (snap) => { document.getElementById('totalVisitsStat').textContent = snap.val() || 0; });
-    onValue(ref(db, `stats/daily/${todayKey}`), (snap) => { document.getElementById('todayVisitsStat').textContent = snap.val() || 0; });
-    onValue(ref(db, 'subscribers'), (snap) => { const val = snap.val(); document.getElementById('subsCountStat').textContent = val ? Object.keys(val).length : 0; });
-  }
-
-  document.getElementById('loginBtn').addEventListener('click', async () => {
-    const email = document.getElementById('adminEmail').value.trim();
-    const password = document.getElementById('adminPassword').value.trim();
-    loginMsg.textContent = '';
-    if (!email || !password) { loginMsg.textContent = 'يرجى إدخال البريد الإلكتروني وكلمة المرور.'; return; }
-    try { await signInWithEmailAndPassword(auth, email, password); }
-    catch (error) { loginMsg.textContent = 'خطأ في البريد الإلكتروني أو كلمة المرور.'; }
-  });
-
-  document.getElementById('logoutBtn').addEventListener('click', async () => { await signOut(auth); });
-
-  document.getElementById('publishBtn').addEventListener('click', async () => {
-    const category = document.getElementById('newsCategory').value;
-    const title = document.getElementById('newsTitle').value.trim();
-    const summary = document.getElementById('newsSummary').value.trim();
-    const image = document.getElementById('newsImage').value.trim();
-    const content = document.getElementById('newsContent').value.trim();
-    publishMsg.textContent = '';
-    if (!title || !content) { alert('يرجى إدخال عنوان الخبر وتفاصيله.'); return; }
-    try {
-      if (editingNewsId) {
-        await update(ref(db, 'news/' + editingNewsId), { category, title, summary, image, content });
-        editingNewsId = null;
-        document.getElementById('publishBtn').textContent = 'نشر الخبر الآن';
-        document.getElementById('publishBtn').style.background = '#15803d';
-        publishMsg.textContent = 'تم حفظ التعديلات بنجاح!';
-      } else {
-        await push(ref(db, 'news'), { category, title, summary, image, content, createdAt: Date.now() });
-        publishMsg.textContent = 'تم نشر الخبر بنجاح!';
-      }
-      document.getElementById('newsTitle').value = '';
-      document.getElementById('newsSummary').value = '';
-      document.getElementById('newsImage').value = '';
-      document.getElementById('newsContent').value = '';
-      setTimeout(() => publishMsg.textContent = '', 3000);
-    } catch (error) { alert('حدث خطأ: ' + error.message); }
-  });
-
-  window.editNews = (id) => {
-    const item = allNews.find(n => n.id === id);
-    if (!item) return;
-    editingNewsId = id;
-    document.getElementById('newsCategory').value = item.category || 'عاجل';
-    document.getElementById('newsTitle').value = item.title || '';
-    document.getElementById('newsSummary').value = item.summary || '';
-    document.getElementById('newsImage').value = item.image || '';
-    document.getElementById('newsContent').value = item.content || '';
-    const btn = document.getElementById('publishBtn');
-    btn.textContent = 'حفظ التعديلات على الخبر';
-    btn.style.background = '#1d4ed8';
-    dashboardSection.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  onValue(ref(db, 'news'), (snapshot) => {
-    const data = snapshot.val();
-    allNews = [];
-    if (data) {
-      Object.keys(data).forEach(key => { allNews.push({ id: key, ...data[key] }); });
-      allNews.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    }
-    updateTicker();
-    if (sharedNewsId) { const target = allNews.find(n => n.id === sharedNewsId); if (target) openArticle(target.id); }
-    renderNews();
-  });
-
-  function updateTicker() {
-    const tickerMove = document.getElementById('tickerMove');
-    if (allNews.length === 0) { tickerMove.textContent = 'أهلاً بكم في موقع زاوية الحدث الإخباري'; return; }
-    tickerMove.innerHTML = allNews.slice(0, 6).map(n => `<span class="ticker-item" onclick="openArticle('${n.id}')">🔸 [${n.category || 'عام'}] ${n.title}</span>`).join('');
-  }
-
-  function renderNews() {
-    let filtered = [...allNews];
-    if (showingSavedOnly) filtered = filtered.filter(item => savedIds.includes(item.id));
-    else if (selectedCategory !== 'الكل') filtered = filtered.filter(item => item.category === selectedCategory);
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter(item => (item.title || '').toLowerCase().includes(q) || (item.content || '').toLowerCase().includes(q));
-    }
-    document.getElementById('newsCounter').textContent = `${filtered.length} خبر`;
-    if (filtered.length === 0) { newsFeed.innerHTML = '<p style="text-align:center; color:var(--text-muted); grid-column: 1/-1; padding:30px 0;">لا توجد أخبار منشورة في هذا القسم حالياً.</p>'; return; }
-    newsFeed.innerHTML = '';
-    filtered.forEach((item, index) => {
-      const cat = item.category || 'عام';
-      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString('ar-SY', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'منشور حديثاً';
-      const isSaved = savedIds.includes(item.id);
-      const isFeatured = index === 0 && selectedCategory === 'الكل' && !searchQuery && !showingSavedOnly;
-      const card = document.createElement('article');
-      card.className = `news-card ${isFeatured ? 'featured' : ''}`;
-      card.innerHTML = `
-        ${item.image ? `<img class="news-card-img" src="${item.image}" alt="${item.title}" onclick="openArticle('${item.id}')" onerror="this.style.display='none'">` : ''}
-        <div class="news-card-body">
-          <span class="cat-tag ${cat === 'عاجل' ? 'urgent' : ''}">${cat}</span>
-          <h3 onclick="openArticle('${item.id}')">${item.title}</h3>
-          <p class="news-excerpt">${item.summary || item.content}</p>
-          <div class="card-footer">
-            <span>🕒 ${dateStr}</span>
-            <div class="mini-actions">
-              <button class="mini-btn" onclick="toggleSave('${item.id}')">${isSaved ? '★ محفوظ' : '☆ حفظ'}</button>
-              <button class="mini-btn share-orange" onclick="openShareModal('${item.id}')">شارك</button>
-              ${currentUser ? `<button class="mini-btn edit-blue" onclick="editNews('${item.id}')">تعديل</button><button class="btn btn-danger" onclick="deleteNews('${item.id}')">حذف</button>` : ''}
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <span class="logo-badge">مباشر</span>
+                <h1 id="siteNameHeader">زاوية الحدث</h1>
+            </a>
+            <div class="header-social">
+                <a id="headerFbLink" href="https://www.facebook.com/zawiyatalhadath" target="_blank" rel="noopener">
+                    <i class="fab fa-facebook-f"></i> تابعنا على فيسبوك
+                </a>
             </div>
-          </div>
         </div>
-      `;
-      newsFeed.appendChild(card);
-    });
-  }
+    </header>
 
-  window.openArticle = (id) => {
-    const item = allNews.find(n => n.id === id);
-    if (!item) return;
-    const cat = item.category || 'عام';
-    const words = (item.content || '').split(/\s+/).length;
-    const readMins = Math.max(1, Math.ceil(words / 180));
-    const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleString('ar-SY', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'زاوية الحدث';
-    const isSaved = savedIds.includes(item.id);
-    const autoSummary = item.summary && item.summary.trim() !== '' ? item.summary : (item.content || '').split(/[.،\n]/).filter(s => s.trim().length > 10).slice(0, 2).join('، ') + '.';
-    homeView.classList.add('hidden');
-    articleView.classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    articleView.innerHTML = `
-      <button class="back-btn" onclick="goHome()">→ العودة إلى الأخبار</button>
-      <div><span class="cat-tag ${cat === 'عاجل' ? 'urgent' : ''}">${cat}</span></div>
-      <h1 class="article-title">${item.title}</h1>
-      <div class="article-meta-bar">
-        <span>🕒 دقائق القراءة - ${readMins}</span>
-        <div class="share-group">
-          <button class="share-btn-main" onclick="openShareModal('${item.id}')">🔗 شارك</button>
-          <button class="bookmark-btn" onclick="toggleSave('${item.id}'); openArticle('${item.id}')">${isSaved ? '★ محفوظ' : '☆ حفظ'}</button>
+    <main class="container">
+        <!-- Dynamic Ad Banner -->
+        <section class="ad-wrapper" id="adWrapper" style="display:none;">
+            <span class="ad-label">إعلان</span>
+            <div class="ad-slides" id="adSlides"></div>
+            <div class="ad-dots" id="adDots"></div>
+        </section>
+
+        <h2 class="section-title">آخر الأخبار والمستجدات</h2>
+        <div class="news-grid" id="newsContainer">
+            <p style="color: var(--text-muted);">جاري تحميل الأخبار...</p>
         </div>
-      </div>
-      <div class="follow-grid">
-        <a href="${WHATSAPP_CHANNEL_URL}" target="_blank" class="follow-btn whatsapp"><span>تابعنا على واتساب</span><span class="icon-wa">W</span></a>
-        <a href="${FACEBOOK_PAGE_URL}" target="_blank" class="follow-btn"><span>تابعنا على فيسبوك</span><span style="color:#1877F2; font-weight:900;">f</span></a>
-      </div>
-      <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">نُشر: ${dateStr} | المصدر: زاوية الحدث</div>
-      <div class="summary-box">
-        <div class="summary-header" onclick="document.getElementById('summaryTextWrap').classList.toggle('hidden')">
-          <div class="summary-title-wrap"><span class="summary-icon">✦</span><span>الخلاصة</span></div>
-          <span style="color:var(--accent-orange); font-weight:bold;">⌃</span>
+    </main>
+
+    <!-- Full Article Modal -->
+    <div class="modal" id="articleModal" onclick="if(event.target===this) closeModal()">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <img id="modalImg" class="modal-img" src="" alt="">
+            <div class="modal-body">
+                <div class="news-meta" id="modalMeta"></div>
+                <h2 id="modalTitle" style="margin-bottom: 14px;"></h2>
+                <div id="modalText" style="white-space: pre-line; color: #334155;"></div>
+            </div>
         </div>
-        <div id="summaryTextWrap"><div class="summary-body">${autoSummary}</div><div class="summary-note">* موجز سريع لأهم ما ورد في الخبر.</div></div>
-      </div>
-      ${item.image ? `<img class="article-main-img" src="${item.image}" alt="${item.title}" onerror="this.style.display='none'">` : ''}
-      <div class="article-body-text">${item.content}</div>
-    `;
-  };
+    </div>
 
-  window.goHome = () => { articleView.classList.add('hidden'); homeView.classList.remove('hidden'); window.history.replaceState({}, '', window.location.pathname + (isAdminRoute ? '?admin=1' : '')); };
+    <!-- Dynamic Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 id="footerAboutTitle">عن زاوية الحدث</h4>
+                    <p id="footerAboutDesc" style="color: #94a3b8; font-size: 0.92rem;">
+                        منصة إخبارية شاملة تنقل لكم الخبر بدقة وموضوعية على مدار الساعة.
+                    </p>
+                </div>
 
-  window.openShareModal = (id) => {
-    const item = allNews.find(n => n.id === id);
-    if (!item) return;
-    const shareUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
-    const shareText = encodeURIComponent(`${item.title}\n\nاقرأ التفاصيل عبر زاوية الحدث:\n${shareUrl}`);
-    if (navigator.share) { navigator.share({ title: item.title, text: item.title, url: shareUrl }).catch(() => {}); return; }
-    document.getElementById('modalContent').innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;"><h3 style="margin:0;">مشاركة الخبر</h3><button class="mini-btn" onclick="forceCloseModal()">✕</button></div>
-      <p style="font-size:13px; color:var(--text-muted); margin:8px 0;">${item.title}</p>
-      <div class="share-links-grid">
-        <a class="social-share-item" style="border-color:#25D366;" target="_blank" href="https://api.whatsapp.com/send?text=${shareText}">واتساب</a>
-        <a class="social-share-item" style="border-color:#1877F2;" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">فيسبوك</a>
-        <a class="social-share-item" style="border-color:#0088cc;" target="_blank" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(item.title)}">تيليغرام</a>
-        <button class="social-share-item" onclick="copyNewsLink('${shareUrl}')">📋 نسخ الرابط</button>
-      </div>
-    `;
-    document.getElementById('modalBackdrop').classList.remove('hidden');
-  };
+                <div class="footer-col">
+                    <h4>تواصل معنا وللإعلان</h4>
+                    <div class="contact-links" id="footerContacts"></div>
+                </div>
+            </div>
 
-  window.copyNewsLink = (url) => { navigator.clipboard.writeText(url); alert('تم نسخ رابط الخبر بنجاح!'); forceCloseModal(); };
+            <div class="copyright">
+                جميع الحقوق محفوظة &copy; <span id="year"></span> <span id="footerSiteName">زاوية الحدث</span>
+            </div>
+        </div>
+    </footer>
 
-  window.openBriefModal = () => {
-    const top5 = allNews.slice(0, 5);
-    document.getElementById('modalContent').innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;"><h3 style="margin:0; color:var(--accent-orange);">⚡ الأخبار باختصار</h3><button class="mini-btn" onclick="forceCloseModal()">✕</button></div>
-            ${top5.length === 0 ? '<p>لا توجد أخبار حالياً.</p>' : top5.map((n, i) => `<div style="padding:10px 0; border-bottom:1px solid var(--border-color); cursor:pointer;" onclick="forceCloseModal(); openArticle('${n.id}')"><span style="color:var(--accent-orange); font-weight:800;">${i + 1}. [${n.category || 'عام'}]</span><strong style="font-size:14px;"> ${n.title}</strong></div>`).join('')}
-    `;
-    document.getElementById('modalBackdrop').classList.remove('hidden');
-  };
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-  window.openSubscribeModal = () => {
-    document.getElementById('modalContent').innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;"><h3 style="margin:0;">🔔 اشترك في زاوية الحدث</h3><button class="mini-btn" onclick="forceCloseModal()">✕</button></div>
-      <p style="font-size:13px; color:var(--text-muted);">احصل على أهم الأخبار العاجلة فور نشرها مباشرة:</p>
-      <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
-        <a href="${WHATSAPP_CHANNEL_URL}" target="_blank" class="follow-btn whatsapp"><span>انضم لقناتنا على واتساب</span><span class="icon-wa">W</span></a>
-        <a href="${FACEBOOK_PAGE_URL}" target="_blank" class="follow-btn"><span>تابع صفحتنا على فيسبوك</span></a>
-        <input type="email" id="subEmailInput" placeholder="أو أدخل بريدك الإلكتروني للنشرة اليومية..." style="padding:10px; border-radius:6px; border:1px solid var(--border-color);" />
-        <button class="btn btn-primary" style="margin-top:0;" onclick="saveSubscriber()">اشتراك بالنشرة</button>
-      </div>
-    `;
-    document.getElementById('modalBackdrop').classList.remove('hidden');
-  };
+        const defaultConfig = {
+            siteName: "زاوية الحدث",
+            siteDesc: "منصة إخبارية شاملة تنقل لكم الخبر بدقة وموضوعية على مدار الساعة، وتسلط الضوء على أهم المستجدات المحلية والعامة.",
+            phone: "0953445723",
+            whatsappIntl: "963953445723",
+            email: "Easyxx1111999@gmail.com",
+            facebook: "https://www.facebook.com/zawiyatalhadath",
+            ads: [
+                {
+                    active: true,
+                    theme: "ad-theme-blue",
+                    tag: "شبكة HAYA.NET للإنترنت",
+                    title: "إنترنت فائق السرعة واستقرار على مدار الساعة",
+                    desc: "باقات منزلية وتجارية متنوعة — تغطية قوية ودعم فني متواصل.",
+                    btnText: "اشترك الآن",
+                    whatsappMsg: "مرحباً، أود الاستفسار عن اشتراكات الإنترنت في شبكة HAYA.NET"
+                },
+                {
+                    active: true,
+                    theme: "ad-theme-red",
+                    tag: "ملحمة أبو ناصر",
+                    title: "أجود أنواع اللحوم الطازجة وتجهيز الولائم والمناسبات",
+                    desc: "ذبح يومي طازج — تشكيلة واسعة من اللحوم والفروج بأعلى معايير النظافة.",
+                    btnText: "اطلب الآن",
+                    whatsappMsg: "مرحباً أبو ناصر، أود الاستفسار عن طلبات اللحوم من ملحمة أبو ناصر"
+                },
+                {
+                    active: true,
+                    theme: "ad-theme-light",
+                    tag: "مساحة إعلانية متاحة",
+                    title: "أعلن عن نشاطك التجاري هنا أمام آلاف الزوار",
+                    desc: "احجز مساحتك الإعلانية المميزة في موقع زاوية الحدث بأسعار منافسة.",
+                    btnText: "احجز مساحتك",
+                    whatsappMsg: "مرحباً، أرغب بالاستفسار عن حجز مساحة إعلانية في موقع زاوية الحدث"
+                }
+            ]
+        };
 
-  window.saveSubscriber = async () => {
-    const email = document.getElementById('subEmailInput').value.trim();
-    if (!email || !email.includes('@')) { alert('يرجى إدخال بريد إلكتروني صحيح.'); return; }
-    try { await push(ref(db, 'subscribers'), { email, subscribedAt: Date.now() }); alert('تم اشتراكك بنجاح!'); forceCloseModal(); }
-    catch (e) { alert('شكراً لاشتراكك!'); forceCloseModal(); }
-  };
+        let slideTimer = null;
 
-  window.closeModal = (e) => { if (e.target.id === 'modalBackdrop') forceCloseModal(); };
-  window.forceCloseModal = () => { document.getElementById('modalBackdrop').classList.add('hidden'); };
+        async function loadSiteConfig() {
+            let cfg = defaultConfig;
+            try {
+                const res = await fetch('config.json?v=' + Date.now());
+                if (res.ok) cfg = { ...defaultConfig, ...(await res.json()) };
+            } catch (e) {}
 
-  window.toggleSave = (id) => {
-    if (savedIds.includes(id)) savedIds = savedIds.filter(item => item !== id);
-    else savedIds.push(id);
-    localStorage.setItem('zawya_saved', JSON.stringify(savedIds));
-    updateSavedCount();
-    renderNews();
-  };
+            // Apply Site Info
+            document.title = cfg.siteName + " | أخبار ومستجدات";
+            document.getElementById('siteNameHeader').textContent = cfg.siteName;
+            document.getElementById('footerAboutTitle').textContent = "عن " + cfg.siteName;
+            document.getElementById('footerAboutDesc').textContent = cfg.siteDesc;
+            document.getElementById('footerSiteName').textContent = cfg.siteName;
+            document.getElementById('headerFbLink').href = cfg.facebook;
 
-  function updateSavedCount() { document.getElementById('savedCount').textContent = `(${savedIds.length})`; }
+            // Apply Contacts
+            document.getElementById('footerContacts').innerHTML = `
+                <a href="https://wa.me/${cfg.whatsappIntl}" target="_blank" class="contact-item">
+                    <i class="fab fa-whatsapp"></i> <span>واتساب مباشر: ${cfg.phone}</span>
+                </a>
+                <a href="tel:+${cfg.whatsappIntl}" class="contact-item">
+                    <i class="fas fa-phone"></i> <span>اتصال هاتفي: ${cfg.phone}</span>
+                </a>
+                <a href="mailto:${cfg.email}" class="contact-item">
+                    <i class="fas fa-envelope"></i> <span>${cfg.email}</span>
+                </a>
+                <a href="${cfg.facebook}" target="_blank" class="contact-item">
+                    <i class="fab fa-facebook"></i> <span>صفحتنا الرسمية على فيسبوك</span>
+                </a>
+            `;
 
-  window.showSavedNews = () => {
-    goHome();
-    showingSavedOnly = !showingSavedOnly;
-    document.getElementById('currentSectionTitle').textContent = showingSavedOnly ? 'قائمتي (الأخبار المحفوظة)' : 'آخر الأخبار';
-    renderNews();
-  };
+            // Apply Active Ads
+            const activeAds = (cfg.ads || []).filter(ad => ad.active);
+            const adWrapper = document.getElementById('adWrapper');
+            if (activeAds.length > 0) {
+                adWrapper.style.display = 'block';
+                const slidesEl = document.getElementById('adSlides');
+                const dotsEl = document.getElementById('adDots');
 
-  document.getElementById('openDrawerBtn').addEventListener('click', () => { document.getElementById('sideDrawer').classList.add('open'); document.getElementById('drawerOverlay').classList.remove('hidden'); });
-  window.closeDrawer = () => { document.getElementById('sideDrawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.add('hidden'); };
+                slidesEl.innerHTML = activeAds.map(ad => `
+                    <div class="ad-slide ${ad.theme || 'ad-theme-blue'}">
+                        <div>
+                            <span class="ad-tag">${ad.tag}</span>
+                            <h3>${ad.title}</h3>
+                            <p>${ad.desc}</p>
+                        </div>
+                        <a href="https://wa.me/${ad.customWhatsapp || cfg.whatsappIntl}?text=${encodeURIComponent(ad.whatsappMsg || '')}" target="_blank" class="ad-btn">
+                            <i class="fab fa-whatsapp"></i> ${ad.btnText || 'تواصل الآن'}
+                        </a>
+                    </div>
+                `).join('');
 
-  document.querySelectorAll('#drawerCategories button[data-cat]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#drawerCategories button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedCategory = btn.getAttribute('data-cat');
-      showingSavedOnly = false;
-      document.getElementById('currentSectionTitle').textContent = selectedCategory === 'الكل' ? 'آخر الأخبار' : `قسم: ${selectedCategory}`;
-      goHome();
-      renderNews();
-      closeDrawer();
-    });
-  });
+                if (activeAds.length > 1) {
+                    dotsEl.innerHTML = activeAds.map((_, i) => `
+                        <button class="ad-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>
+                    `).join('');
 
-  window.setTheme = (mode) => {
-    if (mode === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('darkThemeBtn').classList.add('active'); document.getElementById('lightThemeBtn').classList.remove('active'); localStorage.setItem('zawya_theme', 'dark'); }
-    else { document.body.classList.remove('dark-mode'); document.getElementById('lightThemeBtn').classList.add('active'); document.getElementById('darkThemeBtn').classList.remove('active'); localStorage.setItem('zawya_theme', 'light'); }
-  };
+                    let current = 0;
+                    window.goToSlide = function(idx) {
+                        current = idx;
+                        slidesEl.style.transform = `translateX(${current * 100}%)`;
+                        document.querySelectorAll('.ad-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+                    };
 
-  window.toggleSearch = () => { const bar = document.getElementById('searchBar'); bar.classList.toggle('hidden'); if (!bar.classList.contains('hidden')) document.getElementById('searchInput').focus(); };
-  window.handleSearch = () => { goHome(); searchQuery = document.getElementById('searchInput').value.trim(); renderNews(); };
-  window.clearSearch = () => { document.getElementById('searchInput').value = ''; searchQuery = ''; document.getElementById('searchBar').classList.add('hidden'); renderNews(); };
-  window.toggleTicker = () => { const wrap = document.getElementById('tickerWrap'); const btn = document.getElementById('tickerPauseBtn'); wrap.classList.toggle('paused'); btn.textContent = wrap.classList.contains('paused') ? '▶' : '❚❚'; };
-  window.deleteNews = async (id) => { if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) await remove(ref(db, 'news/' + id)); };
-</script>
+                    if (slideTimer) clearInterval(slideTimer);
+                    slideTimer = setInterval(() => {
+                        current = (current + 1) % activeAds.length;
+                        window.goToSlide(current);
+                    }, 5000);
+                } else {
+                    dotsEl.style.display = 'none';
+                }
+            }
+        }
+
+        let allArticles = [];
+        async function loadNews() {
+            const container = document.getElementById('newsContainer');
+            try {
+                const res = await fetch('news.json?v=' + Date.now());
+                if (!res.ok) throw new Error();
+                allArticles = await res.json();
+
+                if (!allArticles.length) {
+                    container.innerHTML = '<p>لا توجد أخبار منشورة حالياً.</p>';
+                    return;
+                }
+
+                container.innerHTML = allArticles.map((item, idx) => `
+                    <article class="news-card">
+                        ${item.image ? `<img src="${item.image}" alt="${item.title}" class="news-img" loading="lazy">` : ''}
+                        <div class="news-body">
+                            <div class="news-meta">
+                                <span class="news-category">${item.category || 'أخبار عامة'}</span>
+                                <span>${item.date || ''}</span>
+                            </div>
+                            <h3 class="news-title">${item.title}</h3>
+                            <p class="news-excerpt">${item.content.substring(0, 120)}...</p>
+                            <button class="read-more-btn" onclick="openModal(${idx})">اقرأ المزيد &larr;</button>
+                        </div>
+                    </article>
+                `).join('');
+            } catch (err) {
+                              container.innerHTML = '<p style="color:#dc2626;">لا توجد أخبار متاحة حالياً.</p>';
+            }
+        }
+
+        function openModal(idx) {
+            const item = allArticles[idx];
+            if (!item) return;
+            const img = document.getElementById('modalImg');
+            if (item.image) {
+                img.src = item.image;
+                img.style.display = 'block';
+            } else {
+                img.style.display = 'none';
+            }
+            document.getElementById('modalMeta').innerHTML = `<span class="news-category">${item.category || 'أخبار عامة'}</span> <span>${item.date || ''}</span>`;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalText').textContent = item.content;
+            document.getElementById('articleModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('articleModal').style.display = 'none';
+        }
+
+        loadSiteConfig();
+        loadNews();
+    </script>
 </body>
 </html>
