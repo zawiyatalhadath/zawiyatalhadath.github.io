@@ -17,7 +17,7 @@
         .visitor-pill { background: rgba(255,255,255,0.1); color: #fbbf24; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; }
         header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 12px 14px; position: sticky; top: 0; z-index: 900; }
         .header-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .brand-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+        .brand-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         .menu-icon { font-size: 1.3rem; color: #111827; background: none; border: none; cursor: pointer; }
         .brand-title h1 { font-size: 1.35rem; font-weight: 900; color: #111827; line-height: 1.1; }
         .brand-title span { font-size: 0.72rem; color: #ea580c; font-weight: 700; display: block; }
@@ -91,7 +91,7 @@
 
     <header>
         <div class="header-inner">
-            <div class="brand-wrap" id="secret-logo" onclick="handleLogoTap()">
+            <div class="brand-wrap" id="secret-logo">
                 <button class="menu-icon"><i class="fa-solid fa-bars"></i></button>
                 <div class="brand-title">
                     <h1>زاوية الحدث</h1>
@@ -134,7 +134,6 @@
         <button class="floating-brief" onclick="openBriefModal()">الأخبار باختصار <span class="play-badge"><i class="fa-solid fa-play"></i></span></button>
     </div>
 
-    <!-- Admin & Editors Dashboard (#admin) -->
     <div id="admin-panel">
         <div class="admin-card" id="login-box" style="max-width:420px; margin:20px auto;">
             <h3 style="margin-bottom:14px;"><i class="fa-solid fa-shield-halved" style="color:#ea580c"></i> دخول الإدارة والمحررين</h3>
@@ -142,7 +141,7 @@
             <input type="email" id="adm-email" class="form-ctrl" placeholder="أدخل البريد الإلكتروني">
             <label class="form-label">كلمة المرور</label>
             <input type="password" id="adm-pass" class="form-ctrl" placeholder="أدخل كلمة المرور">
-            <button class="btn-read" id="btn-login-submit" style="width:100%; padding:10px;" onclick="loginUser()">تسجيل الدخول</button>
+            <button class="btn-read" id="login-submit-btn" style="width:100%; padding:10px;" onclick="loginUser()">تسجيل الدخول</button>
             <button class="btn-save" style="width:100%; margin-top:8px;" onclick="exitAdmin()">عودة للموقع</button>
         </div>
 
@@ -172,7 +171,6 @@
                     <button class="tab-btn manager-only" onclick="switchTab('tab-settings', this)"><i class="fa-solid fa-sliders"></i> إعدادات المدير</button>
                 </div>
 
-                <!-- Tab 1: News -->
                 <div id="tab-news" class="tab-section active">
                     <h4 style="margin-bottom:10px;" id="news-form-title">نشر خبر جديد</h4>
                     <input type="hidden" id="edit-id">
@@ -184,7 +182,6 @@
                         <option value="أخبار عامة">أخبار عامة</option>
                     </select>
 
-                    <!-- Ultra-Fast HD Studio Image Upload -->
                     <div class="upload-box" onclick="document.getElementById('in-file').click()">
                         <i class="fa-solid fa-image" style="font-size:1.5rem; color:#ea580c; margin-bottom:4px;"></i>
                         <div style="font-weight:800; font-size:0.88rem;" id="upload-status-txt">اضغط لاختيار صورة من الاستوديو</div>
@@ -201,7 +198,6 @@
                     <div id="adm-list"></div>
                 </div>
 
-                <!-- Tab 2: Ads Management -->
                 <div id="tab-ads" class="tab-section">
                     <h4 style="margin-bottom:10px;">إدارة الإعلان الممول الرئيسي</h4>
                     <label class="form-label">حالة الإعلان</label>
@@ -220,33 +216,28 @@
                     <button class="btn-read" onclick="saveSiteSettings()">حفظ ونشر الإعلان</button>
                 </div>
 
-                <!-- Tab 3: Editors Management -->
                 <div id="tab-editors" class="tab-section">
                     <h4 style="margin-bottom:10px;">إضافة محرر جديد</h4>
                     <input type="text" id="ed-name" class="form-ctrl" placeholder="اسم المحرر (مثال: أحمد - قسم الاقتصاد)">
                     <input type="email" id="ed-email" class="form-ctrl" placeholder="البريد الإلكتروني للمحرر">
-                    <input type="text" id="ed-pass" class="form-ctrl" placeholder="كلمة مرور المحرر (6 أحرف على الأقل)">
+                    <input type="text" id="ed-pass" class="form-ctrl" placeholder="كلمة مرور المحرر">
                     <button class="btn-read" onclick="addEditor()"><i class="fa-solid fa-user-plus"></i> إضافة المحرر</button>
                     <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
                     <h4 style="margin-bottom:8px;">قائمة المحررين الحاليين</h4>
                     <div id="editors-list"></div>
                 </div>
 
-                <!-- Tab 4: Manager & Site Settings -->
                 <div id="tab-settings" class="tab-section">
                     <h4 style="margin-bottom:10px;">بيانات التواصل وروابط الموقع</h4>
                     <label class="form-label">رقم الواتساب (مع رمز الدولة بدون +)</label>
                     <input type="text" id="set-wa" class="form-ctrl" placeholder="963900000000">
-                    <label class="form-label">رقم الاتصال الهاتفي</label>
+                    <label class="form-label">رقم الهاتف للاتصال</label>
                     <input type="text" id="set-phone" class="form-ctrl" placeholder="0900000000">
-                    <label class="form-label">البريد الرسمي الظاهر في الموقع</label>
-                    <input type="email" id="set-public-email" class="form-ctrl" placeholder="info@zawiyatalhadath.com">
+                    <label class="form-label">البريد الإلكتروني للموقع</label>
+                    <input type="email" id="set-email" class="form-ctrl" placeholder="info@zawiyatalhadath.com">
                     <label class="form-label">رابط صفحة فيسبوك</label>
                     <input type="url" id="set-fb" class="form-ctrl" placeholder="https://facebook.com/...">
-                    <label class="form-label">رابط Webhook للنشر التلقائي (اختياري)</label>
-                    <input type="url" id="set-webhook" class="form-ctrl" placeholder="https://hook.eu2.make.com/...">
-
-                    <button class="btn-read" style="background:#16a34a;" onclick="saveSiteSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ جميع الإعدادات</button>
+                    <button class="btn-read" style="width:100%; padding:11px;" onclick="saveSiteSettings()"><i class="fa-solid fa-floppy-disk"></i> حفظ جميع الإعدادات</button>
                 </div>
             </div>
         </div>
@@ -256,69 +247,53 @@
         <div class="footer-inner">
             <h3>تواصل معنا وأعلن عبر زاوية الحدث</h3>
             <div class="contact-pills">
-                <a href="https://wa.me/963900000000" id="ft-wa" class="c-pill"><i class="fa-brands fa-whatsapp"></i> واتساب مباشر: 963900000000</a>
-                <a href="tel:0900000000" id="ft-phone" class="c-pill"><i class="fa-solid fa-phone"></i> اتصال هاتفي: 0900000000</a>
-                <a href="mailto:info@zawiyatalhadath.com" id="ft-email" class="c-pill"><i class="fa-solid fa-envelope"></i> info@zawiyatalhadath.com</a>
+                <a href="https://wa.me/963900000000" id="ft-wa" target="_blank" class="c-pill"><i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> واتساب مباشر: <span id="ft-wa-txt">963900000000</span></a>
+                <a href="tel:0900000000" id="ft-phone" class="c-pill"><i class="fa-solid fa-phone" style="color:#ea580c;"></i> اتصال هاتفي: <span id="ft-phone-txt">0900000000</span></a>
+                <a href="mailto:info@zawiyatalhadath.com" id="ft-email" class="c-pill"><i class="fa-solid fa-envelope" style="color:#38bdf8;"></i> <span id="ft-email-txt">info@zawiyatalhadath.com</span></a>
             </div>
             <a href="https://facebook.com" id="ft-fb" target="_blank" class="fb-footer-btn"><i class="fa-brands fa-facebook"></i> صفحتنا الرسمية على فيسبوك</a>
             <div class="copy-txt">جميع الحقوق محفوظة © 2026 زاوية الحدث</div>
         </div>
     </footer>
 
-    <div class="modal" id="read-modal" onclick="if(event.target.id==='read-modal') closeModal()">
+    <div class="modal" id="article-modal">
         <div class="modal-box">
-            <button class="close-btn" onclick="closeModal()">✕</button>
-            <span class="card-cat" id="m-cat"></span>
-            <h2 id="m-title" style="margin:8px 0 12px;"></h2>
-            <img id="m-img" style="width:100%; border-radius:10px; margin-bottom:12px; display:none;">
-            <p id="m-body" style="white-space:pre-line; line-height:1.8; color:#374151;"></p>
+            <button class="close-btn" onclick="closeModal('article-modal')"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modal-article-content"></div>
         </div>
     </div>
+
+    <div class="modal" id="brief-modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('brief-modal')"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="margin-bottom:14px; color:#ea580c;">موجز الأخبار العاجلة والمهمة</h3>
+            <div id="brief-list"></div>
+        </div>
+    </div>
+
     <div id="toast"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD4DiuqBE2seftZOe4TtCT-Mtwvhh7A_BM",
-            authDomain: "news-site-f4efc.firebaseapp.com",
-            databaseURL: "https://news-site-f4efc-default-rtdb.firebaseio.com",
-            projectId: "news-site-f4efc",
-            storageBucket: "news-site-f4efc.firebasestorage.app",
-            messagingSenderId: "644937766713",
-            appId: "1:644937766713:web:bc55a35eebedbe46c1bae8"
-        };
-
+    <script>
+        const API_KEY = "AIzaSyD4DiuqBE2seftZOe4TtCT-Mtwvhh7A_BM";
+        const DB_URL = "https://news-site-f4efc-default-rtdb.firebaseio.com";
         const MANAGER_UID = "eXdLEAeWcNXMrsrfCrZjqzNEdW42";
-        const DB_URL = firebaseConfig.databaseURL;
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const secondaryApp = initializeApp(firebaseConfig, "SecondaryEditorCreator");
-        const secondaryAuth = getAuth(secondaryApp);
-
-        let articles = [], editors = [], activeCat = "الكل", visitors = 0, tapCount = 0, tapTimer = null;
+        let articles = [];
+        let currentCat = "الكل";
         let currentUser = null;
-        let idToken = "";
-
+        let authToken = localStorage.getItem('zh_token') || "";
+        let editorsMap = {};
         let siteSettings = {
             wa: "963900000000",
             phone: "0900000000",
-            publicEmail: "info@zawiyatalhadath.com",
+            email: "info@zawiyatalhadath.com",
             fb: "https://facebook.com",
-            webhook: "",
             adActive: "true",
             adTitle: "أعلن عن نشاطك التجاري هنا أمام آلاف الزوار",
             adDesc: "مساحات إعلانية مميزة في موقع زاوية الحدث بأسعار منافسة",
             adBtn: "تواصل معنا",
             adUrl: "https://wa.me/963900000000"
         };
-
-        const defaultArticles = [
-            { id: "1", title: "النفط يحافظ على مكاسبه مع تجدد المخاوف بشأن الإمدادات وخام برنت قرب 95 دولاراً", category: "أسواق وبورصة", body: "حافظت أسعار النفط على مكاسبها التي حققتها خلال الجلسات الأخيرة مدعومة بمخاوف المستثمرين من تراجع المعروض العالمي وتنامي الطلب.", date: "منذ قليل", author: "هيئة التحرير", views: 45 },
-            { id: "2", title: "أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة", category: "اقتصاد", body: "ارتفعت أسعار الذهب في المعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة مستفيدة من تراجع مؤشر الدولار.", date: "منذ قليل", author: "القسم الاقتصادي", views: 38 }
-        ];
 
         function esc(str) {
             if (!str) return "";
@@ -327,511 +302,597 @@
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(/'/g, "&#39;");
         }
 
-        function safeUrl(url) {
-            if (!url) return "#";
-            const clean = String(url).trim();
-            if (clean.startsWith("http://") || clean.startsWith("https://") || clean.startsWith("mailto:") || clean.startsWith("tel:") || clean.startsWith("data:image/")) {
-                return clean;
-            }
-            return "#";
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                idToken = await user.getIdToken();
-                if (location.hash === "#admin") {
-                    openAdmin();
-                }
-                syncPrivateAdminData();
-            } else {
-                currentUser = null;
-                idToken = "";
-                if (location.hash === "#admin") {
-                    openAdmin();
-                }
-            }
+        document.getElementById('today-date').textContent = new Date().toLocaleDateString('ar-SY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Long press (1.5s) on logo to open admin panel without triggering phone zoom
+        let pressTimer = null;
+        const logoEl = document.getElementById('secret-logo');
+        logoEl.addEventListener('touchstart', () => {
+            pressTimer = setTimeout(() => { openAdminPanel(); }, 1500);
+        }, { passive: true });
+        logoEl.addEventListener('touchend', () => { clearTimeout(pressTimer); });
+        logoEl.addEventListener('touchmove', () => { clearTimeout(pressTimer); });
+        logoEl.addEventListener('mousedown', () => {
+            pressTimer = setTimeout(() => { openAdminPanel(); }, 1500);
         });
+        logoEl.addEventListener('mouseup', () => { clearTimeout(pressTimer); });
+        logoEl.addEventListener('mouseleave', () => { clearTimeout(pressTimer); });
 
-        window.handleLogoTap = function() {
-            tapCount++;
-            clearTimeout(tapTimer);
-            if (tapCount >= 3) {
-                tapCount = 0;
-                location.hash = "admin";
-                openAdmin();
-            } else {
-                tapTimer = setTimeout(() => {
-                    if (tapCount === 1) resetHome();
-                    tapCount = 0;
-                }, 400);
+        function checkAdminTrigger() {
+            const params = new URLSearchParams(window.location.search);
+            if (window.location.hash === '#admin' || params.get('admin') === '1') {
+                openAdminPanel();
             }
-        };
+        }
+        window.addEventListener('hashchange', checkAdminTrigger);
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.querySelectorAll(".cat-pill").forEach(btn => btn.onclick = () => filterByCat(btn.dataset.cat));
-
-            const cachedSet = localStorage.getItem("zawiya_settings_v6");
-            if (cachedSet) siteSettings = { ...siteSettings, ...JSON.parse(cachedSet) };
-            applySettingsToUI();
-
-            const cachedArt = localStorage.getItem("zawiya_art_v6");
-            articles = cachedArt ? JSON.parse(cachedArt) : defaultArticles;
-            renderNews();
-
-            if (location.hash === "#admin") openAdmin();
-            window.onhashchange = () => location.hash === "#admin" ? openAdmin() : exitAdmin(false);
-
-            syncArticlesFast();
-            syncPublicSettingsFast();
-            trackVisitors();
-        });
-
-        async function safeFetch(url, opt = {}) {
-            const c = new AbortController();
-            const t = setTimeout(() => c.abort(), 4500);
-            try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
-            catch (e) { clearTimeout(t); throw e; }
+        function openAdminPanel() {
+            document.getElementById('visitor-view').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            window.scrollTo(0, 0);
+            if (currentUser && authToken) {
+                showDashboard();
+            } else {
+                document.getElementById('login-box').style.display = 'block';
+                document.getElementById('dashboard-box').style.display = 'none';
+            }
         }
 
-        window.handleImageUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const statusTxt = document.getElementById("upload-status-txt");
-            statusTxt.textContent = "جاري تجهيز الصورة...";
+        function exitAdmin() {
+            document.getElementById('admin-panel').style.display = 'none';
+            document.getElementById('visitor-view').style.display = 'block';
+            try { history.replaceState(null, "", window.location.pathname); } catch(e) {}
+        }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement("canvas");
-                    const MAX_WIDTH = 720;
-                    let w = img.width, h = img.height;
-                    if (w > MAX_WIDTH) { h = Math.round(h * (MAX_WIDTH / w)); w = MAX_WIDTH; }
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, w, h);
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
 
-                    const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.65);
-                    document.getElementById("in-img").value = compressedDataUrl;
-                    const prev = document.getElementById("img-preview");
-                    prev.src = compressedDataUrl;
-                    prev.style.display = "block";
-                    const kb = Math.round((compressedDataUrl.length * 3) / 4 / 1024);
-                    statusTxt.textContent = `جاهزة للنشر (${kb} KB - خفيفة جداً)`;
-                    toast("تم ضغط الصورة بسرعة فائقة!");
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
+        async function loginUser() {
+            const email = document.getElementById('adm-email').value.trim();
+            const password = document.getElementById('adm-pass').value.trim();
+            if (!email || !password) return showToast("يرجى إدخال البريد الإلكتروني وكلمة المرور");
 
-        async function syncArticlesFast() {
+            const btn = document.getElementById('login-submit-btn');
+            btn.disabled = true;
+            btn.textContent = "جاري التحقق...";
+
             try {
-                const r = await safeFetch(`${DB_URL}/articles.json`);
-                const artData = await r.json();
-                if (artData && typeof artData === "object" && !artData.error) {
-                    articles = Object.keys(artData).map(k => ({ id: k, ...artData[k] })).reverse();
-                    saveLocalCache();
-                    renderNews();
-                    renderAdminList();
-                } else if (artData === null) {
-                    articles = defaultArticles;
-                    saveLocalCache();
-                    renderNews();
-                    renderAdminList();
+                const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, returnSecureToken: true })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error?.message || "بيانات الدخول غير صحيحة");
+
+                authToken = data.idToken;
+                localStorage.setItem('zh_token', authToken);
+                localStorage.setItem('zh_refresh', data.refreshToken);
+                localStorage.setItem('zh_uid', data.localId);
+                localStorage.setItem('zh_email', data.email);
+
+                const isManager = (data.localId === MANAGER_UID);
+                currentUser = { uid: data.localId, email: data.email, role: isManager ? 'manager' : 'editor' };
+                showDashboard();
+                showToast("تم تسجيل الدخول بنجاح");
+            } catch (err) {
+                showToast("خطأ: تأكد من البريد وكلمة المرور");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "تسجيل الدخول";
+            }
+        }
+
+        async function restoreSession() {
+            const refresh = localStorage.getItem('zh_refresh');
+            if (!refresh) return;
+            try {
+                const res = await fetch(`https://securetoken.googleapis.com/v1/token?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refresh)}`
+                });
+                const data = await res.json();
+                if (res.ok && data.id_token) {
+                    authToken = data.id_token;
+                    localStorage.setItem('zh_token', authToken);
+                    localStorage.setItem('zh_refresh', data.refresh_token);
+                    const uid = data.user_id;
+                    const email = localStorage.getItem('zh_email') || "";
+                    currentUser = { uid, email, role: (uid === MANAGER_UID) ? 'manager' : 'editor' };
+                    if (document.getElementById('admin-panel').style.display === 'block') {
+                        showDashboard();
+                    }
+                } else {
+                    logoutUser(true);
                 }
             } catch (e) {}
         }
 
-        async function syncPublicSettingsFast() {
+        function logoutUser(silent = false) {
+            currentUser = null;
+            authToken = "";
+            localStorage.removeItem('zh_token');
+            localStorage.removeItem('zh_refresh');
+            localStorage.removeItem('zh_uid');
+            localStorage.removeItem('zh_email');
+            document.getElementById('dashboard-box').style.display = 'none';
+            document.getElementById('login-box').style.display = 'block';
+            if (!silent) showToast("تم تسجيل الخروج");
+        }
+
+        async function showDashboard() {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('dashboard-box').style.display = 'block';
+            const isMgr = currentUser.role === 'manager';
+            document.getElementById('welcome-role-title').textContent = isMgr ? "لوحة تحكم المدير العام" : "لوحة تحكم المحرر";
+            document.getElementById('logged-user-info').textContent = currentUser.email;
+
+            document.querySelectorAll('.manager-only').forEach(el => {
+                el.style.display = isMgr ? 'inline-block' : 'none';
+            });
+
+            renderAdminList();
+            if (isMgr) {
+                await loadPrivateSettings();
+                await loadEditors();
+            }
+        }
+
+        async function loadPublicSettings() {
             try {
-                let setRes = await safeFetch(`${DB_URL}/public_settings.json`);
-                let setData = await setRes.json();
-                if (!setData || setData.error) {
-                    setRes = await safeFetch(`${DB_URL}/settings.json`);
-                    setData = await setRes.json();
-                }
-                if (setData && typeof setData === "object" && !setData.error) {
-                    const { mgrEmail, mgrPass, ...safePublic } = setData;
-                    siteSettings = { ...siteSettings, ...safePublic };
-                    localStorage.setItem("zawiya_settings_v6", JSON.stringify(siteSettings));
+                const res = await fetch(`${DB_URL}/public_settings.json`);
+                const data = await res.json();
+                if (data) {
+                    siteSettings = { ...siteSettings, ...data };
                     applySettingsToUI();
                 }
             } catch (e) {}
         }
 
-        async function syncPrivateAdminData() {
-            if (!currentUser) return;
+        async function loadPrivateSettings() {
+            if (!authToken) return;
             try {
-                idToken = await currentUser.getIdToken();
-                if (currentUser.uid === MANAGER_UID) {
-                    const [setRes, edRes] = await Promise.all([
-                        safeFetch(`${DB_URL}/settings.json?auth=${idToken}`),
-                        safeFetch(`${DB_URL}/editors.json?auth=${idToken}`)
-                    ]);
-                    const setData = await setRes.json();
-                    if (setData && typeof setData === "object" && !setData.error) {
-                        siteSettings = { ...siteSettings, ...setData };
-                        applySettingsToUI();
-                    }
-                    const edData = await edRes.json();
-                    editors = (edData && typeof edData === "object" && !edData.error) ? Object.keys(edData).map(k => ({ id: k, ...edData[k] })) : [];
-                    renderEditorsList();
+                const res = await fetch(`${DB_URL}/settings.json?auth=${authToken}`);
+                const data = await res.json();
+                if (data && !data.error) {
+                    siteSettings = { ...siteSettings, ...data };
                 }
             } catch (e) {}
+            fillSettingsForm();
         }
 
-        function saveLocalCache() {
-            try { localStorage.setItem("zawiya_art_v6", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
+        function fillSettingsForm() {
+            document.getElementById('set-wa').value = siteSettings.wa || "";
+            document.getElementById('set-phone').value = siteSettings.phone || "";
+            document.getElementById('set-email').value = siteSettings.email || "";
+            document.getElementById('set-fb').value = siteSettings.fb || "";
+            document.getElementById('set-ad-active').value = siteSettings.adActive || "true";
+            document.getElementById('set-ad-title').value = siteSettings.adTitle || "";
+            document.getElementById('set-ad-desc').value = siteSettings.adDesc || "";
+            document.getElementById('set-ad-btn').value = siteSettings.adBtn || "";
+            document.getElementById('set-ad-url').value = siteSettings.adUrl || "";
         }
 
         function applySettingsToUI() {
-            document.getElementById("top-fb-link").href = safeUrl(siteSettings.fb);
-            document.getElementById("ft-fb").href = safeUrl(siteSettings.fb);
-            document.getElementById("ft-wa").href = `https://wa.me/${encodeURIComponent(siteSettings.wa)}`;
-            document.getElementById("ft-wa").innerHTML = `<i class="fa-brands fa-whatsapp"></i> واتساب مباشر: ${esc(siteSettings.wa)}`;
-            document.getElementById("ft-phone").href = `tel:${encodeURIComponent(siteSettings.phone)}`;
-            document.getElementById("ft-phone").innerHTML = `<i class="fa-solid fa-phone"></i> اتصال هاتفي: ${esc(siteSettings.phone)}`;
-            document.getElementById("ft-email").href = `mailto:${encodeURIComponent(siteSettings.publicEmail)}`;
-            document.getElementById("ft-email").innerHTML = `<i class="fa-solid fa-envelope"></i> ${esc(siteSettings.publicEmail)}`;
+            const waClean = (siteSettings.wa || "").replace(/[^0-9]/g, '');
+            document.getElementById('ft-wa').href = `https://wa.me/${waClean}`;
+            document.getElementById('ft-wa-txt').textContent = siteSettings.wa || "";
+            document.getElementById('ft-phone').href = `tel:${siteSettings.phone || ""}`;
+            document.getElementById('ft-phone-txt').textContent = siteSettings.phone || "";
+            document.getElementById('ft-email').href = `mailto:${siteSettings.email || ""}`;
+            document.getElementById('ft-email-txt').textContent = siteSettings.email || "";
+            document.getElementById('ft-fb').href = siteSettings.fb || "https://facebook.com";
+            document.getElementById('top-fb-link').href = siteSettings.fb || "https://facebook.com";
 
-            const adBox = document.getElementById("main-ad-banner");
-            if (siteSettings.adActive === "false") adBox.style.display = "none";
-            else {
-                adBox.style.display = "flex";
-                document.getElementById("ad-title-txt").textContent = siteSettings.adTitle;
-                document.getElementById("ad-desc-txt").textContent = siteSettings.adDesc;
-                document.getElementById("ad-link-btn").textContent = siteSettings.adBtn;
-                document.getElementById("ad-link-btn").href = safeUrl(siteSettings.adUrl);
+            const banner = document.getElementById('main-ad-banner');
+            if (siteSettings.adActive === "false") {
+                banner.style.display = "none";
+            } else {
+                banner.style.display = "flex";
+                document.getElementById('ad-title-txt').textContent = siteSettings.adTitle || "";
+                document.getElementById('ad-desc-txt').textContent = siteSettings.adDesc || "";
+                document.getElementById('ad-link-btn').textContent = siteSettings.adBtn || "تواصل معنا";
+                document.getElementById('ad-link-btn').href = siteSettings.adUrl || "#";
+            }
+        }
+
+        async function saveSiteSettings() {
+            if (!authToken || currentUser?.role !== 'manager') return showToast("غير مصرح لك");
+            const updated = {
+                wa: document.getElementById('set-wa').value.trim(),
+                phone: document.getElementById('set-phone').value.trim(),
+                email: document.getElementById('set-email').value.trim(),
+                fb: document.getElementById('set-fb').value.trim(),
+                adActive: document.getElementById('set-ad-active').value,
+                adTitle: document.getElementById('set-ad-title').value.trim(),
+                adDesc: document.getElementById('set-ad-desc').value.trim(),
+                adBtn: document.getElementById('set-ad-btn').value.trim(),
+                adUrl: document.getElementById('set-ad-url').value.trim()
+            };
+            try {
+                const res = await fetch(`${DB_URL}/public_settings.json?auth=${authToken}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updated)
+                });
+                if (!res.ok) throw new Error();
+                siteSettings = updated;
+                applySettingsToUI();
+                showToast("تم حفظ الإعدادات ونشرها بنجاح");
+            } catch (e) {
+                showToast("فشل الحفظ: تأكد من صلاحية الجلسة");
+            }
+        }
+
+        async function loadEditors() {
+            if (!authToken) return;
+            try {
+                const res = await fetch(`${DB_URL}/editors.json?auth=${authToken}`);
+                const data = await res.json();
+                editorsMap = (data && !data.error) ? data : {};
+                renderEditorsList();
+            } catch (e) {}
+        }
+
+        function renderEditorsList() {
+            const list = document.getElementById('editors-list');
+            const keys = Object.keys(editorsMap);
+            if (!keys.length) {
+                list.innerHTML = '<p style="color:#6b7280; font-size:0.85rem;">لا يوجد محررون مضافون حالياً.</p>';
+                return;
+            }
+            list.innerHTML = keys.map(k => {
+                const ed = editorsMap[k];
+                return `<div class="list-row">
+                    <div>
+                        <strong>${esc(ed.name)}</strong><br>
+                        <small style="color:#6b7280;">${esc(ed.email)}</small>
+                    </div>
+                    <button class="btn-urgent" onclick="deleteEditor('${esc(k)}')">حذف</button>
+                </div>`;
+            }).join('');
+        }
+
+        async function addEditor() {
+            if (!authToken || currentUser?.role !== 'manager') return showToast("غير مصرح لك");
+            const name = document.getElementById('ed-name').value.trim();
+            const email = document.getElementById('ed-email').value.trim();
+            const password = document.getElementById('ed-pass').value.trim();
+            if (!name || !email || password.length < 6) {
+                return showToast("أدخل الاسم والبريد وكلمة مرور (6 أحرف على الأقل)");
             }
 
-            document.getElementById("set-wa").value = siteSettings.wa || "";
-            document.getElementById("set-phone").value = siteSettings.phone || "";
-            document.getElementById("set-public-email").value = siteSettings.publicEmail || "";
-            document.getElementById("set-fb").value = siteSettings.fb || "";
-            document.getElementById("set-webhook").value = siteSettings.webhook || "";
-            document.getElementById("set-ad-active").value = siteSettings.adActive || "true";
-            document.getElementById("set-ad-title").value = siteSettings.adTitle || "";
-            document.getElementById("set-ad-desc").value = siteSettings.adDesc || "";
-            document.getElementById("set-ad-btn").value = siteSettings.adBtn || "";
-            document.getElementById("set-ad-url").value = siteSettings.adUrl || "";
+            try {
+                // Create editor account in Firebase Auth via REST SignUp
+                const authRes = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, returnSecureToken: false })
+                });
+                const authData = await authRes.json();
+                if (!authRes.ok) {
+                    const msg = authData.error?.message || "";
+                    if (msg.includes("EMAIL_EXISTS")) {
+                        return showToast("هذا البريد مسجل مسبقاً");
+                    }
+                    throw new Error(msg);
+                }
+
+                const edUid = authData.localId;
+                const edObj = { name, email, uid: edUid, createdAt: Date.now() };
+                await fetch(`${DB_URL}/editors/${edUid}.json?auth=${authToken}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(edObj)
+                });
+
+                document.getElementById('ed-name').value = "";
+                document.getElementById('ed-email').value = "";
+                document.getElementById('ed-pass').value = "";
+                await loadEditors();
+                showToast("تم إنشاء حساب المحرر وتفعيله بنجاح");
+            } catch (e) {
+                showToast("تعذر إضافة المحرر: تحقق من البيانات");
+            }
+        }
+
+        async function deleteEditor(uid) {
+            if (!authToken || currentUser?.role !== 'manager') return;
+            if (!confirm("هل تريد حذف هذا المحرر من القائمة؟")) return;
+            try {
+                await fetch(`${DB_URL}/editors/${uid}.json?auth=${authToken}`, { method: 'DELETE' });
+                await loadEditors();
+                showToast("تم حذف المحرر");
+            } catch (e) {
+                showToast("فشل حذف المحرر");
+            }
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const status = document.getElementById('upload-status-txt');
+            status.textContent = "جاري ضغط الصورة...";
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxW = 800;
+                    const scale = Math.min(1, maxW / img.width);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressed = canvas.toDataURL('image/jpeg', 0.65);
+                    document.getElementById('in-img').value = compressed;
+                    const prev = document.getElementById('img-preview');
+                    prev.src = compressed;
+                    prev.style.display = 'block';
+                    status.textContent = "تم تجهيز الصورة بنجاح ✓";
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function loadArticles() {
+            try {
+                const res = await fetch(`${DB_URL}/articles.json`);
+                const data = await res.json();
+                if (data && typeof data === 'object') {
+                    articles = Object.keys(data).map(id => ({ id, ...data[id] }))
+                        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                } else {
+                    articles = [];
+                }
+                renderNews();
+                renderAdminList();
+                updateStats();
+            } catch (e) {}
+        }
+
+        function updateStats() {
+            const urgent = articles.filter(a => a.cat === 'عاجل').length;
+            document.getElementById('urgent-count').textContent = urgent;
+            document.getElementById('adm-news-count').textContent = articles.length;
+            const totalViews = articles.reduce((sum, a) => sum + (Number(a.views) || 0), 0);
+            document.getElementById('adm-views').textContent = totalViews;
+        }
+
+        async function saveArticle() {
+            if (!authToken) return showToast("يرجى تسجيل الدخول أولاً");
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('in-title').value.trim();
+            const cat = document.getElementById('in-cat').value;
+            const img = document.getElementById('in-img').value.trim();
+            const body = document.getElementById('in-body').value.trim();
+            if (!title || !body) return showToast("يرجى كتابة عنوان وتفاصيل الخبر");
+
+            const payload = {
+                title,
+                cat,
+                img,
+                body,
+                author: currentUser?.email || "الإدارة",
+                date: new Date().toLocaleDateString('ar-SY'),
+                timestamp: id ? (articles.find(x => x.id === id)?.timestamp || Date.now()) : Date.now(),
+                views: id ? (articles.find(x => x.id === id)?.views || 0) : 0
+            };
+
+            try {
+                const url = id ? `${DB_URL}/articles/${id}.json?auth=${authToken}` : `${DB_URL}/articles.json?auth=${authToken}`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error();
+                resetArticleForm();
+                await loadArticles();
+                showToast(id ? "تم تعديل الخبر بنجاح" : "تم نشر الخبر بنجاح");
+            } catch (e) {
+                showToast("فشل النشر: تأكد من تسجيل الدخول");
+            }
+        }
+
+        function editArticle(id) {
+            const a = articles.find(x => x.id === id);
+            if (!a) return;
+            document.getElementById('edit-id').value = a.id;
+            document.getElementById('in-title').value = a.title;
+            document.getElementById('in-cat').value = a.cat;
+            document.getElementById('in-img').value = a.img || "";
+            document.getElementById('in-body').value = a.body;
+            document.getElementById('news-form-title').textContent = "تعديل الخبر";
+            if (a.img) {
+                const prev = document.getElementById('img-preview');
+                prev.src = a.img;
+                prev.style.display = 'block';
+            }
+            window.scrollTo(0, 0);
+        }
+
+        async function deleteArticle(id) {
+            if (!authToken) return showToast("يرجى تسجيل الدخول أولاً");
+            if (!confirm("هل أنت متأكد من حذف هذا الخبر نهائياً؟")) return;
+            try {
+                const res = await fetch(`${DB_URL}/articles/${id}.json?auth=${authToken}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+                await loadArticles();
+                showToast("تم حذف الخبر نهائياً");
+            } catch (e) {
+                showToast("فشل الحذف: تأكد من صلاحية الجلسة");
+            }
+        }
+
+        function resetArticleForm() {
+            document.getElementById('edit-id').value = "";
+            document.getElementById('in-title').value = "";
+            document.getElementById('in-img').value = "";
+            document.getElementById('in-body').value = "";
+            document.getElementById('img-preview').style.display = 'none';
+            document.getElementById('upload-status-txt').textContent = "اضغط لاختيار صورة من الاستوديو";
+            document.getElementById('news-form-title').textContent = "نشر خبر جديد";
+        }
+
+        function renderAdminList() {
+            const box = document.getElementById('adm-list');
+            if (!articles.length) {
+                box.innerHTML = '<p style="color:#6b7280; font-size:0.85rem;">لا توجد أخبار منشورة بعد.</p>';
+                return;
+            }
+            box.innerHTML = articles.map(a => `
+                <div class="list-row">
+                    <div style="flex:1;">
+                        <span class="card-cat">${esc(a.cat)}</span>
+                        <div style="font-weight:800; font-size:0.9rem;">${esc(a.title)}</div>
+                        <small style="color:#9ca3af;">${esc(a.date || '')}</small>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn-save" onclick="editArticle('${esc(a.id)}')">تعديل</button>
+                        <button class="btn-urgent" onclick="deleteArticle('${esc(a.id)}')">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.querySelectorAll('.cat-pill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterByCat(btn.dataset.cat);
+            });
+        });
+
+        function filterByCat(cat) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-pill').forEach(b => {
+                b.classList.toggle('active', b.dataset.cat === cat);
+            });
+            renderNews();
+        }
+
+        function toggleSearch() {
+            const p = document.getElementById('search-panel');
+            p.classList.toggle('open');
+            if (p.classList.contains('open')) document.getElementById('search-input').focus();
+        }
+
+        function renderNews() {
+            const q = document.getElementById('search-input').value.trim().toLowerCase();
+            const filtered = articles.filter(a => {
+                const matchCat = currentCat === 'الكل' || a.cat === currentCat;
+                const matchQ = !q || (a.title && a.title.toLowerCase().includes(q)) || (a.body && a.body.toLowerCase().includes(q));
+                return matchCat && matchQ;
+            });
+
+            const container = document.getElementById('news-container');
+            if (!filtered.length) {
+                container.innerHTML = '<div class="admin-card" style="text-align:center; color:#6b7280;">لا توجد أخبار مطابقة حالياً.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(a => `
+                <article class="news-card">
+                    <span class="card-cat" style="${a.cat === 'عاجل' ? 'background:#fee2e2;color:#dc2626;' : ''}">${esc(a.cat)}</span>
+                    ${a.img ? `<img src="${esc(a.img)}" class="card-img" loading="lazy" onclick="openArticle('${esc(a.id)}')">` : ''}
+                    <h2 onclick="openArticle('${esc(a.id)}')">${esc(a.title)}</h2>
+                    <p>${esc(a.body)}</p>
+                    <div class="card-meta"><i class="fa-regular fa-clock"></i> ${esc(a.date || '')}</div>
+                    <div class="card-actions">
+                        <button class="btn-read" onclick="openArticle('${esc(a.id)}')">اقرأ المزيد</button>
+                        <button class="btn-save" onclick="saveBookmark('${esc(a.id)}')"><i class="fa-regular fa-bookmark"></i> حفظ</button>
+                        <button class="btn-share" onclick="shareArticle('${esc(a.title)}')"><i class="fa-solid fa-share-nodes"></i> مشاركة</button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function openArticle(id) {
+            const a = articles.find(x => x.id === id);
+            if (!a) return;
+            const content = document.getElementById('modal-article-content');
+            content.innerHTML = `
+                <span class="card-cat">${esc(a.cat)}</span>
+                <h2 style="margin:8px 0 12px; font-size:1.3rem;">${esc(a.title)}</h2>
+                <div class="card-meta" style="margin-bottom:12px;">${esc(a.date || '')}</div>
+                ${a.img ? `<img src="${esc(a.img)}" style="width:100%; border-radius:10px; margin-bottom:14px;">` : ''}
+                <div style="white-space:pre-line; font-size:0.98rem; color:#1f2937; line-height:1.8;">${esc(a.body)}</div>
+            `;
+            document.getElementById('article-modal').classList.add('active');
+        }
+
+        function openBriefModal() {
+            const top = articles.slice(0, 5);
+            const list = document.getElementById('brief-list');
+            list.innerHTML = top.length ? top.map(a => `
+                <div style="padding:10px 0; border-bottom:1px solid #f3f4f6;">
+                    <span class="card-cat">${esc(a.cat)}</span>
+                    <h4 style="margin:4px 0; cursor:pointer;" onclick="closeModal('brief-modal'); openArticle('${esc(a.id)}')">${esc(a.title)}</h4>
+                </div>
+            `).join('') : '<p style="color:#6b7280;">لا توجد أخبار حالياً.</p>';
+            document.getElementById('brief-modal').classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function saveBookmark(id) {
+            showToast("تم حفظ الخبر في المفضلة");
+        }
+
+        function shareArticle(title) {
+            const url = window.location.origin + window.location.pathname;
+            if (navigator.share) {
+                navigator.share({ title, url }).catch(() => {});
+            } else {
+                navigator.clipboard?.writeText(`${title} - ${url}`);
+                showToast("تم نسخ رابط الخبر للمشاركة");
+            }
         }
 
         async function trackVisitors() {
             try {
-                const r = await safeFetch(`${DB_URL}/visitors.json`);
-                let count = await r.json();
-                count = (typeof count === "number") ? count : 100;
-                if (!sessionStorage.getItem("v_done")) {
-                    count++;
-                    sessionStorage.setItem("v_done", "1");
-                    safeFetch(`${DB_URL}/visitors.json`, { method: "PUT", body: JSON.stringify(count) }).catch(() => {});
+                const res = await fetch(`${DB_URL}/visitors.json`);
+                let count = await res.json();
+                count = (typeof count === 'number' ? count : 120) + 1;
+                document.getElementById('visitor-count').textContent = count;
+                document.getElementById('adm-visitors').textContent = count;
+                if (!sessionStorage.getItem('zh_visited')) {
+                    sessionStorage.setItem('zh_visited', '1');
+                    await fetch(`${DB_URL}/visitors.json`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(count)
+                    });
                 }
-                visitors = count;
-            } catch (e) { visitors = 108; }
-            document.getElementById("visitor-count").textContent = visitors;
-            document.getElementById("adm-visitors").textContent = visitors;
+            } catch (e) {
+                document.getElementById('visitor-count').textContent = "125";
+            }
         }
 
-        window.filterByCat = function(cat) {
-            activeCat = cat;
-            document.querySelectorAll(".cat-pill").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
-            renderNews();
-        };
-        window.resetHome = function() { filterByCat("الكل"); exitAdmin(); };
-        window.toggleSearch = function() {
-            const p = document.getElementById("search-panel");
-            p.classList.toggle("open");
-            if (!p.classList.contains("open")) { document.getElementById("search-input").value = ""; renderNews(); }
-        };
-
-        window.renderNews = function() {
-            const q = document.getElementById("search-input").value.trim().toLowerCase();
-            document.getElementById("urgent-count").textContent = articles.filter(a => a.category === "عاجل").length;
-            const list = articles.filter(a => (activeCat === "الكل" || a.category === activeCat) && (!q || (a.title && a.title.toLowerCase().includes(q))));
-            document.getElementById("news-container").innerHTML = list.map(a => `
-                <article class="news-card">
-                    <span class="card-cat">${esc(a.category)}</span>
-                    ${a.image ? `<img src="${safeUrl(a.image)}" class="card-img" loading="lazy" onclick="openArticle('${esc(a.id)}')" onerror="this.style.display='none'">` : ''}
-                    <h2 onclick="openArticle('${esc(a.id)}')">${esc(a.title)}</h2>
-                    <p>${esc(a.body)}</p>
-                    <div class="card-meta"><span><i class="fa-regular fa-clock"></i> ${esc(a.date || 'منذ قليل')} • ${esc(a.author || 'هيئة التحرير')}</span></div>
-                    <div class="card-actions">
-                        <button class="btn-read" onclick="openArticle('${esc(a.id)}')">اقرأ المزيد</button>
-                        <button class="btn-save" onclick="toast('تم حفظ الخبر')">حفظ</button>
-                        <button class="btn-share" onclick="shareArt('${esc(a.id)}')">شارك</button>
-                    </div>
-                </article>`).join("");
-        };
-
-        window.openArticle = function(id) {
-            const a = articles.find(x => x.id === id);
-            if (!a) return;
-            document.getElementById("m-cat").textContent = a.category;
-            document.getElementById("m-title").textContent = a.title;
-            document.getElementById("m-body").textContent = a.body;
-            const img = document.getElementById("m-img");
-            if (a.image) { img.src = safeUrl(a.image); img.style.display = "block"; } else img.style.display = "none";
-            document.getElementById("read-modal").classList.add("active");
-        };
-        window.openBriefModal = function() {
-            document.getElementById("m-cat").textContent = "الأخبار باختصار";
-            document.getElementById("m-title").textContent = "موجز أهم أخبار زاوية الحدث";
-            document.getElementById("m-img").style.display = "none";
-            document.getElementById("m-body").textContent = articles.slice(0, 5).map((a, i) => `${i + 1}. ${a.title}`).join("
-
-");
-            document.getElementById("read-modal").classList.add("active");
-        };
-        window.closeModal = function() { document.getElementById("read-modal").classList.remove("active"); };
-        window.shareArt = function(id) {
-            const a = articles.find(x => x.id === id);
-            if (a) window.open(`https://wa.me/?text=${encodeURIComponent(a.title + "
-" + location.href)}`, "_blank");
-        };
-
-        window.switchTab = function(tabId, btn) {
-            document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.getElementById(tabId).classList.add("active");
-            btn.classList.add("active");
-        };
-
-        window.openAdmin = function() {
-            document.getElementById("visitor-view").style.display = "none";
-            document.getElementById("admin-panel").style.display = "block";
-            if (currentUser) {
-                const isManager = (currentUser.uid === MANAGER_UID);
-                document.getElementById("login-box").style.display = "none";
-                document.getElementById("dashboard-box").style.display = "block";
-                document.getElementById("welcome-role-title").textContent = isManager ? "لوحة تحكم المدير العام" : "لوحة المحرر";
-                document.getElementById("logged-user-info").textContent = currentUser.email;
-                document.querySelectorAll(".manager-only").forEach(el => el.style.display = isManager ? "inline-block" : "none");
-                renderAdminList();
-                if (isManager) renderEditorsList();
-            } else {
-                document.getElementById("login-box").style.display = "block";
-                document.getElementById("dashboard-box").style.display = "none";
-            }
-        };
-
-        window.exitAdmin = function(clr = true) {
-            if (clr && location.hash === "#admin") history.pushState("", "", location.pathname);
-            document.getElementById("admin-panel").style.display = "none";
-            document.getElementById("visitor-view").style.display = "block";
-        };
-
-        window.loginUser = async function() {
-            const em = document.getElementById("adm-email").value.trim().toLowerCase();
-            const pw = document.getElementById("adm-pass").value.trim();
-            if (!em || !pw) return toast("أدخل البريد الإلكتروني وكلمة المرور");
-            const btn = document.getElementById("btn-login-submit");
-            btn.textContent = "جاري التحقق الآمن...";
-            btn.disabled = true;
-            try {
-                const cred = await signInWithEmailAndPassword(auth, em, pw);
-                currentUser = cred.user;
-                idToken = await currentUser.getIdToken();
-                openAdmin();
-                syncPrivateAdminData();
-                toast("تم تسجيل الدخول بأمان!");
-            } catch (e) {
-                toast("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-            } finally {
-                btn.textContent = "تسجيل الدخول";
-                btn.disabled = false;
-            }
-        };
-
-        window.logoutUser = async function() {
-            await signOut(auth);
-            currentUser = null;
-            idToken = "";
-            openAdmin();
-            toast("تم تسجيل الخروج");
-        };
-
-        window.saveArticle = async function() {
-            if (!currentUser) return toast("يرجى تسجيل الدخول أولاً");
-            idToken = await currentUser.getIdToken();
-            const id = document.getElementById("edit-id").value;
-            const title = document.getElementById("in-title").value.trim();
-            const category = document.getElementById("in-cat").value;
-            const image = document.getElementById("in-img").value.trim();
-            const body = document.getElementById("in-body").value.trim();
-            if (!title || !body) return toast("أدخل العنوان والتفاصيل");
-
-            const authorName = (currentUser.uid === MANAGER_UID) ? "المدير العام" : (currentUser.email.split("@")[0]);
-            const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: authorName, views: 1 };
-
-            document.getElementById("edit-id").value = "";
-            document.getElementById("in-title").value = "";
-            document.getElementById("in-img").value = "";
-            document.getElementById("in-body").value = "";
-            document.getElementById("img-preview").style.display = "none";
-            document.getElementById("upload-status-txt").textContent = "اضغط لاختيار صورة من الاستوديو";
-
-            if (id) {
-                const idx = articles.findIndex(x => x.id === id);
-                if (idx > -1) articles[idx] = { id, ...payload };
-                renderAdminList(); renderNews(); saveLocalCache();
-                toast("تم التعديل بنجاح!");
-                safeFetch(`${DB_URL}/articles/${id}.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(payload) }).catch(() => {});
-            } else {
-                const tempId = "temp_" + Date.now();
-                articles.unshift({ id: tempId, ...payload });
-                renderAdminList(); renderNews(); saveLocalCache();
-                toast("تم نشر الخبر بنجاح!");
-                try {
-                    const r = await safeFetch(`${DB_URL}/articles.json?auth=${idToken}`, { method: "POST", body: JSON.stringify(payload) });
-                    const res = await r.json();
-                    if (res && res.name) {
-                        const i = articles.findIndex(x => x.id === tempId);
-                        if (i > -1) articles[i].id = res.name;
-                        saveLocalCache(); renderAdminList();
-                    }
-                    if (siteSettings.webhook) fetch(siteSettings.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
-                } catch (e) { toast("تعذر الحفظ على السيرفر، تأكد من الصلاحيات"); }
-            }
-        };
-
-        window.renderAdminList = function() {
-            document.getElementById("adm-news-count").textContent = articles.length;
-            document.getElementById("adm-views").textContent = articles.reduce((s, a) => s + (a.views || 0), 0);
-            document.getElementById("adm-list").innerHTML = articles.map(a => `
-                <div class="list-row">
-                    <div>
-                        <strong style="font-size:0.88rem; display:block;">${esc(a.title)}</strong>
-                        <small style="color:#6b7280;">${esc(a.category)} • بواسطة: ${esc(a.author || 'المدير')}</small>
-                    </div>
-                    <div style="display:flex; gap:5px;">
-                        <button class="btn-save" onclick="editArt('${esc(a.id)}')">تعديل</button>
-                        <button class="btn-urgent" onclick="delArt('${esc(a.id)}')">حذف</button>
-                    </div>
-                </div>`).join("");
-        };
-
-        window.editArt = function(id) {
-            const a = articles.find(x => x.id === id);
-            if (!a) return;
-            document.getElementById("edit-id").value = a.id;
-            document.getElementById("in-title").value = a.title;
-            document.getElementById("in-cat").value = a.category;
-            document.getElementById("in-img").value = a.image || "";
-            if (a.image) { const prev = document.getElementById("img-preview"); prev.src = safeUrl(a.image); prev.style.display = "block"; }
-            document.getElementById("in-body").value = a.body;
-            window.scrollTo(0, 0);
-        };
-
-        window.delArt = async function(id) {
-            if (!currentUser) return toast("يرجى تسجيل الدخول أولاً");
-            idToken = await currentUser.getIdToken();
-            if (!id || id.startsWith("temp_")) {
-                articles = articles.filter(a => a.id !== id);
-                renderAdminList(); renderNews(); saveLocalCache();
-                return toast("تم الحذف!");
-            }
-            toast("جاري مسح الخبر من السيرفر...");
-            try {
-                const res = await fetch(`${DB_URL}/articles/${id}.json?auth=${idToken}`, { method: "DELETE" });
-                if (res.ok) {
-                    articles = articles.filter(a => a.id !== id);
-                    localStorage.removeItem("zawiya_art_v6");
-                    saveLocalCache();
-                    renderAdminList();
-                    renderNews();
-                    toast("تم المسح النهائي من السيرفر بنجاح!");
-                } else {
-                    toast("تعذر الحذف، تأكد من الصلاحيات");
-                }
-            } catch (e) {
-                toast("ضعف في الإنترنت، أعد المحاولة");
-            }
-        };
-
-        window.addEditor = async function() {
-            if (!currentUser || currentUser.uid !== MANAGER_UID) return toast("هذه الصلاحية للمدير العام فقط");
-            idToken = await currentUser.getIdToken();
-            const name = document.getElementById("ed-name").value.trim();
-            const email = document.getElementById("ed-email").value.trim().toLowerCase();
-            const pass = document.getElementById("ed-pass").value.trim();
-            if (!name || !email || !pass) return toast("أكمل جميع بيانات المحرر");
-            if (pass.length < 6) return toast("كلمة مرور المحرر يجب أن تكون 6 أحرف على الأقل");
-
-            toast("جاري إنشاء حساب المحرر...");
-            try {
-                const edCred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
-                const edUid = edCred.user.uid;
-                await signOut(secondaryAuth);
-
-                await safeFetch(`${DB_URL}/editors/${edUid}.json?auth=${idToken}`, {
-                    method: "PUT",
-                    body: JSON.stringify({ name, email, uid: edUid })
-                });
-
-                document.getElementById("ed-name").value = "";
-                document.getElementById("ed-email").value = "";
-                document.getElementById("ed-pass").value = "";
-                toast("تمت إضافة المحرر وتفعيل حسابه بأمان!");
-                syncPrivateAdminData();
-            } catch (e) {
-                if (e.code === "auth/email-already-in-use") {
-                    toast("هذا البريد مسجل مسبقاً في النظام");
-                } else {
-                    toast("تعذرت إضافة المحرر: " + (e.message || ""));
-                }
-            }
-        };
-
-        window.renderEditorsList = function() {
-            const el = document.getElementById("editors-list");
-            if (!editors.length) { el.innerHTML = "<small style='color:#6b7280;'>لا يوجد محررون مضافون حالياً.</small>"; return; }
-            el.innerHTML = editors.map(ed => `
-                <div class="list-row">
-                    <div><strong>${esc(ed.name)}</strong><br><small style="color:#6b7280;">${esc(ed.email)}</small></div>
-                    <button class="btn-urgent" onclick="delEditor('${esc(ed.id)}')">حذف</button>
-                </div>`).join("");
-        };
-
-        window.delEditor = async function(id) {
-            if (!currentUser || currentUser.uid !== MANAGER_UID) return;
-            idToken = await currentUser.getIdToken();
-            editors = editors.filter(e => e.id !== id);
-            renderEditorsList(); toast("تم حذف المحرر");
-            safeFetch(`${DB_URL}/editors/${id}.json?auth=${idToken}`, { method: "DELETE" }).catch(() => {});
-        };
-
-        window.saveSiteSettings = async function() {
-            if (!currentUser || currentUser.uid !== MANAGER_UID) return toast("هذه الصلاحية للمدير العام فقط");
-            idToken = await currentUser.getIdToken();
-            siteSettings.wa = document.getElementById("set-wa").value.trim();
-            siteSettings.phone = document.getElementById("set-phone").value.trim();
-            siteSettings.publicEmail = document.getElementById("set-public-email").value.trim();
-            siteSettings.fb = document.getElementById("set-fb").value.trim();
-            siteSettings.webhook = document.getElementById("set-webhook").value.trim();
-            siteSettings.adActive = document.getElementById("set-ad-active").value;
-            siteSettings.adTitle = document.getElementById("set-ad-title").value.trim();
-            siteSettings.adDesc = document.getElementById("set-ad-desc").value.trim();
-            siteSettings.adBtn = document.getElementById("set-ad-btn").value.trim();
-            siteSettings.adUrl = document.getElementById("set-ad-url").value.trim();
-
-            const { webhook, ...publicOnly } = siteSettings;
-
-            localStorage.setItem("zawiya_settings_v6", JSON.stringify(publicOnly));
-            applySettingsToUI();
-            toast("تم حفظ الإعدادات بأمان!");
-            await Promise.all([
-                safeFetch(`${DB_URL}/public_settings.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(publicOnly) }),
-                safeFetch(`${DB_URL}/settings.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(siteSettings) })
-            ]).catch(() => {});
-        };
-
-        window.toast = function(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2200); };
+        // Init
+        checkAdminTrigger();
+        restoreSession();
+        loadPublicSettings();
+        loadArticles();
+        trackVisitors();
     </script>
 </body>
 </html>
