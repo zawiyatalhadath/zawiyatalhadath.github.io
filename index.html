@@ -142,7 +142,7 @@
             <input type="email" id="adm-email" class="form-ctrl" placeholder="أدخل البريد الإلكتروني">
             <label class="form-label">كلمة المرور</label>
             <input type="password" id="adm-pass" class="form-ctrl" placeholder="أدخل كلمة المرور">
-            <button class="btn-read" style="width:100%; padding:10px;" onclick="loginUser()">تسجيل الدخول</button>
+            <button class="btn-read" id="btn-login-submit" style="width:100%; padding:10px;" onclick="loginUser()">تسجيل الدخول</button>
             <button class="btn-save" style="width:100%; margin-top:8px;" onclick="exitAdmin()">عودة للموقع</button>
         </div>
 
@@ -225,7 +225,7 @@
                     <h4 style="margin-bottom:10px;">إضافة محرر جديد</h4>
                     <input type="text" id="ed-name" class="form-ctrl" placeholder="اسم المحرر (مثال: أحمد - قسم الاقتصاد)">
                     <input type="email" id="ed-email" class="form-ctrl" placeholder="البريد الإلكتروني للمحرر">
-                    <input type="text" id="ed-pass" class="form-ctrl" placeholder="كلمة مرور المحرر">
+                    <input type="text" id="ed-pass" class="form-ctrl" placeholder="كلمة مرور المحرر (6 أحرف على الأقل)">
                     <button class="btn-read" onclick="addEditor()"><i class="fa-solid fa-user-plus"></i> إضافة المحرر</button>
                     <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
                     <h4 style="margin-bottom:8px;">قائمة المحررين الحاليين</h4>
@@ -234,13 +234,7 @@
 
                 <!-- Tab 4: Manager & Site Settings -->
                 <div id="tab-settings" class="tab-section">
-                    <h4 style="margin-bottom:10px;">بيانات الدخول الأساسية (المدير العام)</h4>
-                    <label class="form-label">البريد الإلكتروني الأساسي للمدير</label>
-                    <input type="email" id="set-mgr-email" class="form-ctrl">
-                    <label class="form-label">كلمة المرور الأساسية للمدير</label>
-                    <input type="text" id="set-mgr-pass" class="form-ctrl">
-
-                    <h4 style="margin:14px 0 10px;">بيانات التواصل وروابط الموقع</h4>
+                    <h4 style="margin-bottom:10px;">بيانات التواصل وروابط الموقع</h4>
                     <label class="form-label">رقم الواتساب (مع رمز الدولة بدون +)</label>
                     <input type="text" id="set-wa" class="form-ctrl" placeholder="963900000000">
                     <label class="form-label">رقم الاتصال الهاتفي</label>
@@ -281,13 +275,34 @@
         </div>
     </div>
     <div id="toast"></div>
-    <script>
-        const DB_URL = "https://news-site-f4efc-default-rtdb.firebaseio.com";
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD4DiuqBE2seftZOe4TtCT-Mtwvhh7A_BM",
+            authDomain: "news-site-f4efc.firebaseapp.com",
+            databaseURL: "https://news-site-f4efc-default-rtdb.firebaseio.com",
+            projectId: "news-site-f4efc",
+            storageBucket: "news-site-f4efc.firebasestorage.app",
+            messagingSenderId: "644937766713",
+            appId: "1:644937766713:web:bc55a35eebedbe46c1bae8"
+        };
+
+        const MANAGER_UID = "eXdLEAeWcNXMrsrfCrZjqzNEdW42";
+        const DB_URL = firebaseConfig.databaseURL;
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const secondaryApp = initializeApp(firebaseConfig, "SecondaryEditorCreator");
+        const secondaryAuth = getAuth(secondaryApp);
+
         let articles = [], editors = [], activeCat = "الكل", visitors = 0, tapCount = 0, tapTimer = null;
+        let currentUser = null;
+        let idToken = "";
 
         let siteSettings = {
-            mgrEmail: "admin@zawiya.com",
-            mgrPass: "1234",
             wa: "963900000000",
             phone: "0900000000",
             publicEmail: "info@zawiyatalhadath.com",
@@ -305,7 +320,43 @@
             { id: "2", title: "أسعار الذهب تعوض خسائرها وتستقر فوق مستوى 3600 دولار للأونصة", category: "اقتصاد", body: "ارتفعت أسعار الذهب في المعاملات الفورية والعقود الآجلة لتتجاوز مستوى 3620 دولاراً للأونصة مستفيدة من تراجع مؤشر الدولار.", date: "منذ قليل", author: "القسم الاقتصادي", views: 38 }
         ];
 
-        function handleLogoTap() {
+        function esc(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function safeUrl(url) {
+            if (!url) return "#";
+            const clean = String(url).trim();
+            if (clean.startsWith("http://") || clean.startsWith("https://") || clean.startsWith("mailto:") || clean.startsWith("tel:") || clean.startsWith("data:image/")) {
+                return clean;
+            }
+            return "#";
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                idToken = await user.getIdToken();
+                if (location.hash === "#admin") {
+                    openAdmin();
+                }
+                syncPrivateAdminData();
+            } else {
+                currentUser = null;
+                idToken = "";
+                if (location.hash === "#admin") {
+                    openAdmin();
+                }
+            }
+        });
+
+        window.handleLogoTap = function() {
             tapCount++;
             clearTimeout(tapTimer);
             if (tapCount >= 3) {
@@ -318,17 +369,17 @@
                     tapCount = 0;
                 }, 400);
             }
-        }
+        };
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("today-date").textContent = new Date().toLocaleDateString('ar-SY', { day: 'numeric', month: 'long', year: 'numeric' });
             document.querySelectorAll(".cat-pill").forEach(btn => btn.onclick = () => filterByCat(btn.dataset.cat));
 
-            const cachedSet = localStorage.getItem("zawiya_settings_v5");
+            const cachedSet = localStorage.getItem("zawiya_settings_v6");
             if (cachedSet) siteSettings = { ...siteSettings, ...JSON.parse(cachedSet) };
             applySettingsToUI();
 
-            const cachedArt = localStorage.getItem("zawiya_art_v5");
+            const cachedArt = localStorage.getItem("zawiya_art_v6");
             articles = cachedArt ? JSON.parse(cachedArt) : defaultArticles;
             renderNews();
 
@@ -336,18 +387,18 @@
             window.onhashchange = () => location.hash === "#admin" ? openAdmin() : exitAdmin(false);
 
             syncArticlesFast();
-            syncSettingsFast();
+            syncPublicSettingsFast();
             trackVisitors();
         });
 
         async function safeFetch(url, opt = {}) {
             const c = new AbortController();
-            const t = setTimeout(() => c.abort(), 3500);
+            const t = setTimeout(() => c.abort(), 4500);
             try { const r = await fetch(url, { ...opt, signal: c.signal }); clearTimeout(t); return r; }
             catch (e) { clearTimeout(t); throw e; }
         }
 
-        function handleImageUpload(event) {
+        window.handleImageUpload = function(event) {
             const file = event.target.files[0];
             if (!file) return;
             const statusTxt = document.getElementById("upload-status-txt");
@@ -377,13 +428,13 @@
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
-        }
+        };
 
         async function syncArticlesFast() {
             try {
                 const r = await safeFetch(`${DB_URL}/articles.json`);
                 const artData = await r.json();
-                if (artData && typeof artData === "object") {
+                if (artData && typeof artData === "object" && !artData.error) {
                     articles = Object.keys(artData).map(k => ({ id: k, ...artData[k] })).reverse();
                     saveLocalCache();
                     renderNews();
@@ -397,37 +448,57 @@
             } catch (e) {}
         }
 
-        async function syncSettingsFast() {
+        async function syncPublicSettingsFast() {
             try {
-                const [setRes, edRes] = await Promise.all([
-                    safeFetch(`${DB_URL}/settings.json`),
-                    safeFetch(`${DB_URL}/editors.json`)
-                ]);
-                const setData = await setRes.json();
-                if (setData && typeof setData === "object") {
-                    siteSettings = { ...siteSettings, ...setData };
-                    localStorage.setItem("zawiya_settings_v5", JSON.stringify(siteSettings));
+                let setRes = await safeFetch(`${DB_URL}/public_settings.json`);
+                let setData = await setRes.json();
+                if (!setData || setData.error) {
+                    setRes = await safeFetch(`${DB_URL}/settings.json`);
+                    setData = await setRes.json();
+                }
+                if (setData && typeof setData === "object" && !setData.error) {
+                    const { mgrEmail, mgrPass, ...safePublic } = setData;
+                    siteSettings = { ...siteSettings, ...safePublic };
+                    localStorage.setItem("zawiya_settings_v6", JSON.stringify(siteSettings));
                     applySettingsToUI();
                 }
-                const edData = await edRes.json();
-                editors = (edData && typeof edData === "object") ? Object.keys(edData).map(k => ({ id: k, ...edData[k] })) : [];
-                renderEditorsList();
+            } catch (e) {}
+        }
+
+        async function syncPrivateAdminData() {
+            if (!currentUser) return;
+            try {
+                idToken = await currentUser.getIdToken();
+                if (currentUser.uid === MANAGER_UID) {
+                    const [setRes, edRes] = await Promise.all([
+                        safeFetch(`${DB_URL}/settings.json?auth=${idToken}`),
+                        safeFetch(`${DB_URL}/editors.json?auth=${idToken}`)
+                    ]);
+                    const setData = await setRes.json();
+                    if (setData && typeof setData === "object" && !setData.error) {
+                        siteSettings = { ...siteSettings, ...setData };
+                        applySettingsToUI();
+                    }
+                    const edData = await edRes.json();
+                    editors = (edData && typeof edData === "object" && !edData.error) ? Object.keys(edData).map(k => ({ id: k, ...edData[k] })) : [];
+                    renderEditorsList();
+                }
             } catch (e) {}
         }
 
         function saveLocalCache() {
-            try { localStorage.setItem("zawiya_art_v5", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
+            try { localStorage.setItem("zawiya_art_v6", JSON.stringify(articles.slice(0, 15))); } catch (e) {}
         }
 
         function applySettingsToUI() {
-            document.getElementById("top-fb-link").href = siteSettings.fb;
-            document.getElementById("ft-fb").href = siteSettings.fb;
-            document.getElementById("ft-wa").href = `https://wa.me/${siteSettings.wa}`;
-            document.getElementById("ft-wa").innerHTML = `<i class="fa-brands fa-whatsapp"></i> واتساب مباشر: ${siteSettings.wa}`;
-            document.getElementById("ft-phone").href = `tel:${siteSettings.phone}`;
-            document.getElementById("ft-phone").innerHTML = `<i class="fa-solid fa-phone"></i> اتصال هاتفي: ${siteSettings.phone}`;
-            document.getElementById("ft-email").href = `mailto:${siteSettings.publicEmail}`;
-            document.getElementById("ft-email").innerHTML = `<i class="fa-solid fa-envelope"></i> ${siteSettings.publicEmail}`;
+            document.getElementById("top-fb-link").href = safeUrl(siteSettings.fb);
+            document.getElementById("ft-fb").href = safeUrl(siteSettings.fb);
+            document.getElementById("ft-wa").href = `https://wa.me/${encodeURIComponent(siteSettings.wa)}`;
+            document.getElementById("ft-wa").innerHTML = `<i class="fa-brands fa-whatsapp"></i> واتساب مباشر: ${esc(siteSettings.wa)}`;
+            document.getElementById("ft-phone").href = `tel:${encodeURIComponent(siteSettings.phone)}`;
+            document.getElementById("ft-phone").innerHTML = `<i class="fa-solid fa-phone"></i> اتصال هاتفي: ${esc(siteSettings.phone)}`;
+            document.getElementById("ft-email").href = `mailto:${encodeURIComponent(siteSettings.publicEmail)}`;
+            document.getElementById("ft-email").innerHTML = `<i class="fa-solid fa-envelope"></i> ${esc(siteSettings.publicEmail)}`;
 
             const adBox = document.getElementById("main-ad-banner");
             if (siteSettings.adActive === "false") adBox.style.display = "none";
@@ -436,21 +507,19 @@
                 document.getElementById("ad-title-txt").textContent = siteSettings.adTitle;
                 document.getElementById("ad-desc-txt").textContent = siteSettings.adDesc;
                 document.getElementById("ad-link-btn").textContent = siteSettings.adBtn;
-                document.getElementById("ad-link-btn").href = siteSettings.adUrl;
+                document.getElementById("ad-link-btn").href = safeUrl(siteSettings.adUrl);
             }
 
-            document.getElementById("set-mgr-email").value = siteSettings.mgrEmail;
-            document.getElementById("set-mgr-pass").value = siteSettings.mgrPass;
-            document.getElementById("set-wa").value = siteSettings.wa;
-            document.getElementById("set-phone").value = siteSettings.phone;
-            document.getElementById("set-public-email").value = siteSettings.publicEmail;
-            document.getElementById("set-fb").value = siteSettings.fb;
+            document.getElementById("set-wa").value = siteSettings.wa || "";
+            document.getElementById("set-phone").value = siteSettings.phone || "";
+            document.getElementById("set-public-email").value = siteSettings.publicEmail || "";
+            document.getElementById("set-fb").value = siteSettings.fb || "";
             document.getElementById("set-webhook").value = siteSettings.webhook || "";
-            document.getElementById("set-ad-active").value = siteSettings.adActive;
-            document.getElementById("set-ad-title").value = siteSettings.adTitle;
-            document.getElementById("set-ad-desc").value = siteSettings.adDesc;
-            document.getElementById("set-ad-btn").value = siteSettings.adBtn;
-            document.getElementById("set-ad-url").value = siteSettings.adUrl;
+            document.getElementById("set-ad-active").value = siteSettings.adActive || "true";
+            document.getElementById("set-ad-title").value = siteSettings.adTitle || "";
+            document.getElementById("set-ad-desc").value = siteSettings.adDesc || "";
+            document.getElementById("set-ad-btn").value = siteSettings.adBtn || "";
+            document.getElementById("set-ad-url").value = siteSettings.adUrl || "";
         }
 
         async function trackVisitors() {
@@ -469,119 +538,136 @@
             document.getElementById("adm-visitors").textContent = visitors;
         }
 
-        function filterByCat(cat) {
+        window.filterByCat = function(cat) {
             activeCat = cat;
             document.querySelectorAll(".cat-pill").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
             renderNews();
-        }
-        function resetHome() { filterByCat("الكل"); exitAdmin(); }
-        function toggleSearch() {
+        };
+        window.resetHome = function() { filterByCat("الكل"); exitAdmin(); };
+        window.toggleSearch = function() {
             const p = document.getElementById("search-panel");
             p.classList.toggle("open");
             if (!p.classList.contains("open")) { document.getElementById("search-input").value = ""; renderNews(); }
-        }
+        };
 
-        function renderNews() {
+        window.renderNews = function() {
             const q = document.getElementById("search-input").value.trim().toLowerCase();
             document.getElementById("urgent-count").textContent = articles.filter(a => a.category === "عاجل").length;
-            const list = articles.filter(a => (activeCat === "الكل" || a.category === activeCat) && (!q || a.title.toLowerCase().includes(q)));
+            const list = articles.filter(a => (activeCat === "الكل" || a.category === activeCat) && (!q || (a.title && a.title.toLowerCase().includes(q))));
             document.getElementById("news-container").innerHTML = list.map(a => `
                 <article class="news-card">
-                    <span class="card-cat">${a.category}</span>
-                    ${a.image ? `<img src="${a.image}" class="card-img" loading="lazy" onclick="openArticle('${a.id}')" onerror="this.style.display='none'">` : ''}
-                    <h2 onclick="openArticle('${a.id}')">${a.title}</h2>
-                    <p>${a.body}</p>
-                    <div class="card-meta"><span><i class="fa-regular fa-clock"></i> ${a.date || 'منذ قليل'} • ${a.author || 'هيئة التحرير'}</span></div>
+                    <span class="card-cat">${esc(a.category)}</span>
+                    ${a.image ? `<img src="${safeUrl(a.image)}" class="card-img" loading="lazy" onclick="openArticle('${esc(a.id)}')" onerror="this.style.display='none'">` : ''}
+                    <h2 onclick="openArticle('${esc(a.id)}')">${esc(a.title)}</h2>
+                    <p>${esc(a.body)}</p>
+                    <div class="card-meta"><span><i class="fa-regular fa-clock"></i> ${esc(a.date || 'منذ قليل')} • ${esc(a.author || 'هيئة التحرير')}</span></div>
                     <div class="card-actions">
-                        <button class="btn-read" onclick="openArticle('${a.id}')">اقرأ المزيد</button>
+                        <button class="btn-read" onclick="openArticle('${esc(a.id)}')">اقرأ المزيد</button>
                         <button class="btn-save" onclick="toast('تم حفظ الخبر')">حفظ</button>
-                        <button class="btn-share" onclick="shareArt('${a.id}')">شارك</button>
+                        <button class="btn-share" onclick="shareArt('${esc(a.id)}')">شارك</button>
                     </div>
                 </article>`).join("");
-        }
+        };
 
-        function openArticle(id) {
+        window.openArticle = function(id) {
             const a = articles.find(x => x.id === id);
             if (!a) return;
             document.getElementById("m-cat").textContent = a.category;
             document.getElementById("m-title").textContent = a.title;
             document.getElementById("m-body").textContent = a.body;
             const img = document.getElementById("m-img");
-            if (a.image) { img.src = a.image; img.style.display = "block"; } else img.style.display = "none";
+            if (a.image) { img.src = safeUrl(a.image); img.style.display = "block"; } else img.style.display = "none";
             document.getElementById("read-modal").classList.add("active");
-        }
-        function openBriefModal() {
+        };
+        window.openBriefModal = function() {
             document.getElementById("m-cat").textContent = "الأخبار باختصار";
             document.getElementById("m-title").textContent = "موجز أهم أخبار زاوية الحدث";
             document.getElementById("m-img").style.display = "none";
-            document.getElementById("m-body").textContent = articles.slice(0, 5).map((a, i) => `${i + 1}. ${a.title}`).join("\n\n");
-            document.getElementById("read-modal").classList.add("active");
-        }
-        function closeModal() { document.getElementById("read-modal").classList.remove("active"); }
-        function shareArt(id) {
-            const a = articles.find(x => x.id === id);
-            if (a) window.open(`https://wa.me/?text=${encodeURIComponent(a.title + "\n" + location.href)}`, "_blank");
-        }
+            document.getElementById("m-body").textContent = articles.slice(0, 5).map((a, i) => `${i + 1}. ${a.title}`).join("
 
-        function switchTab(tabId, btn) {
+");
+            document.getElementById("read-modal").classList.add("active");
+        };
+        window.closeModal = function() { document.getElementById("read-modal").classList.remove("active"); };
+        window.shareArt = function(id) {
+            const a = articles.find(x => x.id === id);
+            if (a) window.open(`https://wa.me/?text=${encodeURIComponent(a.title + "
+" + location.href)}`, "_blank");
+        };
+
+        window.switchTab = function(tabId, btn) {
             document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
             document.getElementById(tabId).classList.add("active");
             btn.classList.add("active");
-        }
+        };
 
-        function openAdmin() {
+        window.openAdmin = function() {
             document.getElementById("visitor-view").style.display = "none";
             document.getElementById("admin-panel").style.display = "block";
-            const sessionUser = JSON.parse(sessionStorage.getItem("zawiya_user") || "null");
-            if (sessionUser) {
+            if (currentUser) {
+                const isManager = (currentUser.uid === MANAGER_UID);
                 document.getElementById("login-box").style.display = "none";
                 document.getElementById("dashboard-box").style.display = "block";
-                document.getElementById("welcome-role-title").textContent = sessionUser.role === "manager" ? "لوحة تحكم المدير العام" : "لوحة المحرر";
-                document.getElementById("logged-user-info").textContent = `${sessionUser.name} (${sessionUser.email})`;
-                document.querySelectorAll(".manager-only").forEach(el => el.style.display = sessionUser.role === "manager" ? "inline-block" : "none");
+                document.getElementById("welcome-role-title").textContent = isManager ? "لوحة تحكم المدير العام" : "لوحة المحرر";
+                document.getElementById("logged-user-info").textContent = currentUser.email;
+                document.querySelectorAll(".manager-only").forEach(el => el.style.display = isManager ? "inline-block" : "none");
                 renderAdminList();
-                renderEditorsList();
+                if (isManager) renderEditorsList();
             } else {
                 document.getElementById("login-box").style.display = "block";
                 document.getElementById("dashboard-box").style.display = "none";
             }
-        }
+        };
 
-        function exitAdmin(clr = true) {
+        window.exitAdmin = function(clr = true) {
             if (clr && location.hash === "#admin") history.pushState("", "", location.pathname);
             document.getElementById("admin-panel").style.display = "none";
             document.getElementById("visitor-view").style.display = "block";
-        }
+        };
 
-        function loginUser() {
+        window.loginUser = async function() {
             const em = document.getElementById("adm-email").value.trim().toLowerCase();
             const pw = document.getElementById("adm-pass").value.trim();
-            if (em === siteSettings.mgrEmail.toLowerCase() && pw === siteSettings.mgrPass) {
-                sessionStorage.setItem("zawiya_user", JSON.stringify({ role: "manager", name: "المدير العام", email: em }));
-                openAdmin(); toast("أهلاً بك أيها المدير");
-                return;
+            if (!em || !pw) return toast("أدخل البريد الإلكتروني وكلمة المرور");
+            const btn = document.getElementById("btn-login-submit");
+            btn.textContent = "جاري التحقق الآمن...";
+            btn.disabled = true;
+            try {
+                const cred = await signInWithEmailAndPassword(auth, em, pw);
+                currentUser = cred.user;
+                idToken = await currentUser.getIdToken();
+                openAdmin();
+                syncPrivateAdminData();
+                toast("تم تسجيل الدخول بأمان!");
+            } catch (e) {
+                toast("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+            } finally {
+                btn.textContent = "تسجيل الدخول";
+                btn.disabled = false;
             }
-            const ed = editors.find(x => x.email.toLowerCase() === em && x.pass === pw);
-            if (ed) {
-                sessionStorage.setItem("zawiya_user", JSON.stringify({ role: "editor", name: ed.name, email: ed.email }));
-                openAdmin(); toast(`أهلاً بك ${ed.name}`);
-                return;
-            }
-            toast("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-        }
+        };
 
-        function logoutUser() { sessionStorage.removeItem("zawiya_user"); openAdmin(); toast("تم تسجيل الخروج"); }
+        window.logoutUser = async function() {
+            await signOut(auth);
+            currentUser = null;
+            idToken = "";
+            openAdmin();
+            toast("تم تسجيل الخروج");
+        };
 
-        async function saveArticle() {
+        window.saveArticle = async function() {
+            if (!currentUser) return toast("يرجى تسجيل الدخول أولاً");
+            idToken = await currentUser.getIdToken();
             const id = document.getElementById("edit-id").value;
             const title = document.getElementById("in-title").value.trim();
             const category = document.getElementById("in-cat").value;
             const image = document.getElementById("in-img").value.trim();
             const body = document.getElementById("in-body").value.trim();
             if (!title || !body) return toast("أدخل العنوان والتفاصيل");
-            const user = JSON.parse(sessionStorage.getItem("zawiya_user") || '{"name":"هيئة التحرير"}');
-            const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: user.name, views: 1 };
+
+            const authorName = (currentUser.uid === MANAGER_UID) ? "المدير العام" : (currentUser.email.split("@")[0]);
+            const payload = { title, category, image, body, date: new Date().toLocaleDateString('ar-SY'), author: authorName, views: 1 };
 
             document.getElementById("edit-id").value = "";
             document.getElementById("in-title").value = "";
@@ -594,15 +680,15 @@
                 const idx = articles.findIndex(x => x.id === id);
                 if (idx > -1) articles[idx] = { id, ...payload };
                 renderAdminList(); renderNews(); saveLocalCache();
-                toast("تم التعديل فوراً!");
-                safeFetch(`${DB_URL}/articles/${id}.json`, { method: "PUT", body: JSON.stringify(payload) }).catch(() => {});
+                toast("تم التعديل بنجاح!");
+                safeFetch(`${DB_URL}/articles/${id}.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(payload) }).catch(() => {});
             } else {
                 const tempId = "temp_" + Date.now();
                 articles.unshift({ id: tempId, ...payload });
                 renderAdminList(); renderNews(); saveLocalCache();
-                toast("تم نشر الخبر بسرعة البرق!");
+                toast("تم نشر الخبر بنجاح!");
                 try {
-                    const r = await safeFetch(`${DB_URL}/articles.json`, { method: "POST", body: JSON.stringify(payload) });
+                    const r = await safeFetch(`${DB_URL}/articles.json?auth=${idToken}`, { method: "POST", body: JSON.stringify(payload) });
                     const res = await r.json();
                     if (res && res.name) {
                         const i = articles.findIndex(x => x.id === tempId);
@@ -610,96 +696,119 @@
                         saveLocalCache(); renderAdminList();
                     }
                     if (siteSettings.webhook) fetch(siteSettings.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
-                } catch (e) {}
+                } catch (e) { toast("تعذر الحفظ على السيرفر، تأكد من الصلاحيات"); }
             }
-        }
+        };
 
-        function renderAdminList() {
+        window.renderAdminList = function() {
             document.getElementById("adm-news-count").textContent = articles.length;
             document.getElementById("adm-views").textContent = articles.reduce((s, a) => s + (a.views || 0), 0);
             document.getElementById("adm-list").innerHTML = articles.map(a => `
                 <div class="list-row">
                     <div>
-                        <strong style="font-size:0.88rem; display:block;">${a.title}</strong>
-                        <small style="color:#6b7280;">${a.category} • بواسطة: ${a.author || 'المدير'}</small>
+                        <strong style="font-size:0.88rem; display:block;">${esc(a.title)}</strong>
+                        <small style="color:#6b7280;">${esc(a.category)} • بواسطة: ${esc(a.author || 'المدير')}</small>
                     </div>
                     <div style="display:flex; gap:5px;">
-                        <button class="btn-save" onclick="editArt('${a.id}')">تعديل</button>
-                        <button class="btn-urgent" onclick="delArt('${a.id}')">حذف</button>
+                        <button class="btn-save" onclick="editArt('${esc(a.id)}')">تعديل</button>
+                        <button class="btn-urgent" onclick="delArt('${esc(a.id)}')">حذف</button>
                     </div>
                 </div>`).join("");
-        }
+        };
 
-        function editArt(id) {
+        window.editArt = function(id) {
             const a = articles.find(x => x.id === id);
             if (!a) return;
             document.getElementById("edit-id").value = a.id;
             document.getElementById("in-title").value = a.title;
             document.getElementById("in-cat").value = a.category;
             document.getElementById("in-img").value = a.image || "";
-            if (a.image) { const prev = document.getElementById("img-preview"); prev.src = a.image; prev.style.display = "block"; }
+            if (a.image) { const prev = document.getElementById("img-preview"); prev.src = safeUrl(a.image); prev.style.display = "block"; }
             document.getElementById("in-body").value = a.body;
             window.scrollTo(0, 0);
-        }
+        };
 
-        // Confirmed Permanent Server Delete (removes article + image cleanly from Firebase & cache)
-        async function delArt(id) {
+        window.delArt = async function(id) {
+            if (!currentUser) return toast("يرجى تسجيل الدخول أولاً");
+            idToken = await currentUser.getIdToken();
             if (!id || id.startsWith("temp_")) {
                 articles = articles.filter(a => a.id !== id);
                 renderAdminList(); renderNews(); saveLocalCache();
                 return toast("تم الحذف!");
             }
-            toast("جاري مسح الخبر والصورة من السيرفر...");
+            toast("جاري مسح الخبر من السيرفر...");
             try {
-                const res = await fetch(`${DB_URL}/articles/${id}.json`, { method: "DELETE" });
+                const res = await fetch(`${DB_URL}/articles/${id}.json?auth=${idToken}`, { method: "DELETE" });
                 if (res.ok) {
                     articles = articles.filter(a => a.id !== id);
-                    localStorage.removeItem("zawiya_art_v5");
-                    localStorage.removeItem("zawiya_art_v4");
-                    localStorage.removeItem("zawiya_art_v3");
+                    localStorage.removeItem("zawiya_art_v6");
                     saveLocalCache();
                     renderAdminList();
                     renderNews();
-                    toast("تم المسح النهائي من الإنترنت بنجاح!");
+                    toast("تم المسح النهائي من السيرفر بنجاح!");
                 } else {
-                    toast("تعذر الحذف، حاول مرة أخرى");
+                    toast("تعذر الحذف، تأكد من الصلاحيات");
                 }
             } catch (e) {
                 toast("ضعف في الإنترنت، أعد المحاولة");
             }
-        }
+        };
 
-        async function addEditor() {
+        window.addEditor = async function() {
+            if (!currentUser || currentUser.uid !== MANAGER_UID) return toast("هذه الصلاحية للمدير العام فقط");
+            idToken = await currentUser.getIdToken();
             const name = document.getElementById("ed-name").value.trim();
-            const email = document.getElementById("ed-email").value.trim();
+            const email = document.getElementById("ed-email").value.trim().toLowerCase();
             const pass = document.getElementById("ed-pass").value.trim();
             if (!name || !email || !pass) return toast("أكمل جميع بيانات المحرر");
-            document.getElementById("ed-name").value = ""; document.getElementById("ed-email").value = ""; document.getElementById("ed-pass").value = "";
-            try {
-                await safeFetch(`${DB_URL}/editors.json`, { method: "POST", body: JSON.stringify({ name, email, pass }) });
-                toast("تمت إضافة المحرر بنجاح"); syncSettingsFast();
-            } catch (e) { toast("تعذر الإضافة"); }
-        }
+            if (pass.length < 6) return toast("كلمة مرور المحرر يجب أن تكون 6 أحرف على الأقل");
 
-        function renderEditorsList() {
+            toast("جاري إنشاء حساب المحرر...");
+            try {
+                const edCred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+                const edUid = edCred.user.uid;
+                await signOut(secondaryAuth);
+
+                await safeFetch(`${DB_URL}/editors/${edUid}.json?auth=${idToken}`, {
+                    method: "PUT",
+                    body: JSON.stringify({ name, email, uid: edUid })
+                });
+
+                document.getElementById("ed-name").value = "";
+                document.getElementById("ed-email").value = "";
+                document.getElementById("ed-pass").value = "";
+                toast("تمت إضافة المحرر وتفعيل حسابه بأمان!");
+                syncPrivateAdminData();
+            } catch (e) {
+                if (e.code === "auth/email-already-in-use") {
+                    toast("هذا البريد مسجل مسبقاً في النظام");
+                } else {
+                    toast("تعذرت إضافة المحرر: " + (e.message || ""));
+                }
+            }
+        };
+
+        window.renderEditorsList = function() {
             const el = document.getElementById("editors-list");
             if (!editors.length) { el.innerHTML = "<small style='color:#6b7280;'>لا يوجد محررون مضافون حالياً.</small>"; return; }
             el.innerHTML = editors.map(ed => `
                 <div class="list-row">
-                    <div><strong>${ed.name}</strong><br><small style="color:#6b7280;">${ed.email} | كلمة المرور: ${ed.pass}</small></div>
-                    <button class="btn-urgent" onclick="delEditor('${ed.id}')">حذف</button>
+                    <div><strong>${esc(ed.name)}</strong><br><small style="color:#6b7280;">${esc(ed.email)}</small></div>
+                    <button class="btn-urgent" onclick="delEditor('${esc(ed.id)}')">حذف</button>
                 </div>`).join("");
-        }
+        };
 
-        function delEditor(id) {
+        window.delEditor = async function(id) {
+            if (!currentUser || currentUser.uid !== MANAGER_UID) return;
+            idToken = await currentUser.getIdToken();
             editors = editors.filter(e => e.id !== id);
             renderEditorsList(); toast("تم حذف المحرر");
-            safeFetch(`${DB_URL}/editors/${id}.json`, { method: "DELETE" }).catch(() => {});
-        }
+            safeFetch(`${DB_URL}/editors/${id}.json?auth=${idToken}`, { method: "DELETE" }).catch(() => {});
+        };
 
-        async function saveSiteSettings() {
-            siteSettings.mgrEmail = document.getElementById("set-mgr-email").value.trim() || "admin@zawiya.com";
-            siteSettings.mgrPass = document.getElementById("set-mgr-pass").value.trim() || "1234";
+        window.saveSiteSettings = async function() {
+            if (!currentUser || currentUser.uid !== MANAGER_UID) return toast("هذه الصلاحية للمدير العام فقط");
+            idToken = await currentUser.getIdToken();
             siteSettings.wa = document.getElementById("set-wa").value.trim();
             siteSettings.phone = document.getElementById("set-phone").value.trim();
             siteSettings.publicEmail = document.getElementById("set-public-email").value.trim();
@@ -711,13 +820,18 @@
             siteSettings.adBtn = document.getElementById("set-ad-btn").value.trim();
             siteSettings.adUrl = document.getElementById("set-ad-url").value.trim();
 
-            localStorage.setItem("zawiya_settings_v5", JSON.stringify(siteSettings));
-            applySettingsToUI();
-            toast("تم حفظ الإعدادات فوراً!");
-            safeFetch(`${DB_URL}/settings.json`, { method: "PUT", body: JSON.stringify(siteSettings) }).catch(() => {});
-        }
+            const { webhook, ...publicOnly } = siteSettings;
 
-        function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2200); }
+            localStorage.setItem("zawiya_settings_v6", JSON.stringify(publicOnly));
+            applySettingsToUI();
+            toast("تم حفظ الإعدادات بأمان!");
+            await Promise.all([
+                safeFetch(`${DB_URL}/public_settings.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(publicOnly) }),
+                safeFetch(`${DB_URL}/settings.json?auth=${idToken}`, { method: "PUT", body: JSON.stringify(siteSettings) })
+            ]).catch(() => {});
+        };
+
+        window.toast = function(m) { const t = document.getElementById("toast"); t.textContent = m; t.style.display = "block"; setTimeout(() => t.style.display = "none", 2200); };
     </script>
 </body>
 </html>
